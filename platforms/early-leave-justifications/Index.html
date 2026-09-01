@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+    <base target="_top">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #1673a4; --secondary: #208caa; }
+        
+        /* تنسيقات أساسية متوافقة مع جميع الشاشات */
+        body { 
+            font-family: 'Cairo', sans-serif; 
+            background-color: #f4f7f6; 
+            margin: 0; 
+            padding: 15px; /* حواف بسيطة للجوال */
+            color: #333; 
+        }
+        .container { 
+            width: 100%; /* يأخذ عرض الشاشة بالكامل في الجوال */
+            max-width: 800px; /* لا يتجاوز هذا العرض في الكمبيوتر */
+            margin: 0 auto; 
+            background: white; 
+            padding: 20px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            box-sizing: border-box; /* لضمان عدم خروج العناصر عن الحاوية */
+        }
+        h2 { 
+            text-align: center; 
+            color: var(--primary); 
+            border-bottom: 2px solid var(--secondary); 
+            padding-bottom: 10px; 
+            font-size: 1.4rem; /* تصغير الخط قليلاً للجوال */
+        }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 8px; color: var(--primary); font-size: 0.95rem; }
+        input, select, textarea { 
+            width: 100%; 
+            padding: 12px; 
+            border: 1px solid #ccc; 
+            border-radius: 6px; 
+            box-sizing: border-box; 
+            font-family: 'Cairo'; 
+            font-size: 1rem;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 5px rgba(32, 140, 170, 0.3);
+        }
+        /* تنسيق الشيك بوكس ليكون مرناً على الجوال */
+        .checkbox-group { 
+            display: flex; 
+            gap: 15px; 
+            flex-direction: column; /* عمودي في الجوال */
+            background: #f9f9f9; 
+            padding: 15px; 
+            border-radius: 6px; 
+            border: 1px solid #eee;
+        }
+        .checkbox-group label { display: flex; align-items: center; gap: 8px; font-weight: normal; margin-bottom: 0;}
+        input[type="checkbox"] { width: 20px; height: 20px; margin: 0; cursor: pointer; }
+        
+        button { 
+            width: 100%; 
+            padding: 15px; 
+            background-color: var(--primary); 
+            color: white; 
+            border: none; 
+            border-radius: 6px; 
+            font-size: 1.1rem; 
+            font-weight: bold;
+            cursor: pointer; 
+            transition: 0.3s; 
+            margin-top: 10px;
+        }
+        button:hover { background-color: var(--secondary); }
+        button:disabled { background-color: #ccc; cursor: not-allowed; }
+        
+        .hidden { display: none !important; }
+        #loginSection { text-align: center; padding: 20px 0; }
+        .alert { padding: 15px; margin-bottom: 20px; border-radius: 6px; text-align: center; font-weight: bold;}
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb;}
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;}
+
+        /* Media Queries لشاشات الكمبيوتر والأجهزة اللوحية */
+        @media (min-width: 600px) {
+            body { padding: 30px; }
+            .container { padding: 40px; }
+            h2 { font-size: 1.8rem; }
+            .checkbox-group { flex-direction: row; flex-wrap: wrap; } /* أفقي في الكمبيوتر */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>منصة حصر تعليق الدراسة<br><small>1447/10/24 هـ</small></h2>
+    
+    <div id="loginSection">
+        <div class="form-group">
+            <label>يرجى إدخال الرقم الوزاري للمدرسة:</label>
+            <input type="text" id="authId" placeholder="أدخل الرقم الوزاري (أرقام أو حروف)">
+        </div>
+        <button id="loginBtn" onclick="checkAuth()">تسجيل الدخول</button>
+    </div>
+
+    <form id="mainForm" class="hidden" onsubmit="submitForm(event)">
+        <input type="hidden" id="ministerialId">
+        
+        <div class="form-group">
+            <label>القطاع:</label>
+            <select id="sector" required onchange="filterGender()">
+                <option value="">اختر القطاع...</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>الجنس:</label>
+            <select id="gender" required onchange="filterSchools()">
+                <option value="">اختر الجنس...</option>
+                <option value="بنين">بنين</option>
+                <option value="بنات">بنات</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>اسم المدرسة:</label>
+            <select id="schoolName" required>
+                <option value="">اختر المدرسة...</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>اسم المدير /ة:</label>
+            <input type="text" id="managerName" required pattern="[A-Za-z\u0600-\u06FF\s]+" title="يقبل نصوص فقط">
+        </div>
+
+        <div class="form-group">
+            <label>رقم جوال المدير /ة:</label>
+            <input type="tel" id="managerPhone" required pattern="9665[0-9]{8}" maxlength="12" placeholder="مثال: 966512345678" title="يجب أن يبدأ بـ 9665 ومكون من 12 خانة">
+        </div>
+
+        <div class="form-group">
+            <label>المرحلة الدراسية:</label>
+            <div class="checkbox-group">
+                <label><input type="checkbox" name="level" value="روضة"> روضة</label>
+                <label><input type="checkbox" name="level" value="الابتدائية"> الابتدائية</label>
+                <label><input type="checkbox" name="level" value="المتوسطة"> المتوسطة</label>
+                <label><input type="checkbox" name="level" value="الثانوية"> الثانوية</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>إجمالي عدد المعلمين /ات:</label>
+            <input type="number" id="teachersCount" required min="0">
+        </div>
+        
+        <div class="form-group">
+            <label>عدد المعلمين /ات الغائبين:</label>
+            <input type="number" id="absentTeachers" required min="0">
+        </div>
+
+        <div class="form-group">
+            <label>إجمالي عدد الطلاب:</label>
+            <input type="number" id="studentsCount" required min="0">
+        </div>
+        
+        <div class="form-group">
+            <label>عدد الطلاب /ات الغائبين /ات:</label>
+            <input type="number" id="absentStudents" required min="0">
+        </div>
+
+        <div class="form-group">
+            <label>التاريخ:</label>
+            <input type="date" id="date" required>
+        </div>
+
+        <div class="form-group">
+            <label>زمن انصراف الطلاب /ات:</label>
+            <input type="time" id="studentTime" required>
+        </div>
+
+        <div class="form-group">
+            <label>هل تم ارسال رساله إلى اولياء الامور؟</label>
+            <select id="isSent" onchange="toggleMsgBox()" required>
+                <option value="">اختر...</option>
+                <option value="لا">لا</option>
+                <option value="نعم">نعم</option>
+            </select>
+        </div>
+        
+        <div id="msgBox" class="form-group hidden">
+            <label>نص الرسالة المرسلة:</label>
+            <textarea id="msgContent" rows="3" placeholder="اكتب نص الرسالة هنا..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>زمن انصراف المعلمين /ات:</label>
+            <input type="time" id="teacherTime" required>
+        </div>
+
+        <div class="form-group">
+            <label>أسباب الانصراف:</label>
+            <select id="reason" onchange="handleReasonLogic()" required>
+                <option value="">اختر السبب...</option>
+                <option value="توقع هطول الامطار">توقع هطول الامطار</option>
+                <option value="هطول الامطار">هطول الامطار</option>
+                <option value="مشكلة في المبنى المدرسي بسبب الامطار">مشكلة في المبنى المدرسي بسبب الامطار</option>
+                <option value="اخرى">اخرى</option>
+            </select>
+        </div>
+
+        <div id="buildingIssueBox" class="hidden">
+            <div class="form-group">
+                <label>وصف مختصر للمشكلة:</label>
+                <textarea id="problemDesc" rows="2"></textarea>
+            </div>
+            <div class="form-group">
+                <label>رقم بلاغ الدعم الموحد:</label>
+                <input type="text" id="ticketId">
+            </div>
+        </div>
+
+        <div id="otherReasonBox" class="form-group hidden">
+            <label>يرجى كتابة السبب الآخر:</label>
+            <input type="text" id="otherReason">
+        </div>
+
+        <button type="submit" id="submitBtn">إرسال البيانات</button>
+    </form>
+    
+    <div id="status"></div>
+</div>
+
+<script>
+    let allData = [];
+
+    // تحميل البيانات الأولية فور فتح الصفحة
+    window.onload = () => {
+        const loginBtn = document.getElementById('loginBtn');
+        loginBtn.innerText = "جاري تحميل البيانات...";
+        loginBtn.disabled = true;
+
+        google.script.run.withSuccessHandler(data => {
+            allData = data;
+            const sectors = [...new Set(data.map(item => item.sector).filter(s => s !== ""))];
+            const sectorSelect = document.getElementById('sector');
+            sectors.forEach(s => {
+                let opt = document.createElement('option');
+                opt.value = opt.text = s;
+                sectorSelect.add(opt);
+            });
+            loginBtn.innerText = "تسجيل الدخول";
+            loginBtn.disabled = false;
+        }).getInitialData();
+    };
+
+    function checkAuth() {
+        const idInput = document.getElementById('authId').value.trim();
+        const statusDiv = document.getElementById('status');
+        
+        if(!idInput) {
+            statusDiv.innerHTML = `<div class="alert error">الرجاء إدخال الرقم الوزاري.</div>`;
+            return;
+        }
+
+        // البحث عن الرقم الوزاري (يدعم الأحرف والأرقام)
+        const school = allData.find(item => item.ministerialId.toLowerCase() === idInput.toLowerCase());
+        
+        if (school) {
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('mainForm').classList.remove('hidden');
+            document.getElementById('ministerialId').value = school.ministerialId; // تخزين الرقم الصحيح
+            statusDiv.innerHTML = ''; 
+        } else {
+            statusDiv.innerHTML = `<div class="alert error">الرقم الوزاري غير صحيح أو غير مسجل في النظام.</div>`;
+        }
+    }
+
+    function filterGender() {
+        document.getElementById('gender').value = "";
+        document.getElementById('schoolName').innerHTML = '<option value="">اختر المدرسة...</option>';
+    }
+
+    function filterSchools() {
+        const sector = document.getElementById('sector').value;
+        const gender = document.getElementById('gender').value;
+        const schoolSelect = document.getElementById('schoolName');
+        
+        schoolSelect.innerHTML = '<option value="">اختر المدرسة...</option>';
+
+        if(sector && gender) {
+            const filtered = allData.filter(item => item.sector === sector && item.gender === gender);
+            filtered.forEach(s => {
+                let opt = document.createElement('option');
+                opt.value = opt.text = s.schoolName;
+                schoolSelect.add(opt);
+            });
+        }
+    }
+
+    function toggleMsgBox() {
+        const val = document.getElementById('isSent').value;
+        const msgContent = document.getElementById('msgContent');
+        if(val === 'نعم') {
+            document.getElementById('msgBox').classList.remove('hidden');
+            msgContent.required = true;
+        } else {
+            document.getElementById('msgBox').classList.add('hidden');
+            msgContent.required = false;
+            msgContent.value = ""; // تفريغ الحقل إذا تراجع
+        }
+    }
+
+    function handleReasonLogic() {
+        const reason = document.getElementById('reason').value;
+        const buildingBox = document.getElementById('buildingIssueBox');
+        const otherBox = document.getElementById('otherReasonBox');
+        const problemDesc = document.getElementById('problemDesc');
+        const ticketId = document.getElementById('ticketId');
+        const otherReason = document.getElementById('otherReason');
+
+        // إعادة التعيين أولاً
+        buildingBox.classList.add('hidden');
+        otherBox.classList.add('hidden');
+        problemDesc.required = ticketId.required = otherReason.required = false;
+
+        if (reason === 'مشكلة في المبنى المدرسي بسبب الامطار') {
+            buildingBox.classList.remove('hidden');
+            problemDesc.required = true;
+            ticketId.required = true;
+            otherReason.value = ""; // تفريغ الحقل الآخر
+        } else if (reason === 'اخرى') {
+            otherBox.classList.remove('hidden');
+            otherReason.required = true;
+            problemDesc.value = ""; // تفريغ حقول المبنى
+            ticketId.value = "";
+        }
+    }
+
+    function submitForm(e) {
+        e.preventDefault();
+        
+        // التحقق من الشيك بوكس (المرحلة الدراسية)
+        const levelsChecked = document.querySelectorAll('input[name="level"]:checked');
+        if(levelsChecked.length === 0) {
+            alert("الرجاء اختيار مرحلة دراسية واحدة على الأقل.");
+            return;
+        }
+
+        const btn = document.getElementById('submitBtn');
+        btn.disabled = true;
+        btn.innerText = "جاري الإرسال...";
+
+        const levels = Array.from(levelsChecked).map(cb => cb.value).join('، ');
+
+        const formData = {
+            ministerialId: document.getElementById('ministerialId').value,
+            sector: document.getElementById('sector').value,
+            gender: document.getElementById('gender').value,
+            schoolName: document.getElementById('schoolName').value,
+            managerName: document.getElementById('managerName').value,
+            managerPhone: document.getElementById('managerPhone').value,
+            levels: levels,
+            teachersCount: document.getElementById('teachersCount').value,
+            absentTeachers: document.getElementById('absentTeachers').value,
+            studentsCount: document.getElementById('studentsCount').value,
+            absentStudents: document.getElementById('absentStudents').value,
+            date: document.getElementById('date').value,
+            studentTime: document.getElementById('studentTime').value,
+            isSent: document.getElementById('isSent').value,
+            msgContent: document.getElementById('msgContent').value,
+            teacherTime: document.getElementById('teacherTime').value,
+            reason: document.getElementById('reason').value,
+            problemDesc: document.getElementById('problemDesc').value,
+            ticketId: document.getElementById('ticketId').value,
+            otherReason: document.getElementById('otherReason').value
+        };
+
+        google.script.run.withSuccessHandler(res => {
+            document.getElementById('status').innerHTML = `<div class="alert success">${res}</div>`;
+            document.getElementById('mainForm').reset();
+            
+            // إخفاء النوافذ المنبثقة الديناميكية
+            document.getElementById('msgBox').classList.add('hidden');
+            document.getElementById('buildingIssueBox').classList.add('hidden');
+            document.getElementById('otherReasonBox').classList.add('hidden');
+            
+            // العودة لصفحة الدخول
+            setTimeout(() => {
+                document.getElementById('mainForm').classList.add('hidden');
+                document.getElementById('loginSection').classList.remove('hidden');
+                document.getElementById('authId').value = "";
+                document.getElementById('status').innerHTML = "";
+            }, 3000); // إخفاء رسالة النجاح بعد 3 ثواني والعودة للبلاية
+
+            btn.disabled = false;
+            btn.innerText = "إرسال البيانات";
+            
+        }).withFailureHandler(err => {
+            document.getElementById('status').innerHTML = `<div class="alert error">حدث خطأ أثناء الإرسال. الرجاء المحاولة مرة أخرى.</div>`;
+            btn.disabled = false;
+            btn.innerText = "إرسال البيانات";
+        }).processForm(formData);
+    }
+</script>
+
+</body>
+</html>

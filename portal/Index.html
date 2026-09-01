@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>بوابة القسم الداخلية</title>
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+  direction: rtl;
+  color: #374151;
+  background: #eef2f7;
+}
+
+/* ======= APP SHELL ======= */
+.app {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+}
+
+/* ======= SIDEBAR ======= */
+.sidebar {
+  width: 300px;
+  flex-shrink: 0;
+  background: white;
+  border-left: 1px solid #e5e9ef;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.sidebar-header {
+  background: linear-gradient(135deg, #0c6b64 0%, #0f9488 60%, #0a8c70 100%);
+  color: white;
+  padding: 20px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.sidebar-header .icon { font-size: 28px; }
+.sidebar-header h1 { font-size: 15.5px; font-weight: 700; margin-bottom: 3px; }
+.sidebar-header p { font-size: 11px; opacity: 0.85; }
+
+.sidebar-search {
+  padding: 14px 14px 8px;
+  flex-shrink: 0;
+}
+
+.sidebar-search-wrapper { position: relative; }
+
+.sidebar-search-wrapper .search-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  font-size: 13px;
+  pointer-events: none;
+}
+
+#searchBox {
+  width: 100%;
+  padding: 9px 34px 9px 12px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 9px;
+  font-size: 12.5px;
+  background: #fafbfc;
+  color: #374151;
+  direction: rtl;
+  font-family: inherit;
+}
+
+#searchBox::placeholder { color: #b0bac5; }
+
+#searchBox:focus {
+  outline: none;
+  border-color: #0f9488;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(15,148,136,0.1);
+}
+
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 4px 0 16px;
+}
+
+.nav-category-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #9ca3af;
+  padding: 16px 16px 6px;
+  letter-spacing: 0.2px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-size: 12.8px;
+  color: #374151;
+  border-right: 3px solid transparent;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.nav-item:hover {
+  background: #f0fdfa;
+  color: #0f766e;
+}
+
+.nav-item.active {
+  background: #ecfdf5;
+  color: #0f766e;
+  border-right-color: #0f9488;
+  font-weight: 700;
+}
+
+.nav-item.pending {
+  color: #b0bac5;
+  cursor: not-allowed;
+}
+
+.nav-item.pending:hover {
+  background: transparent;
+  color: #b0bac5;
+}
+
+.nav-item.pending.active {
+  background: #f8fafc;
+  border-right-color: #cbd5e1;
+  color: #94a3b8;
+}
+
+.nav-item-icon {
+  font-size: 15px;
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.nav-item-name {
+  flex: 1;
+  line-height: 1.4;
+}
+
+.nav-item-soon {
+  font-size: 9px;
+  font-weight: 700;
+  background: #f1f5f9;
+  color: #94a3b8;
+  border: 1px solid #e2e8f0;
+  padding: 2px 7px;
+  border-radius: 999px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.no-results {
+  padding: 20px 16px;
+  font-size: 12px;
+  color: #9ca3af;
+  text-align: center;
+}
+
+/* ======= MAIN CONTENT ======= */
+.content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.content-topbar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 22px;
+  background: white;
+  border-bottom: 1px solid #e5e9ef;
+}
+
+.content-topbar-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  min-width: 0;
+}
+
+.content-topbar-title .icon { font-size: 19px; flex-shrink: 0; }
+.content-topbar-title span.name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.open-new-tab {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #0f766e;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 14px;
+  border: 1.5px solid #99f6e4;
+  border-radius: 8px;
+  background: #f0fdfa;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.open-new-tab:hover { background: #ccfbf1; }
+
+.content-body {
+  flex: 1;
+  position: relative;
+  background: #f8fafc;
+  overflow: hidden;
+}
+
+#platformFrame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: none;
+}
+
+.state-panel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #9ca3af;
+  gap: 12px;
+  padding: 40px;
+}
+
+.state-panel .state-icon { font-size: 54px; }
+.state-panel h2 { font-size: 16.5px; color: #4b5563; font-weight: 700; }
+.state-panel p { font-size: 13px; max-width: 420px; line-height: 1.8; }
+
+/* ======= LOADING OVERLAY ======= */
+.loading-overlay {
+  position: absolute;
+  inset: 0;
+  background: #f8fafc;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  z-index: 2;
+}
+
+.spinner {
+  width: 34px;
+  height: 34px;
+  border: 3px solid #d1fae5;
+  border-top-color: #0f9488;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-overlay p {
+  font-size: 12.5px;
+  color: #6b7280;
+  font-weight: 600;
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="icon">🏛️</div>
+      <div>
+        <h1>بوابة القسم الداخلية</h1>
+        <p>جميع الأنظمة في مكان واحد</p>
+      </div>
+    </div>
+
+    <div class="sidebar-search">
+      <div class="sidebar-search-wrapper">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchBox" placeholder="ابحث عن منصة..." onkeyup="renderSidebar()">
+      </div>
+    </div>
+
+    <nav class="sidebar-nav" id="sidebarNav"></nav>
+  </aside>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="content">
+    <div class="content-topbar">
+      <div class="content-topbar-title">
+        <span class="icon" id="topbarIcon">🏛️</span>
+        <span class="name" id="topbarName">اختر منصة من القائمة</span>
+      </div>
+      <a class="open-new-tab" id="openNewTabBtn" href="#" target="_blank" rel="noopener noreferrer" style="display:none">
+        فتح في نافذة جديدة ↗
+      </a>
+    </div>
+
+    <div class="content-body">
+      <iframe id="platformFrame" title="platform"></iframe>
+
+      <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <p>جاري تحميل المنصة...</p>
+      </div>
+
+      <div class="state-panel" id="welcomeState">
+        <div class="state-icon">👋</div>
+        <h2>أهلاً بك في بوابة القسم</h2>
+        <p>اختر أي منصة من القائمة الجانبية عشان تفتح مباشرة هنا بنفس الصفحة</p>
+      </div>
+
+      <div class="state-panel" id="pendingState" style="display:none">
+        <div class="state-icon">🚧</div>
+        <h2 id="pendingTitle">المنصة غير متاحة بعد</h2>
+        <p>لسا ما توفر رابط النشر الخاص بهذي المنصة. بمجرد إضافته بتشتغل مباشرة من نفس هذي القائمة</p>
+      </div>
+    </div>
+  </main>
+
+</div>
+
+<script>
+/*
+ * ==========================================================================
+ *  بيانات المنصات
+ *  category : اسم الفئة (تُجمع العناصر تلقائياً تحت نفس العنوان بالقائمة الجانبية)
+ *  name     : اسم المنصة
+ *  icon     : إيموجي يمثل المنصة
+ *  url      : رابط النشر (.../exec) — اتركه null إذا ما توفر بعد،
+ *             والعنصر بيظهر بالقائمة معطّل مع شارة "قريباً"
+ * ==========================================================================
+ */
+const PLATFORMS = [
+
+  // ---- الحضور والمساءلات ----
+  {
+    category: "الحضور والمساءلات",
+    name: "منصة مساند حضوري",
+    icon: "📊",
+    url: "https://script.google.com/macros/s/AKfycbx_N9Sq4wWTR3c8bQbjIjJQK9gjYPCVkp1Xp3KluIfsylBr3drEysR3k5JD9MlNn5EdIQ/exec"
+  },
+  {
+    category: "الحضور والمساءلات",
+    name: "منصة مبررات الانصراف ليوم 24-10-1447",
+    icon: "🚪",
+    url: null
+  },
+
+  // ---- الإشراف التربوي ----
+  {
+    category: "الإشراف التربوي",
+    name: "منصة المدارس المتبقية للمشرفين من مرحلة دورة الأداء",
+    icon: "🏫",
+    url: null
+  },
+  {
+    category: "الإشراف التربوي",
+    name: "منصة رفع استمارات المرحلة الثانية",
+    icon: "📝",
+    url: null
+  },
+  {
+    category: "الإشراف التربوي",
+    name: "منصة شواهد تنفيذ الأهداف للمشرفين ورؤساء الوحدات",
+    icon: "📁",
+    url: "https://script.google.com/macros/s/AKfycbxAWnvLx0y7sF6jyzJ-9_C0pVc7cbm6j_j9XR_Ce_qP29dM-Wjs6TwDf1Lb9yo1dqbe/exec"
+  },
+
+  // ---- الأداء الوظيفي والتميز ----
+  {
+    category: "الأداء الوظيفي والتميز",
+    name: "منصة دورة الأداء الوظيفي 1447",
+    icon: "🏆",
+    url: "https://script.google.com/macros/s/AKfycbyCS-soDhJiYqSKzLorRqMAxS-_uo-W2tT_9wzXjKY94aHztZtFZAaPovecMTPd9IonVQ/exec"
+  },
+  {
+    category: "الأداء الوظيفي والتميز",
+    name: "منصة متابعة حالة التقويم الذاتي",
+    icon: "📈",
+    url: "https://script.google.com/macros/s/AKfycbyYftsyBiHAIsyjUaLp66ppmoOxhgTZi8jzetyd8pzsNXcfyjf712TxKFhYTayyQIsltw/exec"
+  },
+  {
+    category: "الأداء الوظيفي والتميز",
+    name: "منصة استقبال التعديلات على منصة التميز",
+    icon: "✏️",
+    url: "https://script.google.com/macros/s/AKfycbwvGggBoSOXgX4TcDjLqYyVcfGmn5PrOb6_a25vF8lkAkCHuunUjknboRN-43tYZ9jskg/exec"
+  },
+
+  // ---- النماذج والسلامة ----
+  {
+    category: "النماذج والسلامة",
+    name: "منصة حصر المواد الكيميائية وقواعد السلامة المرورية",
+    icon: "🧪",
+    url: "https://script.google.com/macros/s/AKfycbwUETl3AwxaQNzPXKTT6n1OLXECw_yy6pl-BlxU1C7tscNtKxhJ_CLvMhrw9JrTV3gO/exec"
+  },
+  {
+    category: "النماذج والسلامة",
+    name: "منصة المبررات لعدم اكتمال بعض نقاط الدروس في مدرستي",
+    icon: "📚",
+    url: null
+  }
+];
+
+let activePlatform = null;
+
+/* ---- بناء القائمة الجانبية مجمّعة حسب الفئة ---- */
+function renderSidebar() {
+  const term = document.getElementById('searchBox').value.trim();
+  const list = term
+    ? PLATFORMS.filter(function (p) { return p.name.indexOf(term) !== -1; })
+    : PLATFORMS;
+
+  const nav = document.getElementById('sidebarNav');
+  nav.innerHTML = '';
+
+  if (list.length === 0) {
+    nav.innerHTML = '<div class="no-results">ما فيه منصات مطابقة لبحثك</div>';
+    return;
+  }
+
+  const categories = [];
+  const byCategory = {};
+  list.forEach(function (p) {
+    if (!byCategory[p.category]) {
+      byCategory[p.category] = [];
+      categories.push(p.category);
+    }
+    byCategory[p.category].push(p);
+  });
+
+  categories.forEach(function (catName) {
+    const title = document.createElement('div');
+    title.className = 'nav-category-title';
+    title.textContent = catName;
+    nav.appendChild(title);
+
+    byCategory[catName].forEach(function (p) {
+      nav.appendChild(buildNavItem(p));
+    });
+  });
+}
+
+/* ---- بناء عنصر واحد بالقائمة الجانبية ---- */
+function buildNavItem(p) {
+  const isPending = !p.url;
+  const el = document.createElement('div');
+  el.className = 'nav-item' + (isPending ? ' pending' : '');
+  if (activePlatform && activePlatform.name === p.name) {
+    el.classList.add('active');
+  }
+
+  el.innerHTML =
+    '<span class="nav-item-icon">' + p.icon + '</span>' +
+    '<span class="nav-item-name">' + p.name + '</span>' +
+    (isPending ? '<span class="nav-item-soon">قريباً</span>' : '');
+
+  el.onclick = function () { selectPlatform(p); };
+  return el;
+}
+
+/* ---- اختيار منصة من القائمة ---- */
+function selectPlatform(p) {
+  activePlatform = p;
+
+  // تحديث حالة التفعيل على عناصر القائمة
+  document.querySelectorAll('.nav-item').forEach(function (item) {
+    item.classList.remove('active');
+  });
+  renderSidebar(); // إعادة رسم لتطبيق active بشكل صحيح مع البحث الحالي
+
+  document.getElementById('welcomeState').style.display = 'none';
+  document.getElementById('topbarIcon').textContent = p.icon;
+  document.getElementById('topbarName').textContent = p.name;
+
+  const openBtn = document.getElementById('openNewTabBtn');
+  const frame = document.getElementById('platformFrame');
+  const pendingState = document.getElementById('pendingState');
+  const loadingOverlay = document.getElementById('loadingOverlay');
+
+  if (!p.url) {
+    frame.style.display = 'none';
+    openBtn.style.display = 'none';
+    loadingOverlay.style.display = 'none';
+    document.getElementById('pendingTitle').textContent = p.name;
+    pendingState.style.display = 'flex';
+    return;
+  }
+
+  pendingState.style.display = 'none';
+  openBtn.style.display = 'flex';
+  openBtn.href = p.url;
+
+  if (frame.src !== p.url) {
+    loadingOverlay.style.display = 'flex';
+    frame.style.display = 'none';
+    frame.onload = function () {
+      loadingOverlay.style.display = 'none';
+      frame.style.display = 'block';
+    };
+    frame.src = p.url;
+  } else {
+    loadingOverlay.style.display = 'none';
+    frame.style.display = 'block';
+  }
+}
+
+/* ---- التهيئة الأولى ---- */
+renderSidebar();
+</script>
+
+</body>
+</html>

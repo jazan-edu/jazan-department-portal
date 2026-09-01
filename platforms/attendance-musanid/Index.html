@@ -1,0 +1,1130 @@
+
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>نظام إدارة الحضور والغياب</title>
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+  background: linear-gradient(150deg, #eef2f7 0%, #e4ecf5 100%);
+  min-height: 100vh;
+  padding: 24px 16px;
+  direction: rtl;
+}
+
+.container {
+  max-width: 1400px;
+  margin: auto;
+}
+
+/* ======= HEADER ======= */
+.header {
+  background: linear-gradient(135deg, #0c6b64 0%, #0f9488 60%, #0a8c70 100%);
+  color: white;
+  padding: 26px 32px;
+  border-radius: 18px;
+  margin-bottom: 22px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  box-shadow: 0 10px 36px rgba(15, 118, 110, 0.28);
+  position: relative;
+  overflow: hidden;
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  top: -60px; left: -40px;
+  width: 220px; height: 220px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 50%;
+}
+
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: -80px; right: -20px;
+  width: 280px; height: 280px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 50%;
+}
+
+.header-icon {
+  font-size: 48px;
+  z-index: 1;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+}
+
+.header-text { z-index: 1; }
+
+.header h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 5px;
+  letter-spacing: 0.3px;
+}
+
+.header p {
+  font-size: 13px;
+  opacity: 0.82;
+  font-weight: 400;
+}
+
+/* ======= STATS ======= */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.stat {
+  background: white;
+  padding: 18px 20px;
+  border-radius: 14px;
+  box-shadow: 0 2px 14px rgba(0,0,0,0.06);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+  border-right: 4px solid;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0) 60%, rgba(0,0,0,0.015) 100%);
+  pointer-events: none;
+}
+
+.stat:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+}
+
+.stat:nth-child(1) { border-right-color: #ef4444; }
+.stat:nth-child(2) { border-right-color: #f59e0b; }
+.stat:nth-child(3) { border-right-color: #3b82f6; }
+.stat:nth-child(4) { border-right-color: #10b981; }
+
+.stat-icon {
+  width: 52px; height: 52px;
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.stat:nth-child(1) .stat-icon { background: #fef2f2; }
+.stat:nth-child(2) .stat-icon { background: #fffbeb; }
+.stat:nth-child(3) .stat-icon { background: #eff6ff; }
+.stat:nth-child(4) .stat-icon { background: #ecfdf5; }
+
+.stat-info { flex: 1; }
+
+.stat-label {
+  font-size: 12.5px;
+  color: #9ca3af;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.stat-value {
+  font-size: 30px;
+  font-weight: 800;
+  color: #111827;
+  line-height: 1;
+}
+
+/* ======= MAIN CARD ======= */
+.main-card {
+  background: white;
+  border-radius: 18px;
+  box-shadow: 0 2px 14px rgba(0,0,0,0.07);
+  overflow: hidden;
+}
+
+/* ======= UPLOAD SECTION ======= */
+.upload-section {
+  padding: 22px 28px;
+  border-bottom: 1px solid #f0f0f0;
+  background: #fafbfc;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.upload-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 280px;
+}
+
+.file-label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  background: white;
+  border: 1.5px dashed #c9d3de;
+  border-radius: 10px;
+  padding: 11px 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #7b8fa1;
+  font-size: 13.5px;
+  flex: 1;
+  font-weight: 500;
+}
+
+.file-label:hover {
+  border-color: #0f9488;
+  background: #f0fdfa;
+  color: #0f766e;
+}
+
+.file-label .file-icon { font-size: 18px; }
+
+#file { display: none; }
+
+/* ======= RESULT BAR ======= */
+#result {
+  font-size: 14px;
+  font-weight: 600;
+  padding: 11px 16px;
+  border-radius: 10px;
+  margin: 14px 28px 0;
+  background: #f0fdfa;
+  color: #0f766e;
+  border: 1px solid #99f6e4;
+  display: none;
+}
+
+#result.show { display: block; }
+
+/* ======= TABS ======= */
+.tabs-header {
+  display: flex;
+  padding: 0 16px;
+  background: #f9fafb;
+  border-bottom: 2px solid #eef0f3;
+  gap: 2px;
+}
+
+.tab-button {
+  background: transparent;
+  color: #7b8fa1;
+  border: none;
+  padding: 15px 22px;
+  cursor: pointer;
+  font-size: 13.5px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  border-radius: 0;
+  box-shadow: none;
+  letter-spacing: 0.2px;
+}
+
+.tab-button:hover {
+  color: #0f766e;
+  background: #f0fdfa;
+  opacity: 1;
+}
+
+.tab-button.active {
+  color: #0f766e;
+  border-bottom-color: #0f766e;
+  background: transparent;
+}
+
+/* ======= TAB CONTENT ======= */
+.tab-content {
+  padding: 20px 28px 28px;
+}
+
+/* ======= TOOLBAR ======= */
+.toolbar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+  align-items: center;
+}
+
+/* ======= BUTTONS ======= */
+button, .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 9px;
+  cursor: pointer;
+  font-size: 13.5px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-primary, button.btn-primary {
+  background: linear-gradient(135deg, #0c6b64, #0f9488);
+  color: white;
+  box-shadow: 0 3px 10px rgba(15,118,110,0.22);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 15px rgba(15,118,110,0.32);
+}
+
+.btn-blue {
+  background: linear-gradient(135deg, #0369a1, #0ea5e9);
+  color: white;
+  box-shadow: 0 3px 10px rgba(3,105,161,0.22);
+}
+
+.btn-blue:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 15px rgba(3,105,161,0.32);
+}
+
+.btn-outline {
+  background: white;
+  color: #4b5563;
+  border: 1.5px solid #e2e8f0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+.btn-outline:hover {
+  background: #f8fafc;
+  border-color: #c9d3de;
+}
+
+/* ======= PERIOD FILTER ======= */
+.period-filter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  background: #fafbfc;
+  border: 1.5px solid #eef0f3;
+  border-radius: 10px;
+}
+
+.period-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #4b5563;
+  white-space: nowrap;
+}
+
+.period-filter select,
+.period-filter input[type="date"],
+.period-filter input[type="month"] {
+  padding: 9px 14px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 9px;
+  font-size: 13px;
+  background: white;
+  color: #374151;
+  font-family: inherit;
+  direction: rtl;
+}
+
+.period-filter select:focus,
+.period-filter input[type="date"]:focus,
+.period-filter input[type="month"]:focus {
+  outline: none;
+  border-color: #0f9488;
+  box-shadow: 0 0 0 3px rgba(15,148,136,0.1);
+}
+
+#periodDate,
+#periodMonth,
+.period-range-group {
+  display: none;
+}
+
+.period-range-group {
+  align-items: center;
+  gap: 8px;
+}
+
+.period-range-group.show {
+  display: flex;
+}
+
+.period-range-sep {
+  font-size: 13px;
+  color: #7b8fa1;
+  font-weight: 600;
+}
+
+/* ======= SEARCH ======= */
+.search-wrapper {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.search-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  font-size: 15px;
+  pointer-events: none;
+}
+
+#searchBox {
+  width: 100%;
+  padding: 11px 40px 11px 16px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 13.5px;
+  transition: all 0.2s ease;
+  background: #fafbfc;
+  color: #374151;
+  direction: rtl;
+  font-family: inherit;
+}
+
+#searchBox::placeholder { color: #b0bac5; }
+
+#searchBox:focus {
+  outline: none;
+  border-color: #0f9488;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(15,148,136,0.1);
+}
+
+/* ======= TABLE ======= */
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid #eef0f3;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+thead tr {
+  background: linear-gradient(135deg, #0c6b64, #0f9488);
+}
+
+th {
+  color: white;
+  padding: 13px 14px;
+  font-size: 12.5px;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+}
+
+th:first-child { border-radius: 11px 0 0 0; }
+th:last-child  { border-radius: 0 11px 0 0; }
+
+td {
+  border-bottom: 1px solid #f3f4f6;
+  padding: 11px 14px;
+  text-align: center;
+  color: #374151;
+}
+
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: #f8fffe !important; }
+
+tr.found td    { background: #f0fdf4; color: #14532d; }
+tr.notfound td { background: #fff7f7; color: #7f1d1d; }
+
+tr.found:hover td    { background: #dcfce7 !important; }
+tr.notfound:hover td { background: #fee2e2 !important; }
+
+/* Reason select (سبب الانصراف المبكر) */
+.reason-select {
+  width: 100%;
+  min-width: 140px;
+  padding: 7px 10px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-family: inherit;
+  color: #374151;
+  background: white;
+  direction: rtl;
+  cursor: pointer;
+}
+
+.reason-select:focus {
+  outline: none;
+  border-color: #0f9488;
+  box-shadow: 0 0 0 3px rgba(15,148,136,0.1);
+}
+
+/* Checkbox */
+input[type="checkbox"] {
+  width: 15px; height: 15px;
+  accent-color: #0f766e;
+  cursor: pointer;
+}
+
+/* ======= EMPTY STATE ======= */
+.empty-state {
+  text-align: center;
+  padding: 50px 20px;
+  color: #9ca3af;
+}
+
+.empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; }
+.empty-state p { font-size: 15px; font-weight: 500; }
+
+/* ======= PRINT ======= */
+@media print {
+  .upload-section, .tabs-header, .toolbar, .period-filter, .search-wrapper { display: none !important; }
+  .main-card { box-shadow: none; }
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+</head>
+
+<body>
+<div class="container">
+
+  <!-- ===== HEADER ===== -->
+  <div class="header">
+    <div class="header-icon">📊</div>
+    <div class="header-text">
+      <h1>نظام إدارة الحضور والغياب الإلكتروني</h1>
+      <p>رفع ملف الحضور • تحليل البيانات • إرسال المساءلات</p>
+    </div>
+  </div>
+
+  <!-- ===== STATS ===== -->
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-icon">🚫</div>
+      <div class="stat-info">
+        <div class="stat-label">عدد الغياب</div>
+        <div class="stat-value" id="absenceCount">0</div>
+      </div>
+    </div>
+    <div class="stat">
+      <div class="stat-icon">🕒</div>
+      <div class="stat-info">
+        <div class="stat-label">عدد التأخر</div>
+        <div class="stat-value" id="delayCount">0</div>
+      </div>
+    </div>
+    <div class="stat">
+      <div class="stat-icon">🚪</div>
+      <div class="stat-info">
+        <div class="stat-label">انصراف مبكر</div>
+        <div class="stat-value" id="earlyLeaveCount">0</div>
+      </div>
+    </div>
+    <div class="stat">
+      <div class="stat-icon">📋</div>
+      <div class="stat-info">
+        <div class="stat-label">إجمالي الحركات</div>
+        <div class="stat-value" id="totalAbsences">0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MAIN CARD ===== -->
+  <div class="main-card">
+
+    <!-- Upload -->
+    <div class="upload-section">
+      <div class="upload-group">
+        <label class="file-label" for="file">
+          <span class="file-icon">📂</span>
+          <span id="fileNameDisplay">اختر ملف الحضور (Excel / CSV)...</span>
+        </label>
+        <input type="file" id="file" onchange="updateFileName(this)">
+        <button class="btn-primary" onclick="uploadFile()">⚡ تحليل الملف</button>
+      </div>
+    </div>
+
+    <!-- Result Bar -->
+    <div id="result"></div>
+
+    <!-- Tabs -->
+    <div class="tabs-header">
+      <button class="tab-button active" onclick="switchTab('غياب')">📁 قائمة الغياب</button>
+      <button class="tab-button" onclick="switchTab('تأخر')">🕒 قائمة التأخر</button>
+      <button class="tab-button" onclick="switchTab('انصراف مبكر')">🚪 الانصراف المبكر</button>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="tab-content">
+
+      <!-- Toolbar -->
+      <div class="toolbar">
+        <button class="btn-outline" onclick="printReport()">🖨 طباعة</button>
+        <button class="btn-outline" onclick="exportExcel()">📥 تحميل Excel</button>
+        <button class="btn-blue"    onclick="sendSelectedInquiries()">📧 إرسال المحدد</button>
+      </div>
+
+      <!-- Period Filter -->
+      <div class="period-filter">
+        <span class="period-label">📅 تصفية حسب:</span>
+        <select id="periodType" onchange="onPeriodTypeChange()">
+          <option value="all">كل الفترات</option>
+          <option value="day">يوم محدد</option>
+          <option value="week">أسبوع محدد</option>
+          <option value="month">شهر محدد</option>
+          <option value="range">نطاق تواريخ (من - إلى)</option>
+        </select>
+        <input type="date"  id="periodDate"  onchange="applyPeriodFilter()">
+        <input type="month" id="periodMonth" onchange="applyPeriodFilter()">
+        <span id="periodRangeGroup" class="period-range-group">
+          <input type="date" id="periodStartDate" onchange="applyPeriodFilter()">
+          <span class="period-range-sep">إلى</span>
+          <input type="date" id="periodEndDate" onchange="applyPeriodFilter()">
+        </span>
+        <button class="btn-outline" onclick="resetPeriodFilter()">↺ إعادة تعيين</button>
+      </div>
+
+      <!-- Search -->
+      <div class="search-wrapper">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchBox"
+               placeholder="بحث بالاسم أو السجل المدني في القائمة الحالية..."
+               onkeyup="filterTable()">
+      </div>
+
+      <!-- Table -->
+      <div class="table-wrapper">
+        <table id="absenceTable">
+          <thead>
+            <tr>
+              <th><input type="checkbox" id="selectAll" onclick="toggleAll()"></th>
+              <th>السجل المدني</th>
+              <th>الاسم</th>
+              <th>التاريخ</th>
+              <th id="thCheckIn">توقيت الحضور</th>
+              <th id="thCheckOut">توقيت الانصراف</th>
+              <th>الحالة</th>
+              <th>الجوال</th>
+              <th>البريد</th>
+              <th id="thReason" style="display:none">سبب الانصراف المبكر</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colspan="10">
+                <div class="empty-state">
+                  <div class="empty-icon">📂</div>
+                  <p>قم برفع ملف الحضور لعرض البيانات</p>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div><!-- /tab-content -->
+  </div><!-- /main-card -->
+
+</div><!-- /container -->
+
+<script>
+let allRecords   = [];
+let currentRecords = [];
+let currentTab   = 'غياب';
+let periodType   = 'all'; // 'all' | 'day' | 'week' | 'month' | 'range'
+let earlyLeaveReasons = {}; // { "السجل المدني|التاريخ": "السبب المختار" }
+
+/* ---- File name display ---- */
+function updateFileName(input) {
+  const display = document.getElementById('fileNameDisplay');
+  display.textContent = input.files[0]
+    ? input.files[0].name
+    : 'اختر ملف الحضور (Excel / CSV)...';
+}
+
+/* ---- Show result bar ---- */
+function showResult(html, color) {
+  const el = document.getElementById('result');
+  el.innerHTML = html;
+  el.className = 'show';
+  el.style.background = color === 'error' ? '#fff5f5' : '#f0fdfa';
+  el.style.color       = color === 'error' ? '#b91c1c' : '#0f766e';
+  el.style.borderColor = color === 'error' ? '#fca5a5' : '#99f6e4';
+}
+
+/* ---- Upload & analyse ---- */
+function uploadFile() {
+  const file = document.getElementById('file').files[0];
+  if (!file) { alert('اختر الملف أولاً'); return; }
+
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    const base64 = e.target.result.split(',')[1];
+    showResult('⏳ جاري تحليل البيانات وفصل الحركات...');
+
+    google.script.run
+      .withSuccessHandler(function (res) {
+        allRecords = res.records;
+        document.getElementById('totalAbsences').innerHTML = res.totalAbsences;
+        showResult('✅ تم تحليل السجلات بنجاح وتوزيعها على التبويبات.');
+
+        let abs = 0, del = 0, early = 0;
+        allRecords.forEach(r => {
+          const s = String(r[3]).trim();
+          if (s === 'غياب')          abs++;
+          else if (s === 'تأخر')       del++;
+          else if (s === 'انصراف مبكر') early++;
+        });
+
+        document.getElementById('absenceCount').innerHTML    = abs;
+        document.getElementById('delayCount').innerHTML      = del;
+        document.getElementById('earlyLeaveCount').innerHTML = early;
+
+        switchTab(currentTab);
+      })
+      .processAttendanceFile(base64, file.name);
+  };
+  reader.readAsDataURL(file);
+}
+
+/* ---- Switch tab ---- */
+function switchTab(tabName) {
+  currentTab = tabName;
+
+  document.querySelectorAll('.tab-button').forEach(btn => {
+    btn.classList.toggle('active', btn.innerText.includes(tabName));
+  });
+
+  const thIn     = document.getElementById('thCheckIn');
+  const thOut    = document.getElementById('thCheckOut');
+  const thReason = document.getElementById('thReason');
+
+  if (tabName === 'غياب') {
+    thIn.style.display  = 'none';
+    thOut.style.display = 'none';
+  } else if (tabName === 'تأخر') {
+    thIn.style.display  = '';
+    thOut.style.display = 'none';
+  } else {
+    thIn.style.display  = 'none';
+    thOut.style.display = '';
+  }
+
+  thReason.style.display = (tabName === 'انصراف مبكر') ? '' : 'none';
+
+  currentRecords = allRecords.filter(r =>
+    String(r[3]).trim() === tabName && matchesPeriod(r[2])
+  );
+  renderTable(currentRecords);
+  document.getElementById('selectAll').checked = false;
+
+  // إعادة تطبيق فلترة البحث النصي (إن وجدت) فوق فلترة الفترة والتبويب
+  filterTable();
+}
+
+/* ==================================================================
+   تصفية الغياب حسب الفترة (يوم / أسبوع / شهر)
+   ================================================================== */
+
+/* إظهار/إخفاء حقل التاريخ المناسب عند تغيير نوع الفترة */
+function onPeriodTypeChange() {
+  periodType = document.getElementById('periodType').value;
+
+  const dateInput   = document.getElementById('periodDate');
+  const monthInput  = document.getElementById('periodMonth');
+  const rangeGroup  = document.getElementById('periodRangeGroup');
+
+  dateInput.style.display  = (periodType === 'day' || periodType === 'week') ? '' : 'none';
+  monthInput.style.display = (periodType === 'month') ? '' : 'none';
+  rangeGroup.classList.toggle('show', periodType === 'range');
+
+  applyPeriodFilter();
+}
+
+/* إعادة التصفية إلى "كل الفترات" */
+function resetPeriodFilter() {
+  periodType = 'all';
+  document.getElementById('periodType').value = 'all';
+
+  const dateInput      = document.getElementById('periodDate');
+  const monthInput     = document.getElementById('periodMonth');
+  const rangeGroup     = document.getElementById('periodRangeGroup');
+  const startDateInput = document.getElementById('periodStartDate');
+  const endDateInput   = document.getElementById('periodEndDate');
+
+  dateInput.value      = '';
+  monthInput.value     = '';
+  startDateInput.value = '';
+  endDateInput.value   = '';
+
+  dateInput.style.display  = 'none';
+  monthInput.style.display = 'none';
+  rangeGroup.classList.remove('show');
+
+  switchTab(currentTab);
+}
+
+/* تطبيق فلترة الفترة الحالية (تُستدعى عند تغيير التاريخ/الشهر) */
+function applyPeriodFilter() {
+  switchTab(currentTab);
+}
+
+/*
+ * يحوّل نص التاريخ القادم من ملف الحضور، مثل: "الأربعاء 10-06-26"
+ * إلى كائن Date. يفترض أن الصيغة هي DD-MM-YY (أو DD-MM-YYYY) ميلادي.
+ */
+function parseArabicDate(dateStr) {
+  if (!dateStr) return null;
+  const match = String(dateStr).match(/(\d{1,2})-(\d{1,2})-(\d{2,4})/);
+  if (!match) return null;
+
+  let day   = parseInt(match[1], 10);
+  let month = parseInt(match[2], 10);
+  let year  = parseInt(match[3], 10);
+  if (year < 100) year += 2000;
+
+  const d = new Date(year, month - 1, day);
+  return isNaN(d.getTime()) ? null : d;
+}
+
+/* بداية الأسبوع (الأحد) الذي يقع ضمنه التاريخ المعطى */
+function getWeekStart(d) {
+  const start = new Date(d);
+  start.setDate(d.getDate() - d.getDay()); // getDay(): الأحد = 0
+  start.setHours(0, 0, 0, 0);
+  return start;
+}
+
+/* هل تاريخ السجل (dateStr) يقع ضمن الفترة المحددة حالياً؟ */
+function matchesPeriod(dateStr) {
+  if (periodType === 'all') return true;
+
+  const recordDate = parseArabicDate(dateStr);
+  if (!recordDate) return false;
+
+  if (periodType === 'day') {
+    const val = document.getElementById('periodDate').value; // "YYYY-MM-DD"
+    if (!val) return true;
+    const [y, m, d] = val.split('-').map(Number);
+    return recordDate.getFullYear() === y &&
+           (recordDate.getMonth() + 1) === m &&
+           recordDate.getDate() === d;
+  }
+
+  if (periodType === 'week') {
+    const val = document.getElementById('periodDate').value; // "YYYY-MM-DD"
+    if (!val) return true;
+    const [y, m, d] = val.split('-').map(Number);
+    const picked    = new Date(y, m - 1, d);
+    const weekStart = getWeekStart(picked);
+    const weekEnd   = new Date(weekStart);
+    weekEnd.setDate(weekStart.getDate() + 6);
+    weekEnd.setHours(23, 59, 59, 999);
+    return recordDate >= weekStart && recordDate <= weekEnd;
+  }
+
+  if (periodType === 'month') {
+    const val = document.getElementById('periodMonth').value; // "YYYY-MM"
+    if (!val) return true;
+    const [y, m] = val.split('-').map(Number);
+    return recordDate.getFullYear() === y && (recordDate.getMonth() + 1) === m;
+  }
+
+  if (periodType === 'range') {
+    const startVal = document.getElementById('periodStartDate').value; // "YYYY-MM-DD"
+    const endVal   = document.getElementById('periodEndDate').value;   // "YYYY-MM-DD"
+    if (!startVal && !endVal) return true;
+
+    if (startVal) {
+      const [sy, sm, sd] = startVal.split('-').map(Number);
+      const rangeStart = new Date(sy, sm - 1, sd);
+      rangeStart.setHours(0, 0, 0, 0);
+      if (recordDate < rangeStart) return false;
+    }
+
+    if (endVal) {
+      const [ey, em, ed] = endVal.split('-').map(Number);
+      const rangeEnd = new Date(ey, em - 1, ed);
+      rangeEnd.setHours(23, 59, 59, 999);
+      if (recordDate > rangeEnd) return false;
+    }
+
+    return true;
+  }
+
+  return true;
+}
+
+/* ---- Render table ---- */
+function renderTable(records) {
+  const tbody = document.querySelector('#absenceTable tbody');
+  tbody.innerHTML = '';
+
+  if (!records || records.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="10">
+      <div class="empty-state">
+        <div class="empty-icon">🔍</div>
+        <p>لا توجد سجلات في هذا التبويب</p>
+      </div></td></tr>`;
+    return;
+  }
+
+  records.forEach(function (row) {
+    if (!row[0] || row[0].includes('السجل') ||
+        row[1].includes('الحضور والانبساط') ||
+        row[1].includes('الموظفين')) return;
+
+    const tr = document.createElement('tr');
+    tr.classList.add(row[6] || row[7] ? 'found' : 'notfound');
+
+    const cell = (text, bold) => {
+      const td = document.createElement('td');
+      td.textContent = text;
+      if (bold) td.style.fontWeight = '600';
+      return td;
+    };
+
+    // checkbox
+    const chk = document.createElement('td');
+    chk.innerHTML = '<input type="checkbox" class="rowCheck">';
+    tr.appendChild(chk);
+
+    tr.appendChild(cell(row[0]));
+    tr.appendChild(cell(row[1]));
+    tr.appendChild(cell(row[2]));
+
+    if (currentTab === 'تأخر')         tr.appendChild(cell(row[4] || '-', true));
+    if (currentTab === 'انصراف مبكر') tr.appendChild(cell(row[5] || '-', true));
+
+    tr.appendChild(cell(row[3], true));
+    tr.appendChild(cell(row[6] || '-'));
+    tr.appendChild(cell(row[7] || '-'));
+
+    if (currentTab === 'انصراف مبكر') {
+      tr.appendChild(buildReasonSelect(row));
+    }
+
+    tbody.appendChild(tr);
+  });
+}
+
+/* ---- سبب الانصراف المبكر (قائمة منسدلة لكل سجل) ---- */
+const EARLY_LEAVE_REASONS = ['مستأذن', 'زيارة مدرسة', 'موعد مستشفى'];
+
+/* مفتاح فريد لكل سجل (السجل المدني + التاريخ) لحفظ السبب المختار له */
+function reasonKey(row) {
+  return String(row[0]) + '|' + String(row[2]);
+}
+
+function buildReasonSelect(row) {
+  const td = document.createElement('td');
+  const select = document.createElement('select');
+  select.className = 'reason-select';
+
+  const key = reasonKey(row);
+  const savedValue = earlyLeaveReasons[key] || '';
+
+  const placeholderOpt = document.createElement('option');
+  placeholderOpt.value = '';
+  placeholderOpt.textContent = '— اختر السبب —';
+  select.appendChild(placeholderOpt);
+
+  EARLY_LEAVE_REASONS.forEach(function (reason) {
+    const opt = document.createElement('option');
+    opt.value = reason;
+    opt.textContent = reason;
+    if (reason === savedValue) opt.selected = true;
+    select.appendChild(opt);
+  });
+
+  select.onchange = function () {
+    earlyLeaveReasons[key] = select.value;
+  };
+
+  td.appendChild(select);
+  return td;
+}
+
+/* ---- Search ---- */
+function filterTable() {
+  const filter = document.getElementById('searchBox').value.toUpperCase();
+  document.querySelectorAll('#absenceTable tbody tr').forEach(row => {
+    row.style.display = row.innerText.toUpperCase().includes(filter) ? '' : 'none';
+  });
+}
+
+/* ---- Select all ---- */
+function toggleAll() {
+  const checked = document.getElementById('selectAll').checked;
+  document.querySelectorAll('.rowCheck').forEach(c => c.checked = checked);
+}
+
+/* ---- Print ---- */
+function printReport() { window.print(); }
+
+/* ---- Export CSV ---- */
+function exportExcel() {
+  try {
+    // التحقق من وجود بيانات لتجنب توقف الزر صامتاً
+    if (!currentRecords || currentRecords.length === 0) {
+      alert("لا توجد بيانات متاحة في هذا التبويب لتصديرها حالياً.");
+      return;
+    }
+
+    // العناوين الرئيسية للأعمدة
+    const isEarlyLeave = (currentTab === 'انصراف مبكر');
+    const headers = ['السجل المدني', 'الاسم', 'التاريخ', 'توقيت الحضور', 'توقيت الانصراف', 'الحالة', 'الجوال', 'البريد'];
+    if (isEarlyLeave) headers.push('سبب الانصراف المبكر');
+
+    const rows = [
+      headers,
+      ...currentRecords.map(r => {
+        // التأكد من أن السطر معرف ويحتوي على بيانات
+        if (!r) return headers.map(() => '');
+
+        // إذا كانت البيانات تأتي كنص طويل مفصولة بـ ; نقوم بتفكيكها، وإلا نستخدمها كمصفوفة مباشرة
+        const columns = typeof r === 'string' ? r.split(';') : r;
+
+        // جلب البيانات من المصفوفة بحسب ترتيبها الأصلي القادم من السيرفر
+        const rowData = [
+          columns[0] !== undefined ? columns[0] : '', // السجل المدني
+          columns[1] !== undefined ? columns[1] : '', // الاسم
+          columns[2] !== undefined ? columns[2] : '', // التاريخ
+          columns[4] !== undefined ? columns[4] : '', // توقيت الحضور
+          columns[5] !== undefined ? columns[5] : '', // توقيت الانصراف
+          columns[3] !== undefined ? columns[3] : '', // الحالة
+          columns[6] !== undefined ? columns[6] : '', // الجوال
+          columns[7] !== undefined ? columns[7] : ''  // البريد
+        ];
+
+        if (isEarlyLeave) {
+          rowData.push(earlyLeaveReasons[reasonKey(columns)] || '');
+        }
+
+        return rowData;
+      })
+    ];
+
+    // بناء ورقة العمل
+    const ws = XLSX.utils.aoa_to_sheet(rows);
+    
+    // ضبط عرض الأعمدة تلقائياً ليصبح شكلها منسقاً
+    ws['!cols'] = rows[0].map(() => ({ wch: 22 }));
+    
+    // توجيه الجدول من اليمين إلى اليسار ليناسب اللغة العربية
+    ws['!dir'] = "rtl"; 
+
+    const wb = XLSX.utils.book_new();
+    
+    // التأكد من أن اسم التبويب نصي وصحيح
+    const sheetName = currentTab ? String(currentTab).trim() : "بيانات";
+    XLSX.utils.book_append_sheet(wb, ws, sheetName);
+    
+    // تصدير وتحميل الملف بصيغة Excel حقيقية (.xlsx)
+    XLSX.writeFile(wb, sheetName + '.xlsx');
+
+  } catch (error) {
+    console.error("خطأ أثناء التصدير للـ Excel:", error);
+    alert("حدث خطأ غير متوقع أثناء التصدير: " + error.message);
+  }
+}
+function sendSelectedInquiries() {
+  const rows = document.querySelectorAll('#absenceTable tbody tr');
+  const selectedRecords = [];
+
+  rows.forEach((row, index) => {
+    const checkbox = row.querySelector('.rowCheck');
+    if (checkbox && checkbox.checked && row.style.display !== 'none') {
+      const r = currentRecords[index];
+      if (r) {
+        let record = [r[0], r[1], r[2], r[3], r[6], r[7]];
+        if (r[4] && r[4] !== '-')
+          record[2] = r[2] + ' (وقت الحضور: ' + r[4] + ')';
+        else if (r[5] && r[5] !== '-')
+          record[2] = r[2] + ' (وقت الانصراف: ' + r[5] + ')';
+        selectedRecords.push(record);
+      }
+    }
+  });
+
+  if (selectedRecords.length === 0) {
+    alert('الرجاء تحديد موظف واحد على الأقل من الجدول الحالي (وضع علامة صح) قبل الضغط على زر الإرسال.');
+    return;
+  }
+
+  if (confirm('هل أنت متأكد من إرسال المساءلات للموظفين المحددين فقط وعددهم (' + selectedRecords.length + ')؟')) {
+    showResult('⏳ جاري إنشاء وإرسال المساءلات للمحدد... الرجاء الانتظار');
+
+    google.script.run
+      .withSuccessHandler(function (msg) {
+        showResult('✅ تم إرسال المساءلات للموظفين المحددين بنجاح.');
+        alert(msg);
+      })
+      .withFailureHandler(function (err) {
+        showResult('❌ حدث خطأ أثناء معالجة الإرسال.', 'error');
+        alert('خطأ من النظام: ' + err.message);
+      })
+      .createAndSendInquiries(selectedRecords);
+  }
+}
+
+/* ---- Send all (kept for backward compat) ---- */
+function sendInquiries() {
+  if (currentRecords.length === 0) {
+    alert('لا توجد سجلات في هذا التبويب لإرسالها حالياً.');
+    return;
+  }
+  if (confirm('هل أنت متأكد من إرسال المساءلات لجميع موظفي تبويب (' + currentTab + ') دفعة واحدة؟')) {
+    showResult('⏳ جاري إرسال المساءلات لجميع موظفي التبويب الحالي... الرجاء الانتظار');
+
+    const formattedRecords = currentRecords.map(r => {
+      let record = [r[0], r[1], r[2], r[3], r[6], r[7]];
+      if (r[4] && r[4] !== '-')
+        record[2] = r[2] + ' (وقت الحضور: ' + r[4] + ')';
+      else if (r[5] && r[5] !== '-')
+        record[2] = r[2] + ' (وقت الانصراف: ' + r[5] + ')';
+      return record;
+    });
+
+    google.script.run
+      .withSuccessHandler(function (msg) {
+        showResult('✅ تم إرسال المساءلات للتبويب الحالي بنجاح.');
+        alert(msg);
+      })
+      .withFailureHandler(function (err) {
+        showResult('❌ حدث خطأ أثناء الإرسال الجماعي.', 'error');
+        alert('خطأ من النظام: ' + err.message);
+      })
+      .createAndSendInquiries(formattedRecords);
+  }
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,34 @@
+# بوابة القسم الداخلية — Jazan Department Portal
+
+هذا المستودع يحتوي على **الكود المصدري فقط** (Google Apps Script) لبوابة القسم الداخلية وجميع المنصات المرتبطة بها.
+
+⚠️ **لا يحتوي هذا المستودع على أي بيانات فعلية** (لا شيتات بيانات، لا ملفات شواهد/مخرجات، لا معلومات شخصية كأرقام هوية أو جوالات أو أسماء موظفين). فقط أكواد `Code.gs` و `Index.html` الخاصة بكل منصة.
+
+## البوابة (Portal)
+
+مجلد [`portal/`](./portal) يحتوي على كود بوابة القسم — واجهة موحّدة (تبويبات جانبية + iframe) تجمع روابط جميع المنصات مصنّفة حسب الفئة.
+
+## المنصات (Platforms)
+
+| المجلد | المنصة | الفئة |
+|---|---|---|
+| [`attendance-musanid`](./platforms/attendance-musanid) | منصة مساند حضوري (نظام إدارة الغياب والمساءلات) | الحضور والمساءلات |
+| [`early-leave-justifications`](./platforms/early-leave-justifications) | منصة مبررات الانصراف ليوم 24-10-1447 | الحضور والمساءلات |
+| [`performance-schools-remaining`](./platforms/performance-schools-remaining) | منصة المدارس المتبقية للمشرفين من مرحلة دورة الأداء | الإشراف التربوي |
+| [`performance-forms-phase2`](./platforms/performance-forms-phase2) | منصة رفع استمارات المرحلة الثانية | الإشراف التربوي |
+| [`performance-evidence`](./platforms/performance-evidence) | منصة شواهد تنفيذ الأهداف للمشرفين ورؤساء الوحدات | الإشراف التربوي |
+| [`performance-cycle-1447`](./platforms/performance-cycle-1447) | منصة دورة الأداء الوظيفي 1447 | الأداء الوظيفي والتميز |
+| [`self-evaluation-tracking`](./platforms/self-evaluation-tracking) | منصة متابعة حالة التقويم الذاتي | الأداء الوظيفي والتميز |
+| [`excellence-modifications`](./platforms/excellence-modifications) | منصة استقبال التعديلات على منصة التميز | الأداء الوظيفي والتميز |
+| [`chemical-safety`](./platforms/chemical-safety) | منصة حصر المواد الكيميائية وقواعد السلامة المرورية | النماذج والسلامة |
+| [`lesson-completion-justifications`](./platforms/lesson-completion-justifications) | منصة المبررات لعدم اكتمال بعض نقاط الدروس في مدرستي | النماذج والسلامة |
+
+## ملاحظة تقنية مهمة
+
+جميع منصات `doGet()` تحتاج السطر التالي حتى تُفتح داخل iframe (كما في البوابة):
+
+```javascript
+.setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
+```
+
+وبعد أي تعديل على الكود في محرر Apps Script، لازم إنشاء **إصدار جديد (New version)** من قائمة Deploy → Manage deployments حتى ينعكس التعديل على الرابط المنشور فعلياً.

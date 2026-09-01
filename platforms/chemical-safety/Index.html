@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>نظام حصر المختبرات والسلامة</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
+    
+    :root {
+      --primary-color: #449AA7; 
+      --secondary-color: #F8CC2B; 
+      --text-gray: #707070; 
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --text-color: #1a1a1a;
+      --main-font: 'DIN Next LT Arabic', 'Tajawal', sans-serif;
+    }
+    
+    body { font-family: var(--main-font); background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 0; }
+    h1, h2, h3, h4, th, .bold-text { font-weight: bold; }
+    p, span, td, input, select, button { font-weight: normal; }
+
+    .header { background-color: var(--primary-color); color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+    .header-right { flex: 1; text-align: right; }
+    .header-right img { height: 50px; background: white; padding: 5px; border-radius: 5px; object-fit: contain;}
+    .header-center { flex: 2; text-align: center; }
+    .header-left { flex: 1; text-align: left; }
+    .main-title { margin: 0; font-size: 20px; }
+    
+    .btn { background-color: var(--primary-color); color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-size: 15px; font-family: var(--main-font); font-weight: bold; transition: all 0.3s ease; }
+    .btn:hover { background-color: #357a85; transform: translateY(-2px); }
+    .btn-secondary { background-color: var(--secondary-color); color: #333; }
+    .btn-secondary:hover { background-color: #e0b820; }
+    .btn-outline { background-color: transparent; border: 1px solid white; color: white; }
+    .btn-outline:hover { background-color: rgba(255,255,255,0.1); }
+
+    .container { max-width: 850px; margin: 30px auto; padding: 10px; border-radius: 12px; }
+    .base-card { background: var(--card-bg); padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px;}
+
+    .form-group { margin-bottom: 20px; }
+    label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 14px; color: var(--primary-color);}
+    .helper-text { font-size: 12px; color: var(--text-gray); margin-top: 5px; display: block;}
+    
+    input, select { width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; box-sizing: border-box; font-size: 14px; font-family: inherit; transition: border-color 0.3s; }
+    input:focus, select:focus { outline: none; border-color: var(--secondary-color); box-shadow: 0 0 0 2px rgba(248, 204, 43, 0.3); }
+    
+    .readonly-banner { background-color: #f0f7f8; border-right: 5px solid var(--secondary-color); padding: 15px 20px; margin-bottom: 25px; border-radius: 6px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    .readonly-banner div { font-size: 14px; color: var(--text-gray); }
+    .readonly-banner strong { color: var(--primary-color); font-size: 16px; display: block; margin-top: 4px;}
+    
+    .dynamic-item { background: #fafafa; border: 1px solid #eee; padding: 20px; margin-bottom: 15px; border-radius: 8px; border-right: 4px solid var(--secondary-color); }
+    .hidden { display: none !important; }
+    
+    .dashboard-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;}
+    @media (max-width: 600px) { 
+      .dashboard-cards { grid-template-columns: 1fr; } .readonly-banner{ grid-template-columns: 1fr; } 
+      .header {flex-direction: column; gap:10px;} .header-right, .header-center, .header-left { text-align: center !important;} 
+    }
+    
+    .card { background: var(--card-bg); border: 1px solid #eee; padding: 25px 20px; border-radius: 12px; text-align: center; border-bottom: 5px solid var(--secondary-color); box-shadow: 0 4px 6px rgba(0,0,0,0.03); }
+    .card h3 { margin: 15px 0 5px 0; font-size: 38px; color: var(--primary-color); }
+    .card p { margin: 0; color: var(--text-gray); font-size: 14px; }
+    
+    .list-header { font-size: 18px; color: var(--primary-color); margin-bottom: 10px; font-weight: bold; border-bottom: 2px solid #eee; padding-bottom: 10px;}
+    .list-container { max-height: 350px; overflow-y: auto; text-align: right; border: 1px solid #eee; border-radius: 8px; background: white;}
+    .list-item { padding: 15px; border-bottom: 1px solid #f0f0f0; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background 0.2s; }
+    .list-item:hover { background: #f0f7f8; }
+    .list-item span { color: var(--text-gray); font-size: 13px; background: #eee; padding: 3px 8px; border-radius: 12px;}
+    
+    .missing-card { margin-top: 30px; text-align: right; border-bottom: 5px solid #d32f2f; }
+    .missing-card .list-header { color: #d32f2f; border-bottom-color: #fdd; }
+    .missing-table-wrapper { max-height: 250px; overflow-y: auto; border: 1px solid #eee; border-radius: 8px; }
+    .missing-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .missing-table th { background-color: #fafafa; color: var(--text-gray); padding: 12px; border-bottom: 2px solid #eee; position: sticky; top: 0; z-index: 1;}
+    .missing-table td { padding: 12px; border-bottom: 1px solid #eee; }
+    .missing-table tr:hover td { background-color: #fff9f9; }
+
+    .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;}
+    .details-row { background: #f9f9f9; padding: 12px; border-radius: 6px; border-right: 3px solid var(--primary-color); }
+    .details-label { font-size: 12px; color: var(--text-gray); display: block; margin-bottom: 5px;}
+    .details-value { font-size: 14px; font-weight: bold; color: var(--text-color); word-break: break-word;}
+    
+    .table-container { overflow-x: auto; margin-top: 15px; border-radius: 8px; border: 1px solid #eee;}
+    table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: right;}
+    th { background-color: var(--primary-color); color: white; padding: 12px; font-weight: bold;}
+    td { padding: 10px 12px; border-bottom: 1px solid #eee; color: var(--text-color);}
+    
+    .loader { text-align: center; padding: 40px; font-weight: bold; color: var(--primary-color); font-size: 18px;}
+    .section-title { color: var(--primary-color); border-bottom: 2px solid var(--secondary-color); padding-bottom: 8px; margin-top: 0; margin-bottom: 20px; font-size: 18px; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="header-right"><img src="https://lh3.googleusercontent.com/d/1kEqzChQiNwuBqf921l1SzAmEni4sJOmx" alt="logoTBC"></div>
+    <div class="header-center"><h2 class="main-title">حصر المواد الكيميائية في المختبرات و السلامة المرورية (تعليم جازان)</h2></div>
+    <div class="header-left">
+      <button id="btn-goto-dash" class="btn btn-outline" onclick="showView('login-dash-view')">لوحة القيادة</button>
+      <button id="btn-goto-schools" class="btn btn-outline hidden" onclick="showView('login-school-view')">الرئيسية</button>
+    </div>
+  </div>
+
+  <div id="login-school-view" class="container">
+    <div class="base-card">
+      <div id="init-loader" class="loader">جاري تهيئة النظام...</div>
+      <div id="school-login-content" class="hidden">
+        <h3 style="color: var(--primary-color); text-align: center; margin-bottom: 25px;">تسجيل الدخول للمدارس</h3>
+        <div class="form-group">
+          <label>الرقم الوزاري</label>
+          <input type="text" id="school-min-num" placeholder="أدخل الرقم الوزاري للمدرسة هنا..." required>
+        </div>
+        <button class="btn btn-secondary" onclick="performSchoolLogin()" style="width:100%; font-size: 16px; padding: 14px;">دخول وبدء الحصر</button>
+        <p id="school-error" style="color:#d32f2f; text-align:center; display:none; margin-top:15px; font-weight:bold;">الرقم الوزاري غير صحيح.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="schools-view" class="container hidden">
+    <div class="readonly-banner">
+      <div>الرقم الوزاري: <strong id="ro-minnum"></strong></div>
+      <div>القطاع: <strong id="ro-sector"></strong></div>
+      <div style="grid-column: span 2;">اسم المدرسة: <strong id="ro-school"></strong></div>
+    </div>
+
+    <form id="schools-form" onsubmit="submitForm(event)">
+      
+      <!-- الكارد 1: السلامة المرورية -->
+      <div class="base-card">
+        <h4 class="section-title">السلامة المرورية</h4>
+        <p style="color: var(--text-gray); font-weight: bold; margin-bottom: 20px; line-height: 1.6;">
+          عزيزي /تي ،مدير /ة المدرسة نأمل منكم التكرم للإجابة عن أسئلة متعلقة ببيئة السلامة المرورية حول المدرسة
+        </p>
+        <div id="traffic-questions-container"></div>
+      </div>
+
+      <!-- الكارد 2: البيانات الأساسية -->
+      <div class="base-card">
+        <h4 class="section-title">البيانات الأساسية</h4>
+        <div class="form-group"><label>الجنس</label><select id="input-d" required><option value="">اختر...</option><option value="بنين">بنين</option><option value="بنات">بنات</option></select></div>
+        <div class="form-group"><label>نوع المبنى</label><select id="input-e" required><option value="">اختر...</option><option value="حكومي">حكومي</option><option value="مستأجر">مستأجر</option></select></div>
+        <div class="form-group"><label>اسم مدخل البيانات</label><input type="text" id="input-f" required></div>
+        <div class="form-group"><label>رقم الجوال</label><input type="text" id="input-g" pattern="^966[0-9]{9}$" placeholder="966XXXXXXXXX" required></div>
+      </div>
+
+      <!-- الكارد 3: البيانات الفنية والمواد -->
+      <div class="base-card">
+        <h4 class="section-title">البيانات الفنية (المواد الكيميائية)</h4>
+        
+        <div class="form-group">
+          <label>هل توجد مواد كيميائية متوفرة؟</label>
+          <select id="input-has-chemicals" required onchange="toggleChemicals()">
+            <option value="">اختر...</option>
+            <option value="نعم">نعم</option>
+            <option value="لا">لا</option>
+          </select>
+        </div>
+
+        <div id="chemicals-wrapper" class="hidden">
+          <div class="form-group">
+            <label>عدد المواد الكيميائية المتوفرة</label>
+            <input type="number" id="input-h" min="1" onchange="generateDynamicInputs()" onwheel="this.blur()">
+          </div>
+          <div id="dynamic-container"></div>
+        </div>
+      </div>
+
+      <button type="submit" id="btn-submit" class="btn" style="width:100%; font-size: 16px; padding:15px; margin-bottom: 30px;">إرسال واعتماد البيانات</button>
+    </form>
+  </div>
+
+  <div id="login-dash-view" class="container hidden">
+    <div class="base-card">
+      <h3 style="color: var(--primary-color); text-align: center;">صفحة المتابعة</h3>
+      <div class="form-group"><label>رمز الدخول</label><input type="password" id="login-code" required></div>
+      <button class="btn btn-secondary" onclick="performDashLogin()" style="width:100%">تسجيل الدخول</button>
+      <p id="login-error" style="color:#d32f2f; text-align:center; display:none; margin-top:15px; font-weight:bold;">الرمز غير صحيح!</p>
+    </div>
+  </div>
+
+  <div id="dashboard-view" class="container hidden">
+    <div id="dash-loader" class="loader">جاري جلب وتحليل البيانات...</div>
+    <div id="dash-content" class="hidden">
+      <div class="dashboard-cards">
+        <div class="card"><div style="font-weight:bold; color:var(--text-color);">معدل الاستجابة الإجمالي</div><h3 id="rate-compliance"></h3><p id="text-compliance"></p></div>
+        <div class="card"><div style="font-weight:bold; color:var(--text-color);">المدارس المستجيبة</div><h3 id="count-responded">0</h3><p>ردود فريدة بدون تكرار</p></div>
+      </div>
+      <div class="list-header">قائمة المدارس المستجيبة (أحدث الردود)</div>
+      <div id="responded-list" class="list-container"></div>
+
+      <div class="card missing-card">
+        <div class="list-header">المدارس المتأخرة (لم يتم الرد)</div>
+        <div class="missing-table-wrapper">
+          <table class="missing-table">
+            <thead><tr><th>اسم المدرسة</th><th>الرقم الوزاري</th></tr></thead>
+            <tbody id="missing-list-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="details-view" class="container hidden">
+    <div class="base-card">
+      <button class="btn btn-outline" style="color:var(--primary-color); border:1px solid var(--primary-color); margin-bottom:20px;" onclick="showView('dashboard-view')">العودة للوحة القيادة</button>
+      <h3 id="details-school-name" style="color:var(--primary-color); margin-top:0;"></h3>
+      <div style="color:var(--text-gray); margin-bottom: 20px; font-size:14px;">الرقم الوزاري: <span id="details-min-num" style="font-weight:bold; color:var(--secondary-color);"></span></div>
+      
+      <div id="details-base-info" class="details-grid"></div>
+      
+      <div id="details-traffic-container"></div>
+      
+      <h4 class="section-title" style="margin-top:25px;">المواد الكيميائية المسجلة</h4>
+      <div id="details-items-table"></div>
+    </div>
+  </div>
+
+  <script>
+    let globalHeaders =[];
+    let globalItems =[];
+    let dashboardDataCache = null;
+    let currentSchoolData = {};
+
+    window.onload = function() { google.script.run.withSuccessHandler(initApp).getInitialData(); };
+
+    function initApp(data) {
+      globalHeaders = data.headers; globalItems = data.items;
+      
+      const trafficContainer = document.getElementById('traffic-questions-container');
+      let trafficHtml = '';
+      for(let i = 12; i <= 19; i++) {
+        if(globalHeaders[i]) {
+          trafficHtml += `
+            <div class="form-group">
+              <label>${globalHeaders[i]}</label>
+              <select id="traffic-${i}" required>
+                <option value="">اختر...</option>
+                <option value="نعم">نعم</option>
+                <option value="لا">لا</option>
+              </select>
+            </div>
+          `;
+        }
+      }
+      trafficContainer.innerHTML = trafficHtml;
+
+      document.getElementById('init-loader').classList.add('hidden');
+      document.getElementById('school-login-content').classList.remove('hidden');
+    }
+
+    function resetForms() {
+      document.getElementById('schools-form').reset(); document.getElementById('dynamic-container').innerHTML = '';
+      document.getElementById('school-min-num').value = ''; document.getElementById('login-code').value = '';
+      document.getElementById('school-error').style.display = 'none'; document.getElementById('login-error').style.display = 'none';
+      
+      document.getElementById('chemicals-wrapper').classList.add('hidden');
+      document.getElementById('input-h').required = false;
+    }
+
+    function toggleChemicals() {
+      const hasChem = document.getElementById('input-has-chemicals').value;
+      const wrapper = document.getElementById('chemicals-wrapper');
+      const inputH = document.getElementById('input-h');
+
+      if (hasChem === 'نعم') {
+        wrapper.classList.remove('hidden');
+        inputH.required = true;
+      } else {
+        wrapper.classList.add('hidden');
+        inputH.required = false;
+        inputH.value = ''; 
+        document.getElementById('dynamic-container').innerHTML = ''; 
+      }
+    }
+
+    function showView(viewId) {
+      document.querySelectorAll('.container > div').forEach(el => {
+         if(!el.classList.contains('header')) el.parentElement.classList.add('hidden');
+      });
+      document.getElementById(viewId).classList.remove('hidden');
+      const btnSchools = document.getElementById('btn-goto-schools');
+      const btnDash = document.getElementById('btn-goto-dash');
+
+      if (viewId === 'login-school-view') {
+        btnSchools.classList.add('hidden'); btnDash.classList.remove('hidden'); resetForms(); 
+      } else if (viewId === 'schools-view') {
+        btnSchools.classList.add('hidden'); btnDash.classList.remove('hidden');
+      } else {
+        btnSchools.classList.remove('hidden'); btnDash.classList.add('hidden');
+        if (viewId === 'dashboard-view' && dashboardDataCache) renderDashboard(dashboardDataCache);
+      }
+    }
+
+    function performSchoolLogin() {
+      const minNum = document.getElementById('school-min-num').value;
+      if(!minNum) return;
+      const btn = event.target; btn.innerText = 'جاري التحقق...';
+      document.getElementById('school-error').style.display = 'none';
+
+      google.script.run.withSuccessHandler(function(result) {
+        btn.innerText = 'دخول وبدء الحصر';
+        if(result.success) {
+          currentSchoolData = result;
+          document.getElementById('ro-sector').innerText = result.sector;
+          document.getElementById('ro-school').innerText = result.schoolName;
+          document.getElementById('ro-minnum').innerText = result.minNum;
+          showView('schools-view');
+        } else {
+          document.getElementById('school-error').style.display = 'block';
+        }
+      }).loginSchool(minNum);
+    }
+
+    function generateDynamicInputs() {
+      const count = parseInt(document.getElementById('input-h').value) || 0;
+      const container = document.getElementById('dynamic-container'); container.innerHTML = '';
+      let datalistHTML = '<datalist id="smart-items-list">';
+      globalItems.forEach(item => datalistHTML += `<option value="${item}">`); datalistHTML += '</datalist>';
+      container.innerHTML += datalistHTML;
+
+      for (let x = 0; x < count; x++) {
+        const div = document.createElement('div'); div.className = 'dynamic-item';
+        div.innerHTML = `
+          <h4 style="margin-top:0; color:var(--primary-color);">بيانات المادة (${x+1})</h4>
+          <div class="form-group"><label>اسم المادة</label><input type="text" id="item-i-${x}" list="smart-items-list" onchange="checkOther(this, ${x})" required><input type="text" id="item-i-other-${x}" class="hidden" placeholder="اكتب اسم المادة هنا..." style="margin-top:10px;"></div>
+          <div class="details-grid" style="margin-bottom:0;">
+            <div class="form-group"><label>وحدة القياس</label><input type="text" id="item-j-${x}" required></div>
+            <div class="form-group"><label>سعة العبوة</label><input type="text" id="item-k-${x}" required></div>
+          </div>
+          <div class="form-group"><label>الكمية المتوفرة</label><input type="text" id="item-l-${x}" required></div>
+        `;
+        container.appendChild(div);
+      }
+    }
+
+    function checkOther(input, index) {
+      const otherInput = document.getElementById(`item-i-other-${index}`);
+      if (input.value === 'أخرى' || input.value === 'اخرى') {
+        otherInput.classList.remove('hidden'); otherInput.required = true;
+      } else {
+        otherInput.classList.add('hidden'); otherInput.required = false; otherInput.value = '';
+      }
+    }
+
+    function submitForm(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btn-submit'); btn.innerText = 'جاري الحفظ...'; btn.disabled = true;
+
+      const hasChemicalsVal = document.getElementById('input-has-chemicals').value;
+      const hVal = hasChemicalsVal === 'نعم' ? document.getElementById('input-h').value : 0;
+
+      const baseInfo = {
+        sector: currentSchoolData.sector, schoolName: currentSchoolData.schoolName, minNum: currentSchoolData.minNum,
+        d: document.getElementById('input-d').value, e: document.getElementById('input-e').value,
+        f: document.getElementById('input-f').value, g: document.getElementById('input-g').value, 
+        h: hVal, hasChemicals: hasChemicalsVal
+      };
+
+      const trafficInfo =[];
+      for(let i = 12; i <= 19; i++) {
+        if(globalHeaders[i]) {
+           let el = document.getElementById(`traffic-${i}`);
+           if(el) trafficInfo.push({ header: globalHeaders[i], val: el.value });
+        }
+      }
+
+      const count = parseInt(baseInfo.h) || 0; const items =[];
+      for (let x = 0; x < count; x++) {
+        const iVal = document.getElementById(`item-i-${x}`).value;
+        const finalIVal = (iVal === 'أخرى' || iVal === 'اخرى') ? document.getElementById(`item-i-other-${x}`).value : iVal;
+        items.push({ i: finalIVal, j: document.getElementById(`item-j-${x}`).value, k: document.getElementById(`item-k-${x}`).value, l: document.getElementById(`item-l-${x}`).value });
+      }
+
+      google.script.run.withSuccessHandler(function() {
+        alert('تم حفظ البيانات بنجاح!'); btn.innerText = 'إرسال واعتماد البيانات'; btn.disabled = false; showView('login-school-view'); 
+      }).submitData({ baseInfo: baseInfo, trafficInfo: trafficInfo, items: items });
+    }
+
+    function performDashLogin() {
+      const code = document.getElementById('login-code').value;
+      const btn = event.target; btn.innerText = "جاري التحقق...";
+      
+      google.script.run.withSuccessHandler(function(isValid) {
+        btn.innerText = "تسجيل الدخول";
+        if (isValid) {
+          showView('dashboard-view'); 
+          document.getElementById('dash-content').classList.add('hidden');
+          const loader = document.getElementById('dash-loader');
+          loader.classList.remove('hidden');
+          loader.innerText = "جاري جلب وتحليل البيانات...";
+          
+          // تم إضافة withFailureHandler لاصطياد الأخطاء ومنع التعليق
+          google.script.run
+            .withSuccessHandler(renderDashboard)
+            .withFailureHandler(function(error) {
+               document.getElementById('dash-loader').innerHTML = `<span style="color:red;">فشل الجلب: ${error.message}</span>`;
+            })
+            .getDashboardData();
+        } else {
+          document.getElementById('login-error').style.display = 'block';
+        }
+      }).verifyLogin(code);
+    }
+
+    function renderDashboard(data) {
+      if (!data) {
+        document.getElementById('dash-loader').innerText = "حدث خطأ غير متوقع: لم يتم إرجاع بيانات.";
+        return;
+      }
+      dashboardDataCache = data;
+      document.getElementById('dash-loader').classList.add('hidden');
+      document.getElementById('dash-content').classList.remove('hidden');
+      
+      const rateEl = document.getElementById('rate-compliance');
+      if (data.total > 0 && !isNaN(data.respondedCount)) {
+        rateEl.innerText = Math.round((data.respondedCount / data.total) * 100) + "%";
+        rateEl.style.fontSize = "38px";
+      } else {
+        rateEl.innerText = (data.total || 0) + " مدرسة"; 
+        rateEl.style.fontSize = "28px";
+      }
+      
+      document.getElementById('count-responded').innerText = data.respondedCount;
+      document.getElementById('text-compliance').innerText = `${data.respondedCount} استجابة من أصل ${data.total} مدرسة`;
+
+      const listDiv = document.getElementById('responded-list');
+      if (data.list.length === 0) {
+        listDiv.innerHTML = '<div style="padding:15px; text-align:center; color:gray;">لا توجد ردود حتى الآن.</div>';
+      } else {
+        listDiv.innerHTML = data.list.map(s => `<div class="list-item" onclick="showDetails('${s.minNum}')"><div>${s.name}</div><span>${s.minNum}</span></div>`).join('');
+      }
+
+      const missingBody = document.getElementById('missing-list-body');
+      if (data.missingList && data.missingList.length > 0) {
+        missingBody.innerHTML = data.missingList.map(s => `<tr><td>${s.name}</td><td>${s.minNum}</td></tr>`).join('');
+      } else {
+        missingBody.innerHTML = `<tr><td colspan="2" style="text-align:center; color:gray;">اكتمل حصر جميع المدارس!</td></tr>`;
+      }
+    }
+
+    function showDetails(minNum) {
+      const data = dashboardDataCache.details[minNum];
+      if (!data) return;
+
+      document.getElementById('details-school-name').innerText = data.base.schoolName;
+      document.getElementById('details-min-num').innerText = minNum;
+      
+      const baseHtml = `
+        <div class="details-row"><span class="details-label">القطاع</span><span class="details-value">${data.base.sector}</span></div>
+        <div class="details-row"><span class="details-label">الجنس / نوع المبنى</span><span class="details-value">${data.base.gender} - ${data.base.building}</span></div>
+        <div class="details-row"><span class="details-label">اسم المدخل</span><span class="details-value">${data.base.entryName}</span></div>
+        <div class="details-row"><span class="details-label">رقم الجوال</span><span class="details-value">${data.base.phone}</span></div>
+        <div class="details-row"><span class="details-label">البريد الإلكتروني</span><span class="details-value">${data.base.email}</span></div>
+        <div class="details-row"><span class="details-label">وقت الإرسال (دقيق)</span><span class="details-value" style="font-family: Arial, sans-serif;">${data.base.time}</span></div>
+        <div class="details-row" style="grid-column: span 2; background:#fff3cd; border-right-color:#ffc107;"><span class="details-label">هل توجد مواد كيميائية متوفرة؟</span><span class="details-value">${data.base.hasChemicals || 'غير مدخل'}</span></div>
+      `;
+      document.getElementById('details-base-info').innerHTML = baseHtml;
+
+      let trafficHtml = '<h4 class="section-title" style="margin-top:25px;">السلامة المرورية</h4><div class="details-grid">';
+      if(data.traffic && data.traffic.length > 0) {
+        data.traffic.forEach(t => {
+          trafficHtml += `<div class="details-row" style="grid-column: span 2;"><span class="details-label">${t.question}</span><span class="details-value" style="color:${t.answer === 'لا' ? '#d32f2f' : 'var(--primary-color)'};">${t.answer}</span></div>`;
+        });
+      } else {
+        trafficHtml += `<div style="grid-column: span 2; text-align:center; color:var(--text-gray);">لا توجد بيانات مسجلة</div>`;
+      }
+      trafficHtml += '</div>';
+      document.getElementById('details-traffic-container').innerHTML = trafficHtml;
+
+      let tableHtml = '';
+      if(data.items && data.items.length > 0) {
+        tableHtml = `<div class="table-container"><table><thead><tr><th>اسم المادة</th><th>الوحدة</th><th>السعة</th><th>الكمية</th></tr></thead><tbody>`;
+        data.items.forEach(item => {
+          tableHtml += `<tr><td style="font-weight:bold;">${item.name}</td><td>${item.unit}</td><td>${item.cap}</td><td><span style="background:var(--secondary-color); padding:3px 8px; border-radius:10px; font-weight:bold;">${item.qty}</span></td></tr>`;
+        });
+        tableHtml += `</tbody></table></div>`;
+      } else {
+        tableHtml = `<div style="padding:20px; text-align:center; color:var(--text-gray); border: 1px dashed #ccc; border-radius: 8px;">لم يتم تسجيل مواد كيميائية (تم اختيار "لا").</div>`;
+      }
+      document.getElementById('details-items-table').innerHTML = tableHtml;
+      
+      showView('details-view');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>منصة متابعة التقويم الذاتي</title>
+  <style>
+    :root {
+      --primary-purple: #7358a5;
+      --primary-blue: #2baddf;
+      --bg-color: #f4f7f6;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-color);
+      margin: 0; padding: 20px;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .container {
+      max-width: 800px; margin: auto; background: white;
+      padding: 30px; border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      border-top: 5px solid var(--primary-purple);
+      position: relative;
+    }
+    .leader-link {
+      position: absolute; top: 15px; left: 15px; font-size: 12px; color: var(--primary-purple);
+      text-decoration: none; border: 1px solid var(--primary-purple); padding: 4px 8px;
+      border-radius: 4px; font-weight: bold;
+    }
+    .leader-link:hover { background: var(--primary-purple); color: white; }
+    h2, h3 { color: var(--primary-purple); text-align: center; }
+    .form-group { margin-bottom: 20px; }
+    label { display: block; margin-bottom: 8px; font-weight: bold; color: #333; }
+    .req-star { color: red; margin-right: 4px; }
+    input[type="text"], input[type="number"], input[type="date"], select {
+      width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 16px;
+    }
+    button {
+      background-color: var(--primary-blue); color: white; border: none; padding: 14px 20px;
+      font-size: 16px; border-radius: 6px; cursor: pointer; width: 100%; font-weight: bold; transition: 0.3s;
+    }
+    button:hover { background-color: #2190bc; }
+    button:disabled { background-color: #95a5a6; cursor: not-allowed; }
+    .hidden { display: none !important; }
+    .slicer-container { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+    .slicer-btn { flex: 1; min-width: 80px; padding: 8px; font-size: 13px; background: #eee; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; }
+    .slicer-btn.active { background: var(--primary-blue); color: white; border-color: var(--primary-blue); }
+    .stats-grid { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 20px; }
+    .stat-box { flex: 1; padding: 15px; text-align: center; border-radius: 8px; color: white; font-weight: bold; font-size: 14px; }
+    .bg-purple { background-color: var(--primary-purple); }
+    .bg-blue { background-color: var(--primary-blue); }
+    .bg-red { background-color: #e74c3c; }
+    
+    /* تنسيقات قوائم المتابعة الذكية */
+    .lists-container { display: flex; gap: 15px; margin-top: 15px; }
+    /* تنسيقات الجداول الجديدة لتشبه القوائم القديمة وتدعم النسخ للإكسل */
+    .table-wrapper { max-height: 250px; overflow-y: auto; border-radius: 4px; border: 1px solid #ddd; background: #fff; }
+    table.school-table { width: 100%; border-collapse: collapse; text-align: right; }
+    table.school-table th { background: #eee; padding: 10px; font-size: 13px; position: sticky; top: 0; border-bottom: 2px solid #ddd; z-index: 1; }
+    table.school-table td { padding: 8px 10px; border-bottom: 1px solid #eee; font-size: 14px; }
+    table.school-table tr:hover { background-color: #f9f9f9; }
+    .list-box { flex: 1; background: #fdfdfd; padding: 15px; border-radius: 8px; border: 1px solid #eee; }
+    .list-box h4 { margin-top: 0; margin-bottom: 15px; text-align: center; font-size: 15px; }
+    ul.school-list { list-style-type: none; padding: 0; max-height: 250px; overflow-y: auto; text-align: right; margin: 0; }
+    ul.school-list li { background: #fff; margin-bottom: 5px; padding: 10px; border-radius: 4px; border: 1px solid #ddd; font-size: 14px; }
+    
+    @media (max-width: 600px) {
+      .stats-grid, .lists-container { flex-direction: column; } 
+      .container { padding: 15px; }
+      .leader-link { top: 10px; left: 10px; font-size: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  
+  <div id="schoolLogin">
+    <a href="#" class="leader-link" onclick="showScreen('leaderLogin')">بوابة القيادات</a>
+    <h2>تسجيل دخول المدارس</h2>
+    <div class="form-group">
+      <label>الرقم الوزاري:</label>
+      <input type="text" id="ministerialNumInput" placeholder="أدخل الرقم الوزاري">
+    </div>
+    <button onclick="verifySchool()">دخول</button>
+  </div>
+
+  <div id="schoolForm" class="hidden">
+    <h2>متابعة حالة التقويم الذاتي</h2>
+    <div id="schoolInfoCard" style="background:#f9f9f9; padding:15px; border-radius:6px; margin-bottom:15px; border-right:4px solid var(--primary-blue); font-size: 15px; line-height: 1.8;"></div>
+    
+    <div class="form-group">
+      <label>تاريخ التكليف بالعمل الإداري:<span class="req-star">*</span></label>
+      <input type="date" id="q1_date">
+    </div>
+
+    <div class="form-group">
+      <label>حالة التسجيل في منصة تميز:<span class="req-star">*</span></label>
+      <select id="q2_status" onchange="handleStatusChange()">
+        <option value="">-- اختر الحالة --</option>
+        <option value="لم يتم التسجيل">لم يتم التسجيل</option>
+        <option value="بدء نموذج الجاهزية">بدء نموذج الجاهزية</option>
+        <option value="تم الانتهاء من نموذج الجاهزية">تم الانتهاء من نموذج الجاهزية</option>
+        <option value="تم الانتهاء من التقويم الذاتي">تم الانتهاء من التقويم الذاتي</option>
+      </select>
+    </div>
+
+    <div id="datesSection" class="hidden">
+      <div class="form-group hidden" id="startDateGroup">
+        <label>تاريخ بدء التسجيل:<span class="req-star">*</span></label>
+        <input type="date" id="startDate">
+      </div>
+      <div class="form-group hidden" id="singleDateGroup">
+        <label>التاريخ:<span class="req-star">*</span></label>
+        <input type="date" id="singleDate">
+      </div>
+    </div>
+
+    <div id="problemsSection" class="hidden">
+      <label>المشاكل التي واجهتها:<span class="req-star">*</span></label>
+      <select id="problemType" onchange="handleProblemChange()">
+      </select>
+      
+      <div id="ticketSection" class="hidden" style="margin-top:10px;">
+        <label>هل تم رفع بلاغ دعم في المنصة؟<span class="req-star">*</span></label>
+        <select id="ticketRaised" onchange="handleTicketChange()">
+          <option value="">-- اختر --</option>
+          <option value="نعم">نعم</option>
+          <option value="لا">لا</option>
+        </select>
+      </div>
+      
+      <div id="ticketNumSection" class="hidden" style="margin-top:10px;">
+        <label>رقم البلاغ (أرقام فقط):<span class="req-star">*</span></label>
+        <input type="text" id="ticketNum" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+      </div>
+      
+      <div id="noProblemReasonSection" class="hidden" style="margin-top:10px;">
+        <label>سبب عدم اكتمال نموذج الجاهزية:<span class="req-star">*</span></label>
+        <input type="text" id="noProblemReason" placeholder="اكتب السبب هنا...">
+      </div>
+
+      <div id="otherReasonSection" class="hidden" style="margin-top:10px;">
+        <label>السبب (أخرى):<span class="req-star">*</span></label>
+        <input type="text" id="otherReason" placeholder="اكتب السبب هنا...">
+      </div>
+    </div>
+
+    <button onclick="submitFormData()" id="btnSubmit">إرسال الرد</button>
+  </div>
+
+  <div id="leaderLogin" class="hidden">
+    <h2>تسجيل دخول القيادات</h2>
+    <div class="form-group">
+      <label>كود الدخول:</label>
+      <input type="text" id="leaderCodeInput">
+    </div>
+    <button onclick="verifyLeader()" style="background-color: var(--primary-purple)">دخول</button>
+    <button onclick="showScreen('schoolLogin')" style="background-color:#7f8c8d; margin-top:10px;">رجوع</button>
+  </div>
+
+  <div id="leaderDashboard" class="hidden">
+    <h3 id="dashboardTitle">لوحة المتابعة</h3>
+    
+    <div id="headSlicer" class="slicer-container hidden">
+       <button class="slicer-btn active" onclick="filterByStage('الكل', this)">الكل</button>
+       <button class="slicer-btn" onclick="filterByStage('ابتدائي', this)">ابتدائي</button>
+       <button class="slicer-btn" onclick="filterByStage('متوسط', this)">متوسط</button>
+       <button class="slicer-btn" onclick="filterByStage('ثانوي', this)">ثانوي</button>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-box bg-blue">المدارس<br><span id="statTotal">0</span></div>
+      <div class="stat-box bg-purple">تم الرد<br><span id="statResponded">0</span></div>
+      <div class="stat-box bg-red">لم يرد<br><span id="statMissing">0</span></div>
+    </div>
+    
+    <!-- قوائم المتابعة الذكية الجديدة بصيغة جداول -->
+    <div class="lists-container">
+      <div class="list-box" style="border-top: 4px solid var(--primary-purple);">
+        <h4 style="color: var(--primary-purple);">المدارس التي قامت بالرد</h4>
+        <div class="table-wrapper">
+          <table class="school-table">
+            <thead>
+              <tr><th>الرقم الوزاري</th><th>اسم المدرسة</th><th>السلطة</th></tr>
+            </thead>
+            <tbody id="respondedSchoolsList"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="list-box" style="border-top: 4px solid #e74c3c;">
+        <h4 style="color: #e74c3c;">المدارس التي لم تقم بالرد</h4>
+        <div class="table-wrapper">
+          <table class="school-table">
+            <thead>
+              <tr><th>الرقم الوزاري</th><th>اسم المدرسة</th><th>السلطة</th></tr>
+            </thead>
+            <tbody id="missingSchoolsList"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <button onclick="showScreen('schoolLogin')" style="background-color:#7f8c8d; margin-top:20px;">خروج</button>
+  </div>
+
+</div>
+
+<script>
+  let currentSchool = {};
+
+  function showScreen(id) {
+    document.querySelectorAll('.container > div').forEach(d => d.classList.add('hidden'));
+    document.getElementById(id).classList.remove('hidden');
+  }
+
+  function verifySchool() {
+    const val = document.getElementById('ministerialNumInput').value.trim();
+    if(!val) return alert('أدخل الرقم الوزاري');
+    
+    google.script.run.withSuccessHandler(res => {
+      if(res.success) {
+        currentSchool = { ministerialNum: val };
+        document.getElementById('schoolInfoCard').innerHTML = `
+          <b>المدرسة:</b> ${res.schoolName} <br>
+          <b>المدير/ة:</b> ${res.principalName} <br>
+          <b>المرحلة:</b> ${res.stage}
+        `;
+        showScreen('schoolForm');
+      } else alert(res.message);
+    }).verifySchool(val);
+  }
+
+  function resetPage() {
+    document.querySelectorAll('input').forEach(i => i.value = "");
+    document.querySelectorAll('select').forEach(s => s.value = "");
+    document.getElementById('datesSection').classList.add('hidden');
+    document.getElementById('problemsSection').classList.add('hidden');
+    document.getElementById('ticketSection').classList.add('hidden');
+    document.getElementById('ticketNumSection').classList.add('hidden');
+    document.getElementById('noProblemReasonSection').classList.add('hidden');
+    document.getElementById('otherReasonSection').classList.add('hidden');
+  }
+
+  function updateProblemOptions(status) {
+    const select = document.getElementById('problemType');
+    select.innerHTML = '<option value="">-- اختر المشكلة --</option>';
+    if (status === 'لم يتم التسجيل') {
+      select.innerHTML += '<option value="لم يتم إسناد منصة تميز الرقمية">لم يتم إسناد منصة تميز الرقمية</option>';
+    }
+    select.innerHTML += '<option value="مشكلة تقنية">مشكلة تقنية في المنصة</option>';
+    
+    // التعديل الأول: ظهور خيار (لا توجد مشاكل) حصرياً مع (بدء نموذج الجاهزية)
+    if (status === 'بدء نموذج الجاهزية') {
+      select.innerHTML += '<option value="لا يوجد مشاكل">لا يوجد مشاكل</option>';
+    }
+    
+    select.innerHTML += '<option value="أخرى">أخرى</option>';
+  }
+
+  function handleStatusChange() {
+    const status = document.getElementById('q2_status').value;
+    const datesSec = document.getElementById('datesSection');
+    const probSec = document.getElementById('problemsSection');
+    const startGrp = document.getElementById('startDateGroup');
+    const singleDateGrp = document.getElementById('singleDateGroup');
+
+    // إخفاء الأقسام بالكامل
+    datesSec.classList.add('hidden');
+    probSec.classList.add('hidden');
+    startGrp.classList.add('hidden');
+    singleDateGrp.classList.add('hidden');
+    
+    // تصفير القيم المعتمدة لضمان نظافة البيانات
+    document.getElementById('problemType').value = '';
+    document.getElementById('startDate').value = '';
+    document.getElementById('singleDate').value = '';
+    
+    // استدعاء دالة المشكلات لتطبيق الإخفاء والتصفير على الحقول الفرعية
+    handleProblemChange();
+
+    if (status === 'لم يتم التسجيل') {
+      updateProblemOptions(status);
+      probSec.classList.remove('hidden');
+    } else if (status === 'بدء نموذج الجاهزية') {
+      updateProblemOptions(status);
+      datesSec.classList.remove('hidden');
+      startGrp.classList.remove('hidden');
+      probSec.classList.remove('hidden');
+    } else if (status === 'تم الانتهاء من نموذج الجاهزية' || status === 'تم الانتهاء من التقويم الذاتي') {
+      datesSec.classList.remove('hidden');
+      singleDateGrp.classList.remove('hidden');
+    }
+  }
+
+  function handleProblemChange() {
+    const v = document.getElementById('problemType').value;
+    const tSection = document.getElementById('ticketSection');
+    const npSection = document.getElementById('noProblemReasonSection');
+    const oSection = document.getElementById('otherReasonSection');
+    
+    // تطبيق الإخفاء فوراً
+    tSection.classList.add('hidden');
+    npSection.classList.add('hidden');
+    oSection.classList.add('hidden');
+    
+    // تصفير البيانات لضمان نظافة البيانات عند تغيير الاختيارات
+    document.getElementById('ticketRaised').value = '';
+    document.getElementById('ticketNum').value = '';
+    document.getElementById('noProblemReason').value = '';
+    document.getElementById('otherReason').value = '';
+    handleTicketChange();
+
+    // الإظهار بناءً على الخيار الجديد
+    if (v === 'مشكلة تقنية') tSection.classList.remove('hidden');
+    if (v === 'لا يوجد مشاكل') npSection.classList.remove('hidden');
+    if (v === 'أخرى') oSection.classList.remove('hidden');
+  }
+
+  function handleTicketChange() {
+    const ticketNumSec = document.getElementById('ticketNumSection');
+    const ticketNumInput = document.getElementById('ticketNum');
+
+    if(document.getElementById('ticketRaised').value === 'نعم') {
+      ticketNumSec.classList.remove('hidden');
+    } else {
+      ticketNumSec.classList.add('hidden');
+      ticketNumInput.value = '';
+    }
+  }
+
+  function submitFormData() {
+    const btn = document.getElementById('btnSubmit');
+    const q1 = document.getElementById('q1_date').value;
+    const status = document.getElementById('q2_status').value;
+    
+    if(!q1 || !status) return alert('الرجاء إكمال كافة الحقول الإلزامية الأساسية');
+
+    let problem = '', ticketRaised = '', ticketNum = '', other = '', noProblemReason = '', startDate = '', singleDate = '';
+
+    if (status === 'لم يتم التسجيل' || status === 'بدء نموذج الجاهزية') {
+      problem = document.getElementById('problemType').value;
+      if(!problem) return alert('الرجاء اختيار المشكلة التي واجهتك');
+      
+      if(problem === 'مشكلة تقنية') {
+        ticketRaised = document.getElementById('ticketRaised').value;
+        if(!ticketRaised) return alert('الرجاء تحديد ما إذا تم رفع بلاغ دعم');
+        if(ticketRaised === 'نعم') {
+          ticketNum = document.getElementById('ticketNum').value;
+          if(!ticketNum) return alert('الرجاء إدخال رقم البلاغ');
+        }
+      } else if(problem === 'لا يوجد مشاكل') {
+        noProblemReason = document.getElementById('noProblemReason').value;
+        if(!noProblemReason) return alert('الرجاء كتابة سبب عدم اكتمال نموذج الجاهزية');
+      } else if(problem === 'أخرى') {
+        other = document.getElementById('otherReason').value;
+        if(!other) return alert('الرجاء كتابة تفاصيل السبب (أخرى)');
+      }
+    }
+
+    if (status === 'بدء نموذج الجاهزية') {
+      startDate = document.getElementById('startDate').value;
+      if(!startDate) return alert('الرجاء إدخال تاريخ بدء التسجيل');
+    }
+
+    if (status === 'تم الانتهاء من نموذج الجاهزية' || status === 'تم الانتهاء من التقويم الذاتي') {
+      singleDate = document.getElementById('singleDate').value;
+      if(!singleDate) return alert('الرجاء إدخال التاريخ');
+    }
+
+    btn.disabled = true; 
+    btn.innerText = "جاري الإرسال...";
+    
+    const data = {
+      ministerialNum: currentSchool.ministerialNum,
+      q1_date: q1,
+      q2_status: status,
+      problemType: problem,
+      ticketRaised: ticketRaised,
+      ticketNum: ticketNum,
+      noProblemReason: noProblemReason,
+      otherReason: other,
+      startDate: startDate,
+      endDate: singleDate 
+    };
+
+    google.script.run.withSuccessHandler(res => {
+      if(res.success) {
+        alert('تم إرسال الرد بنجاح!');
+        resetPage();
+        showScreen('schoolLogin');
+      } else {
+        alert(res.message);
+      }
+      btn.disabled = false; btn.innerText = "إرسال الرد";
+    }).submitForm(data);
+  }
+
+  // دوال القيادات
+  function verifyLeader() {
+    const code = document.getElementById('leaderCodeInput').value;
+    google.script.run.withSuccessHandler(res => {
+      if(res.success) {
+        document.getElementById('dashboardTitle').innerText = "لوحة المتابعة - " + res.name;
+        if(res.role === 'head') document.getElementById('headSlicer').classList.remove('hidden');
+        else document.getElementById('headSlicer').classList.add('hidden');
+        filterByStage(res.stage);
+      } else alert(res.message);
+    }).loginLeader(code);
+  }
+
+  function filterByStage(stage, btn) {
+    if(btn) {
+      document.querySelectorAll('.slicer-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+    
+    const missingUl = document.getElementById('missingSchoolsList');
+    const respondedUl = document.getElementById('respondedSchoolsList');
+    
+    missingUl.innerHTML = '<li>جاري تحميل البيانات...</li>';
+    respondedUl.innerHTML = '<li>جاري تحميل البيانات...</li>';
+    
+    google.script.run.withSuccessHandler(stats => {
+      document.getElementById('statTotal').innerText = stats.total;
+      document.getElementById('statResponded').innerText = stats.responded;
+      document.getElementById('statMissing').innerText = stats.missing;
+      // تعبئة جدول المدارس التي لم تقم بالرد
+      missingUl.innerHTML = '';
+      if(stats.missingList.length === 0) {
+        missingUl.innerHTML = '<tr><td colspan="3" style="text-align:center;">جميع المدارس أتمت الرد.</td></tr>';
+      } else {
+        stats.missingList.forEach(school => {
+          let tr = document.createElement('tr');
+          // school[0]: الرقم، school[1]: الاسم، school[2]: السلطة
+          tr.innerHTML = `<td>${school[0]}</td><td>${school[1]}</td><td>${school[2]}</td>`;
+          missingUl.appendChild(tr);
+        });
+      }
+
+      // تعبئة جدول المدارس التي قامت بالرد
+      respondedUl.innerHTML = '';
+      if(stats.respondedList.length === 0) {
+        respondedUl.innerHTML = '<tr><td colspan="3" style="text-align:center;">لم تقم أي مدرسة بالرد بعد.</td></tr>';
+      } else {
+        stats.respondedList.forEach(school => {
+          let tr = document.createElement('tr');
+          tr.innerHTML = `<td>${school[0]}</td><td>${school[1]}</td><td>${school[2]}</td>`;
+          respondedUl.appendChild(tr);
+        });
+      }
+      showScreen('leaderDashboard');
+    }).getDashboardData(stage);
+  }
+</script>
+</body>
+</html>

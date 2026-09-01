@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <base target="_top">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <style>
+    :root {
+      --primary: #BDB76B; 
+      --secondary: #A9A9A9; 
+      --bg: #FFFFFF; 
+      --text: #000000; 
+      --success: #2e7d32;
+      --success-bg: #e8f5e9;
+      --light-bg: #f9f9f9;
+    }
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+      background-color: var(--bg); 
+      color: var(--text);
+      margin: 0; 
+      padding: 20px; 
+      box-sizing: border-box;
+      position: relative;
+    }
+    
+    .leader-btn-top {
+      position: absolute; top: 15px; left: 15px; background: transparent; color: var(--text);
+      border: 2px solid var(--primary); padding: 6px 12px; font-size: 13px; border-radius: 6px;
+      cursor: pointer; font-weight: bold; transition: 0.3s; z-index: 100;
+    }
+    .leader-btn-top:hover { background: var(--primary); color: var(--bg); }
+
+    .container { 
+      max-width: 600px; margin: 40px auto 20px; background: #FAFAFA; padding: 30px 20px; 
+      border-radius: 15px; box-shadow: 0 8px 20px rgba(189, 183, 107, 0.2); 
+      border: 1px solid rgba(189, 183, 107, 0.4); box-sizing: border-box;
+    }
+    h2 { color: var(--text); text-align: center; margin-bottom: 30px; font-weight: 800; border-bottom: 3px solid var(--primary); padding-bottom: 10px; display: inline-block; width: 100%; box-sizing: border-box;}
+    
+    input, button { -webkit-appearance: none; appearance: none; font-family: inherit; }
+
+    .btn-group { display: flex; flex-direction: column; gap: 15px; }
+    button.main-btn { 
+      background: var(--primary); color: var(--text); border: none; padding: 15px 25px; 
+      font-size: 17px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; 
+      font-weight: bold; width: 100%; box-sizing: border-box;
+    }
+    button.main-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(189, 183, 107, 0.4); }
+    button.main-btn:active { transform: translateY(0); }
+
+    .form-group { margin-bottom: 25px; padding: 20px; border-radius: 10px; background: #fff; border: 1px solid var(--secondary); box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+    label { display: block; margin-bottom: 12px; font-weight: bold; border-right: 4px solid var(--primary); padding-right: 10px; color: var(--text); line-height: 1.5; }
+    
+    input[type="text"], input[type="password"], input[type="url"] { 
+      width: 100%; padding: 14px 12px; border: 1px solid var(--secondary); border-radius: 6px; box-sizing: border-box; outline: none; font-size: 15px; transition: 0.3s;
+    }
+    input:focus { border-color: var(--primary); box-shadow: 0 0 5px rgba(189, 183, 107, 0.5); }
+    
+    .error-msg { color: #d32f2f; font-size: 13px; font-weight: bold; margin-top: 8px; display: none; }
+
+    .file-source-options { display: flex; gap: 10px; margin-top: 10px; }
+    .btn-file-source { font-size: 13px; padding: 10px; background: #fff; color: var(--text); flex: 1; border: 1px solid var(--primary); border-radius: 5px; font-weight: bold; cursor: pointer;}
+    .btn-file-source.active { background: var(--primary); color: var(--text); }
+    .file-input { margin-top: 8px; width: 100%; font-size: 14px; }
+    
+    .sticky-header {
+      position: -webkit-sticky; position: sticky; top: 0; background: #FAFAFA; z-index: 1000;
+      padding: 15px 20px; margin: -30px -20px 20px -20px; border-radius: 15px 15px 0 0;
+      border-bottom: 1px solid rgba(189, 183, 107, 0.3); box-shadow: 0 6px 12px -4px rgba(0,0,0,0.15);
+    }
+    .sticky-header h2 { margin-bottom: 10px; border-bottom: none; padding-bottom: 0; font-size: 18px; }
+
+    #progressContainer { width: 100%; background: #e0e0e0; border-radius: 8px; overflow: hidden; height: 12px; }
+    #progressBar { width: 0%; height: 100%; background: var(--primary); transition: width 0.4s ease; }
+    #progressText { text-align: left; font-size: 12px; font-weight: bold; color: var(--text); margin-top: 5px; }
+
+    #loader { display: none; text-align: center; margin-top: 20px; font-weight: bold; color: var(--text); animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+
+    #successMsg {
+      display: none; background: var(--success-bg); color: var(--success); padding: 15px; 
+      border-radius: 8px; text-align: center; font-weight: bold; margin-bottom: 20px; border: 1px solid #c8e6c9;
+    }
+
+    /* === تنسيقات لوحة القيادات التفاعلية (Tabs & Accordion) === */
+    .dashboard-container { max-width: 900px; margin: 40px auto 20px; }
+    
+    .tabs-nav { display: flex; border-bottom: 2px solid var(--secondary); margin-bottom: 20px; }
+    .tab-btn { flex: 1; background: transparent; border: none; padding: 12px; font-size: 16px; font-weight: bold; cursor: pointer; color: var(--secondary); transition: 0.3s; }
+    .tab-btn.active { color: var(--text); border-bottom: 3px solid var(--primary); margin-bottom: -2px; }
+    
+    .tab-content { display: none; animation: fadeIn 0.4s ease; }
+    .tab-content.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+    .accordion-item { background: #fff; border: 1px solid var(--secondary); border-radius: 8px; margin-bottom: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); overflow: hidden; }
+    .accordion-header { display: flex; justify-content: space-between; align-items: center; padding: 15px; cursor: pointer; background: var(--light-bg); transition: 0.3s; }
+    .accordion-header:hover { background: #f0f0f0; }
+    .acc-title { font-weight: bold; color: var(--text); font-size: 15px; display: flex; align-items: center; gap: 8px; }
+    .acc-meta { font-size: 12px; color: #666; display: flex; align-items: center; gap: 10px; }
+    .acc-icon { font-size: 12px; transition: transform 0.3s; }
+    .accordion-item.open .acc-icon { transform: rotate(180deg); }
+    .accordion-body { display: none; padding: 15px; border-top: 1px solid #eee; }
+    
+    .q-block { background: var(--light-bg); border-radius: 6px; padding: 12px; margin-bottom: 10px; border-right: 3px solid var(--primary); }
+    .q-title { font-weight: bold; font-size: 14px; margin-bottom: 5px; color: var(--text); }
+    .q-ans { font-size: 13px; color: #444; margin-bottom: 8px; }
+    
+    .files-container { display: flex; flex-wrap: wrap; gap: 6px; }
+    .file-chip { display: inline-flex; align-items: center; gap: 4px; background: var(--secondary); color: #fff; padding: 4px 10px; border-radius: 20px; font-size: 11px; text-decoration: none; font-weight: bold; transition: 0.3s; }
+    .file-chip:hover { background: var(--primary); color: #000; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+
+    @media (max-width: 480px) {
+      .container { padding: 20px 15px; margin: 50px auto 10px; }
+      button.main-btn { font-size: 15px; padding: 12px 20px; }
+      .form-group { padding: 15px; }
+      .sticky-header { padding: 15px; margin: -20px -15px 20px -15px; }
+      .accordion-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .acc-meta { width: 100%; justify-content: space-between; }
+    }
+  </style>
+</head>
+<body>
+
+  <button class="leader-btn-top" onclick="showLogin('leader')" id="topLeaderBtn">بوابة القيادات</button>
+
+  <div class="container" id="mainApp">
+    
+    <div id="homeView">
+      <h2>منصة رفع شواهد الأداء</h2>
+      <div class="btn-group">
+        <button class="main-btn" onclick="showLogin('supervisor')">بوابة المشرفين والمشرفات</button>
+        <button class="main-btn" onclick="showLogin('unit_head')">بوابة رؤساء الوحدات</button>
+      </div>
+    </div>
+
+    <div id="loginView" style="display: none;">
+      <h2 id="loginTitle">تسجيل الدخول</h2>
+      <div class="form-group">
+        <input type="password" id="userCode" placeholder="أدخل آخر 4 أرقام من السجل الخاص بك" required>
+      </div>
+      <div class="btn-group">
+        <button class="main-btn" onclick="login()">دخول</button>
+        <button class="main-btn" type="button" style="background:var(--secondary);" onclick="goHome()">رجوع</button>
+      </div>
+    </div>
+
+    <div id="formView" style="display: none;">
+      <div class="sticky-header" id="stickyHeader">
+        <h2 id="welcomeText"></h2>
+        <div id="progressContainer"><div id="progressBar"></div></div>
+        <div id="progressText">0% مكتمل</div>
+      </div>
+
+      <div style="padding-top: 10px;">
+        <div id="successMsg">تم إرسال التقارير والمرفقات بنجاح.</div>
+        <form id="submissionForm" onsubmit="handleFinalSubmit(event)">
+          <div id="dynamicQuestions"></div>
+          <button class="main-btn" type="submit" style="margin-top:15px;">إرسال التقارير والمرفقات</button>
+          <button class="main-btn" type="button" style="margin-top:10px; background:var(--secondary);" onclick="goHome()">تسجيل خروج / عودة للرئيسية</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="loader">جاري معالجة طلبك، يرجى الانتظار...</div>
+  </div>
+
+  <!-- لوحة القيادات المعاد تصميمها -->
+  <div class="dashboard-container" id="leaderDashboardView" style="display: none;">
+    <h2>لوحة متابعة القيادات</h2>
+    
+    <div class="tabs-nav">
+      <button class="tab-btn active" onclick="switchTab('sup_tab', this)">المشرفون والمشرفات</button>
+      <button class="tab-btn" onclick="switchTab('unit_tab', this)">رؤساء الوحدات</button>
+    </div>
+
+    <div id="sup_tab" class="tab-content active"></div>
+    <div id="unit_tab" class="tab-content"></div>
+
+    <button class="main-btn" style="max-width: 200px; display: block; margin: 30px auto; background: var(--secondary);" onclick="goHome()">تسجيل الخروج</button>
+  </div>
+
+  <script>
+    let currentType = '';
+    let currentUser = null;
+    let questionsData =[];
+
+    function goHome() {
+      document.getElementById('loginView').style.display = 'none';
+      document.getElementById('formView').style.display = 'none';
+      document.getElementById('leaderDashboardView').style.display = 'none';
+      document.getElementById('mainApp').style.display = 'block';
+      document.getElementById('homeView').style.display = 'block';
+      document.getElementById('topLeaderBtn').style.display = 'block';
+      
+      document.getElementById('userCode').value = '';
+      document.getElementById('successMsg').style.display = 'none';
+      resetForm();
+      currentUser = null;
+      currentType = '';
+    }
+
+    function showLogin(type) {
+      currentType = type;
+      document.getElementById('homeView').style.display = 'none';
+      document.getElementById('loginView').style.display = 'block';
+      if(type === 'leader') {
+        document.getElementById('loginTitle').innerText = 'دخول القيادات';
+        document.getElementById('topLeaderBtn').style.display = 'none';
+      } else {
+        document.getElementById('loginTitle').innerText = type === 'supervisor' ? 'دخول المشرفين' : 'دخول رؤساء الوحدات';
+      }
+    }
+
+    function login() {
+      const code = document.getElementById('userCode').value.trim();
+      if (!code) return alert('يرجى إدخال اخر 4 ارقام من السجل');
+      toggleLoader(true);
+      google.script.run.withSuccessHandler(user => {
+        if (user) {
+          currentUser = user;
+          if (user.type === 'leader') loadLeaderDashboard();
+          else loadForm();
+        } else {
+          toggleLoader(false);
+          alert('الرقم غير صحيح، يرجى المحاولة مرة أخرى باستخدام آخر 4 أرقام.');
+        }
+      }).authenticateUser(code, currentType);
+    }
+
+    function loadForm() {
+      google.script.run.withSuccessHandler(qs => {
+        questionsData = qs;
+        document.getElementById('welcomeText').innerText = 'مرحباً: ' + currentUser.name;
+        const container = document.getElementById('dynamicQuestions');
+        container.innerHTML = '';
+        
+        qs.forEach(q => {
+          const div = document.createElement('div');
+          div.className = 'form-group';
+          let reqAttr = q.isRequired ? 'required' : '';
+          
+          div.innerHTML = `
+            <label>${q.title}</label>
+            <input type="text" ${reqAttr} inputmode="numeric" class="q-input" data-index="${q.index}" data-required="${q.isRequired}" placeholder="أدخل العدد هنا (أرقام فقط)..." oninput="validateInput(this, ${q.index}, '${q.title}')">
+            <div id="error_${q.index}" class="error-msg"></div>
+            <div id="files_container_${q.index}" style="margin-top:10px; display:none;"></div>
+          `;
+          container.appendChild(div);
+        });
+        
+        document.getElementById('loginView').style.display = 'none';
+        document.getElementById('formView').style.display = 'block';
+        updateProgress();
+        toggleLoader(false);
+      }).getQuestions(currentUser);
+    }
+
+    function updateProgress() {
+      const mandatoryInputs = document.querySelectorAll('.q-input[data-required="true"]');
+      if(mandatoryInputs.length === 0) return;
+      let filled = 0;
+      mandatoryInputs.forEach(input => {
+        if(input.value.trim() !== '' && input.checkValidity()) filled++;
+      });
+      let percentage = Math.round((filled / mandatoryInputs.length) * 100);
+      document.getElementById('progressBar').style.width = percentage + '%';
+      document.getElementById('progressText').innerText = percentage + '% مكتمل';
+    }
+
+    function validateInput(element, qIndex, title) {
+      const val = element.value;
+      const errorDiv = document.getElementById(`error_${qIndex}`);
+      
+      if (!val) {
+        errorDiv.style.display = 'none';
+        element.setCustomValidity(''); 
+        handleSmartInput(qIndex, val, title);
+        updateProgress();
+        return;
+      }
+
+      let isValid = true;
+      const numRegex = /^\d+$/;
+      
+      if (!numRegex.test(val)) {
+        errorDiv.innerText = "يرجى إدخال أرقام فقط (يُمنع إدخال النصوص أو الرموز)";
+        errorDiv.style.display = 'block';
+        element.setCustomValidity('Invalid Data'); 
+        isValid = false;
+      } else {
+        errorDiv.style.display = 'none';
+        element.setCustomValidity('');
+      }
+
+      if (isValid) handleSmartInput(qIndex, val, title);
+      else {
+        const container = document.getElementById(`files_container_${qIndex}`);
+        container.innerHTML = ''; container.style.display = 'none';
+      }
+      updateProgress();
+    }
+
+    function handleSmartInput(qIndex, value, title) {
+      const container = document.getElementById(`files_container_${qIndex}`);
+      container.innerHTML = '';
+      if (!value || value.trim() === '') { container.style.display = 'none'; return; }
+      
+      container.style.display = 'block';
+      
+      // التعديل: ربط حقل "نوع المشاركة" بصلاحية المستخدم والفهرس الصحيح فقط
+      let isSpecialField = false;
+      if (currentUser.type === 'supervisor' && qIndex == 9) isSpecialField = true;
+      if (currentUser.type === 'unit_head' && qIndex == 8) isSpecialField = true;
+      
+      let num = Number(value);
+      num = num > 10 ? 10 : num; // حماية
+      
+      for (let i = 0; i < num; i++) {
+        container.appendChild(createFileSelector(qIndex, i, title, isSpecialField));
+      }
+    }
+
+    function createFileSelector(qIndex, fileIdx, title, isSpecialField) {
+      const wrapper = document.createElement('div');
+      wrapper.style.marginBottom = '15px'; wrapper.style.padding = '10px';
+      wrapper.style.background = '#f9f9f9'; wrapper.style.border = '1px dashed var(--secondary)';
+      wrapper.style.borderRadius = '5px';
+      
+      let partTypeHtml = '';
+      if (isSpecialField) {
+        partTypeHtml = `<input type="text" class="part-type-input" placeholder="نوع المشاركة (نصوص فقط)" required pattern="^[a-zA-Z\\u0600-\\u06FF\\s]+$" oninvalid="this.setCustomValidity('يرجى إدخال نص فقط')" oninput="this.setCustomValidity('');" style="margin-bottom: 10px; width: 100%; padding: 10px; border: 1px solid var(--secondary); border-radius: 5px; box-sizing: border-box; font-family: inherit;">`;
+      }
+      
+      wrapper.innerHTML = `
+        <div style="font-size:12px; color:var(--text); margin-bottom:8px; font-weight:bold;">إرفاق لـ: ${title}</div>
+        ${partTypeHtml}
+        <div class="file-source-options">
+          <button type="button" class="btn-file-source active" id="btn_dev_${qIndex}_${fileIdx}" onclick="setSource(${qIndex}, ${fileIdx}, 'device')">من الجهاز</button>
+          <button type="button" class="btn-file-source" id="btn_drv_${qIndex}_${fileIdx}" onclick="setSource(${qIndex}, ${fileIdx}, 'drive')">رابط درايف</button>
+        </div>
+        <div id="input_area_${qIndex}_${fileIdx}" style="margin-top:8px;">
+          <input type="file" required class="file-input" data-qindex="${qIndex}" data-source="device">
+        </div>
+      `;
+      return wrapper;
+    }
+
+    function setSource(qIndex, fileIdx, source) {
+      const area = document.getElementById(`input_area_${qIndex}_${fileIdx}`);
+      const btnDev = document.getElementById(`btn_dev_${qIndex}_${fileIdx}`);
+      const btnDrv = document.getElementById(`btn_drv_${qIndex}_${fileIdx}`);
+      
+      if (source === 'device') {
+        area.innerHTML = `<input type="file" required class="file-input" data-qindex="${qIndex}" data-source="device">`;
+        btnDev.classList.add('active'); btnDrv.classList.remove('active');
+      } else {
+        area.innerHTML = `
+          <input type="url" required class="file-input" data-qindex="${qIndex}" data-source="drive" placeholder="أدخل رابط جوجل درايف" oninput="validateUrl(this)">
+          <div class="error-msg" style="display:none; color:#d32f2f; font-size:13px; font-weight:bold; margin-top:5px;">يرجى إدخال رابط صحيح يبدأ بـ http:// أو https://</div>
+        `;
+        btnDrv.classList.add('active'); btnDev.classList.remove('active');
+      }
+    }
+
+    function validateUrl(element) {
+      const val = element.value.trim();
+      const errorDiv = element.nextElementSibling;
+      const urlRegex = /^https?:\/\/.+/i; 
+      if (val && !urlRegex.test(val)) {
+        errorDiv.style.display = 'block'; element.setCustomValidity('Invalid URL');
+      } else {
+        errorDiv.style.display = 'none'; element.setCustomValidity('');
+      }
+    }
+
+    async function handleFinalSubmit(e) {
+      e.preventDefault(); toggleLoader(true);
+      document.getElementById('successMsg').style.display = 'none';
+      
+      const answers = questionsData.map(q => {
+        const input = document.querySelector(`.q-input[data-index="${q.index}"]`);
+        return { qIndex: q.index, value: input ? input.value : '' };
+      });
+
+      const fileElements = document.querySelectorAll('.file-input');
+      const filesData =[];
+
+      for (let el of fileElements) {
+        let qTitle = questionsData.find(q => q.index == el.dataset.qindex)?.title || "مرفق إضافي";
+        let wrapper = el.closest('div').parentElement;
+        let partTypeInput = wrapper.querySelector('.part-type-input');
+        let partTypeVal = partTypeInput ? partTypeInput.value.trim() : "";
+
+        if (el.dataset.source === 'device' && el.files.length > 0) {
+          const file = el.files[0];
+          const base64 = await toBase64(file);
+          filesData.push({
+            qIndex: el.dataset.qindex, qTitle: qTitle, source: 'device',
+            fileName: file.name, mimeType: file.type, base64: base64.split(',')[1], partType: partTypeVal
+          });
+        } else if (el.dataset.source === 'drive' && el.value.trim() !== '') {
+          filesData.push({
+            qIndex: el.dataset.qindex, qTitle: qTitle, source: 'drive',
+            driveUrl: el.value, partType: partTypeVal
+          });
+        }
+      }
+
+      const payload = { user: currentUser, answers: answers };
+      google.script.run.withSuccessHandler(() => {
+        toggleLoader(false); resetForm(); updateProgress();
+        document.getElementById('successMsg').style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' }); 
+      }).submitFormData(payload, filesData);
+    }
+
+    /* === وظائف بوابة القيادات التفاعلية === */
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    function toggleAccordion(headerEl) {
+      const item = headerEl.parentElement;
+      const body = item.querySelector('.accordion-body');
+      if(item.classList.contains('open')) {
+        body.style.display = 'none';
+        item.classList.remove('open');
+      } else {
+        body.style.display = 'block';
+        item.classList.add('open');
+      }
+    }
+
+    function buildAccordionList(usersArray) {
+      if(usersArray.length === 0) return '<p style="text-align:center; padding: 20px;">لا توجد ردود مسجلة حتى الآن.</p>';
+      
+      let html = '';
+      usersArray.forEach(user => {
+        let answersHtml = user.answers.map((a, idx) => {
+          let relatedFiles = user.files.filter(f => f.title === a.question);
+          let filesChips = relatedFiles.map((f, fIdx) => {
+             let label = f.type ? `ملف ${fIdx + 1} (${f.type})` : `ملف ${fIdx + 1}`;
+             return `<a href="${f.url}" target="_blank" class="file-chip">📎 ${label}</a>`;
+          }).join(' ');
+
+          return `
+            <div class="q-block">
+              <div class="q-title">${idx + 1}. ${a.question}</div>
+              <div class="q-ans">العدد المدخل: <b>${a.answer}</b></div>
+              ${filesChips ? `<div class="files-container">${filesChips}</div>` : ''}
+            </div>
+          `;
+        }).join('');
+
+        html += `
+          <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <div class="acc-title">👤 ${user.name}</div>
+              <div class="acc-meta">
+                <span>📅 ${user.date}</span>
+                <span class="acc-icon">▼</span>
+              </div>
+            </div>
+            <div class="accordion-body">
+              ${answersHtml}
+            </div>
+          </div>
+        `;
+      });
+      return html;
+    }
+
+    function loadLeaderDashboard() {
+      document.getElementById('mainApp').style.display = 'none';
+      google.script.run.withSuccessHandler(data => {
+        toggleLoader(false);
+        document.getElementById('sup_tab').innerHTML = buildAccordionList(data.supervisors);
+        document.getElementById('unit_tab').innerHTML = buildAccordionList(data.unitHeads);
+        document.getElementById('leaderDashboardView').style.display = 'block';
+      }).getLeaderDashboardData();
+    }
+
+    function resetForm() {
+      document.getElementById('submissionForm').reset();
+      questionsData.forEach(q => {
+        const container = document.getElementById(`files_container_${q.index}`);
+        const errorDiv = document.getElementById(`error_${q.index}`);
+        if(container) { container.innerHTML = ''; container.style.display = 'none'; }
+        if(errorDiv) { errorDiv.style.display = 'none'; errorDiv.innerText = ''; }
+      });
+      document.getElementById('progressBar').style.width = '0%';
+      document.getElementById('progressText').innerText = '0% مكتمل';
+    }
+
+    const toBase64 = file => new Promise((resolve, reject) => {
+      const reader = new FileReader(); reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result); reader.onerror = error => reject(error);
+    });
+
+    function toggleLoader(show) {
+      document.getElementById('loader').style.display = show ? 'block' : 'none';
+      document.querySelectorAll('button.main-btn, button.leader-btn-top').forEach(b => b.disabled = show);
+    }
+  </script>
+</body>
+</html>

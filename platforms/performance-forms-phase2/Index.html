@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>منصة رفع التقييم للمدارس (المرحلة الثانية)</title>
+  <style>
+    :root { --primary: #208caa; --primary-hover: #176a82; --bg-color: #f4f7f6; --text-main: #333333; --text-gray: #777777; --white: #ffffff; --border-color: #e0e0e0; }
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 15px; }
+    .container { width: 100%; max-width: 800px; margin: 20px auto; background: var(--white); padding: 30px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); }
+    h2, h3 { color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-top: 0; }
+    .form-group { margin-bottom: 20px; }
+    label { display: block; font-weight: bold; margin-bottom: 8px; color: var(--text-main); font-size: 15px;}
+    
+    input, select { width: 100%; padding: 14px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 16px; background-color: #fafafa; transition: 0.3s; }
+    input:focus, select:focus { border-color: var(--primary); outline: none; background-color: var(--white); box-shadow: 0 0 5px rgba(32, 140, 170, 0.3);}
+    input[type=file] { background-color: var(--white); }
+    
+    button { background-color: var(--primary); color: var(--white); padding: 15px; border: none; border-radius: 8px; cursor: pointer; font-size: 18px; width: 100%; font-weight: bold; transition: all 0.3s ease; }
+    button:hover:not(:disabled) { background-color: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(32, 140, 170, 0.3); }
+    button:active:not(:disabled) { transform: translateY(0); }
+    button:disabled { background-color: #cccccc; cursor: not-allowed; transform: none; box-shadow: none; }
+    
+    .btn-home { background-color: #64748b; margin-bottom: 20px; font-size: 15px; padding: 12px;}
+    .btn-home:hover:not(:disabled) { background-color: #475569; box-shadow: 0 4px 10px rgba(100, 116, 139, 0.3); }
+
+    .view { display: none; animation: fadeIn 0.5s ease-in-out; }
+    .view.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    #loader { text-align: center; color: var(--primary); font-weight: bold; display:none; margin-bottom: 20px; font-size: 18px; }
+    
+    .kpi-container { display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; }
+    .kpi-card { flex: 1; min-width: 150px; background: var(--primary); color: var(--white); padding: 20px; border-radius: 10px; text-align: center; box-shadow: 0 4px 10px rgba(32, 140, 170, 0.2); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .kpi-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(32, 140, 170, 0.4); }
+    .kpi-card h4 { margin: 0 0 10px 0; color: #e0f2f1; font-size: 14px;}
+    .kpi-card span { font-size: 32px; font-weight: bold; }
+    
+    .stage-card { background: #f8fafc; color: var(--primary); border: 2px solid var(--primary); }
+    .stage-card h4 { color: var(--text-gray); }
+
+    .table-container { overflow-x: auto; margin-bottom: 25px;}
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { padding: 12px; text-align: right; border-bottom: 1px solid var(--border-color); }
+    th { background-color: #f1f5f9; color: var(--primary); font-weight: bold; }
+    .status-done { color: #10b981; font-weight: bold; }
+    .status-pending { color: #ef4444; font-weight: bold; }
+    .error-msg { color: #ef4444; text-align: center; margin-top: 15px; display: none; font-weight: bold; padding: 10px; background: #fee2e2; border-radius: 5px; }
+    h1 {text-align: center;
+    }
+    h2 {text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div id="loader">🔄 جاري معالجة الطلب، الرجاء الانتظار...</div>
+
+    <!-- شاشة تسجيل الدخول -->
+    <div id="loginView" class="view active">
+      <h1>منصة رفع التقييم للمدارس (المرحلة الثانية)</h1>
+      <h2>تسجيل الدخول</h2>
+      <div class="form-group">
+        <input type="password" id="passcode" placeholder="أدخل اخر 4 أرقام من السجل ..." maxlength="4" inputmode="numeric">
+      </div>
+      <button onclick="login()">تسجيل الدخول</button>
+      <div id="loginError" class="error-msg"></div>
+    </div>
+
+    <!-- شاشة الاستمارة للمشرف -->
+    <div id="formView" class="view">
+      <h2 id="welcomeMsg"></h2>
+      <form id="evalForm" onsubmit="submitForm(event)">
+        
+        <div class="form-group">
+          <label>الجنس <span style="color:red">*</span></label>
+          <select id="genderSelect" name="الجنس" onchange="filterSchools()" required>
+            <option value="">اختر الجنس أولاً...</option>
+            <option value="بنين">بنين</option>
+            <option value="بنات">بنات</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>اسم المدرسة <span style="color:red">*</span></label>
+          <input list="schoolsList" id="schoolSelect" name="اسم المدرسة" placeholder="ابحث باسم المدرسة..." required autocomplete="off">
+          <datalist id="schoolsList"></datalist>
+        </div>
+
+        <div id="dynamicFields"></div>
+
+        <button type="submit" id="submitBtn">إرسال واعتماد التقييم</button>
+      </form>
+      <button onclick="goHome()" class="btn-home">↩ العودة للرئيسية </button>
+    </div>
+
+    <!-- لوحة المتابعة (الداشبورد) -->
+    <div id="dashboardView" class="view">
+      <h2>لوحة المتابعة </h2>
+      
+      <div class="kpi-container">
+        <div class="kpi-card" style="background-color: #3b82f6;"><h4>المدارس المستهدفة</h4><span id="totalSchools">0</span></div>
+        <div class="kpi-card" style="background-color: #0ea5e9;"><h4>المدارس المقيمة</h4><span id="evaluatedSchools">0</span></div>
+        <div class="kpi-card" style="background-color: #059669;"><h4>مشرفين تم البدء بالرد</h4><span id="completedSups">0</span></div>
+        <div class="kpi-card" style="background-color: #dc2626;"><h4>مشرفين لم يتم البدء بالرد</h4><span id="pendingSups">0</span></div>
+      </div>
+
+      <!-- إحصائيات المراحل كبطاقات مستقلة -->
+      <h3>إحصائية إنجاز المراحل</h3>
+      <div class="kpi-container" id="stagesCardsContainer">
+        <!-- تتولد ديناميكياً -->
+      </div>
+
+      <h3>حالة إنجاز المشرفين</h3>
+      <div class="table-container">
+        <table><thead><tr><th>اسم المشرف</th><th>الحالة</th></tr></thead><tbody id="supsTableBody"></tbody></table>
+      </div>
+      <button onclick="goHome()" class="btn-home">↩ العودة للرئيسية</button>
+    </div>
+  </div>
+
+  <script>
+    let currentSupervisor = {};
+    let allSchools =[];
+    let allSupervisors =[];
+    
+    function showLoader(show) { document.getElementById('loader').style.display = show ? 'block' : 'none'; }
+    function showError(msg) { const errDiv = document.getElementById('loginError'); errDiv.innerText = msg; errDiv.style.display = 'block'; }
+    
+    function switchView(viewId) {
+      document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+      document.getElementById(viewId).classList.add('active');
+    }
+
+    function goHome() {
+      document.getElementById('evalForm').reset();
+      document.getElementById('passcode').value = '';
+      document.getElementById('loginError').style.display = 'none';
+      currentSupervisor = {};
+      switchView('loginView');
+    }
+
+    function login() {
+      const code = document.getElementById('passcode').value;
+      document.getElementById('loginError').style.display = 'none';
+      if(code.length !== 4) return showError('الرجاء إدخال 4 أرقام فقط!');
+      
+      showLoader(true);
+      google.script.run
+        .withSuccessHandler(res => {
+          if(res.error) { showLoader(false); showError(res.error); }
+          else if (res.role === 'dashboard') { switchView('dashboardView'); loadDashboard(); }
+          else {
+            currentSupervisor = res;
+            document.getElementById('welcomeMsg').innerText = `أهلاً: ${res.name} | المرحلة: ${res.stage}`;
+            loadFormData();
+          }
+        }).withFailureHandler(err => { showLoader(false); showError("فشل الاتصال بالخادم."); }).verifyLogin(code);
+    }
+
+    function loadFormData() {
+      google.script.run.withSuccessHandler(res => {
+          showLoader(false);
+          if(res.error) { showError(res.error); goHome(); return; }
+          allSchools = res.schools;
+          allSupervisors = res.supervisors;
+          buildDynamicForm(res.headers);
+          switchView('formView');
+        }).getFormData();
+    }
+
+    function buildDynamicForm(headers) {
+      const container = document.getElementById('dynamicFields');
+      container.innerHTML = '';
+      
+      const ignoredHeaders =['تاريخ ووقت الرد', 'التاريخ', 'اسم المشرف', 'المرحلة', 'اسم المدرسة', 'المدرسة', 'الجنس', 'جنس المدرسة', 'الرقم الوزاري', 'المرفقات', 'الملف', 'رابط_درايف'];
+      
+      headers.forEach(header => {
+        const cleanHeader = header.trim();
+        if (!cleanHeader || ignoredHeaders.includes(cleanHeader)) return;
+        
+        const div = document.createElement('div'); div.className = 'form-group';
+        div.innerHTML = `<label>${cleanHeader} <span style="color:red">*</span></label>`;
+        
+        if (cleanHeader === 'ملف الاستمارة') {
+          div.innerHTML += `<p style="font-size:13px; color: var(--text-gray); margin-top:0;">إما رفع ملف من الجهاز أو وضع رابط Drive:</p>`;
+          const fileInput = document.createElement('input'); 
+          fileInput.type = 'file'; fileInput.id = 'evaluationFile'; fileInput.style.marginBottom = '15px';
+          const urlInput = document.createElement('input');
+          urlInput.type = 'url'; urlInput.id = 'driveLink'; urlInput.name = 'رابط_درايف';
+          urlInput.placeholder = 'أو ضع رابط درايف متاح للمشاركة هنا...';
+          div.appendChild(fileInput); div.appendChild(urlInput);
+          div.style.background = '#f8fafc'; div.style.padding = '15px'; div.style.borderRadius = '8px'; div.style.border = '2px dashed var(--border-color)';
+        } 
+        else if (cleanHeader === 'اسم المشرف المقيم') {
+          const select = document.createElement('select'); select.name = cleanHeader; select.required = true;
+          select.innerHTML = '<option value="">اختر اسم المشرف المقيم...</option>';
+          allSupervisors.forEach(sup => { select.innerHTML += `<option value="${sup}">${sup}</option>`; });
+          div.appendChild(select);
+        } 
+        else {
+          const input = document.createElement('input'); input.name = cleanHeader; input.required = true; 
+          if (cleanHeader.includes('درجة') || cleanHeader.includes('تقييم') || cleanHeader.includes('نسبة')) {
+            input.type = 'text'; input.inputMode = 'decimal'; input.pattern = "^[0-9]+(\.[0-9]+)?$"; 
+            input.title = "أرقام فقط (يسمح بالفاصلة العشرية)"; input.placeholder = "مثال: 3.50";
+            input.onkeypress = function(e) { if ((e.which != 46 || this.value.indexOf('.') != -1) && (e.which < 48 || e.which > 57)) e.preventDefault(); };
+            input.addEventListener('paste', function(e) { e.preventDefault(); });
+          } else { input.type = 'text'; }
+          div.appendChild(input); 
+        }
+        container.appendChild(div);
+      });
+    }
+
+    function filterSchools() {
+      const gender = document.getElementById('genderSelect').value;
+      const datalist = document.getElementById('schoolsList');
+      const schoolInput = document.getElementById('schoolSelect');
+      datalist.innerHTML = ''; schoolInput.value = ''; 
+      if(!gender) return;
+      allSchools.filter(s => s.gender === gender).forEach(s => {
+        const option = document.createElement('option'); option.value = s.name; datalist.appendChild(option);
+      });
+    }
+
+    function submitForm(e) {
+      e.preventDefault();
+      
+      const fileInput = document.getElementById('evaluationFile');
+      const driveLink = document.getElementById('driveLink');
+      const hasFile = fileInput && fileInput.files.length > 0;
+      const hasLink = driveLink && driveLink.value.trim() !== '';
+      
+      if (!hasFile && !hasLink) { alert('يجب إما رفع ملف من الجهاز أو وضع رابط Drive صالـح!'); return; }
+      
+      const form = document.getElementById('evalForm');
+      const dataObj = Object.fromEntries(new FormData(form).entries());
+      const btn = document.getElementById('submitBtn');
+      
+      btn.disabled = true; 
+      btn.innerText = '⏳ جاري الرفع والاعتماد... (الرجاء عدم الإغلاق)';
+      showLoader(true);
+
+      if (hasFile) {
+        const file = fileInput.files[0]; const reader = new FileReader();
+        reader.onload = ev => sendToServer(dataObj, {filename: file.name, mimeType: file.type, bytes: ev.target.result.split(',')[1]}, btn);
+        reader.readAsDataURL(file);
+      } else {
+        sendToServer(dataObj, null, btn);
+      }
+    }
+
+    function sendToServer(dataObj, fileData, btn) {
+      google.script.run
+        .withSuccessHandler(msg => {
+          showLoader(false); 
+          if(msg.includes('بنجاح')) {
+            alert(msg);
+            document.getElementById('evalForm').reset();
+          } else {
+            alert(msg); 
+          }
+          btn.disabled = false; btn.innerText = 'إرسال واعتماد التقييم';
+        })
+        .withFailureHandler(err => {
+          showLoader(false);
+          alert('تعذر إكمال العملية، خطأ في الاتصال الخارجي.\n' + err.message);
+          btn.disabled = false; btn.innerText = 'إرسال واعتماد التقييم';
+        })
+        .submitResponse(dataObj, fileData, currentSupervisor.name, currentSupervisor.stage);
+    }
+
+    function loadDashboard() {
+      showLoader(true);
+      google.script.run.withSuccessHandler(res => {
+        showLoader(false);
+        
+        document.getElementById('totalSchools').innerText = res.totalSchoolsCount;
+        document.getElementById('evaluatedSchools').innerText = res.evaluatedSchoolsCount;
+        document.getElementById('completedSups').innerText = res.completedCount;
+        document.getElementById('pendingSups').innerText = res.pendingCount;
+        
+        const stagesContainer = document.getElementById('stagesCardsContainer');
+        stagesContainer.innerHTML = '';
+        if (Object.keys(res.stageStats).length === 0) {
+          stagesContainer.innerHTML = '<div style="width:100%; text-align:center; color:gray;">لا توجد ردود بعد.</div>';
+        } else {
+          for (const[stage, count] of Object.entries(res.stageStats)) {
+            stagesContainer.innerHTML += `
+              <div class="kpi-card stage-card">
+                <h4>مرحلة: ${stage}</h4>
+                <span>${count}</span>
+              </div>
+            `;
+          }
+        }
+
+        const tbody = document.getElementById('supsTableBody'); 
+        tbody.innerHTML = '';
+        res.completedList.forEach(name => { tbody.innerHTML += `<tr><td>${name}</td><td class="status-done">✔️ بدأ التقييم</td></tr>`; });
+        res.pendingList.forEach(name => { tbody.innerHTML += `<tr><td>${name}</td><td class="status-pending">⏳ لم يبدأ</td></tr>`; });
+        
+      }).getDashboardData();
+    }
+  </script>
+</body>
+</html>

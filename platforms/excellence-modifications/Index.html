@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>منصة التعديلات المدرسية</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #347235;
+      --secondary-color: #707070;
+      --bg-color: #f7f9fa;
+      --white: #ffffff;
+      --black: #333333;
+    }
+
+    * { box-sizing: border-box; font-family: 'DIN Next LT Arabic', 'Tajawal', sans-serif; }
+    body { margin: 0; padding: 0; background-color: var(--bg-color); color: var(--black); }
+    h1, h2, h3 { font-weight: 700; margin: 0 0 15px 0; }
+    p { font-weight: 400; }
+
+    /* الهيدر المطور */
+    header {
+      background-color: var(--primary-color);
+      color: var(--white);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    #header-title {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-weight: bold;
+      font-size: 1.3rem;
+      white-space: nowrap;
+    }
+    .header-spacer { width: 120px; }
+
+    /* الزر الاحترافي في الهيدر */
+    .header-link-btn {
+      background-color: rgba(255, 255, 255, 0.15);
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,0.3);
+      padding: 8px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 2;
+    }
+    .header-link-btn:hover {
+      background-color: var(--white);
+      color: var(--primary-color);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    /* الحاويات */
+    .container { max-width: 800px; margin: 40px auto; padding: 20px; }
+    .card {
+      background: var(--white);
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+    }
+    .hover-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+
+    /* الديباجة */
+    .welcome-text { text-align: center; margin-bottom: 30px; line-height: 1.8; font-size: 16px; }
+    .department-name { text-align: center; color: var(--secondary-color); font-size: 14px; font-weight: 700; }
+
+    /* النماذج والإدخال */
+    .form-group { margin-bottom: 20px; }
+    label { display: block; margin-bottom: 8px; font-weight: 700; color: var(--primary-color); }
+    input[type="text"], input[type="number"] {
+      width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; outline: none;
+      transition: border-color 0.3s;
+    }
+    input[type="text"]:focus, input[type="number"]:focus { border-color: var(--primary-color); }
+    
+    .checkbox-group {
+      background: #f0f5f0; border-radius: 6px; border: 1px solid var(--primary-color);
+    }
+    .checkbox-group input { width: 20px; height: 20px; accent-color: var(--primary-color); cursor: pointer; }
+    
+    /* الأزرار الأساسية */
+    .btn {
+      background-color: var(--primary-color); color: var(--white); border: none;
+      padding: 12px 25px; font-size: 16px; border-radius: 6px; cursor: pointer;
+      width: 100%; font-weight: bold; transition: all 0.3s;
+    }
+    .btn:hover { background-color: #275928; transform: scale(1.02); }
+    .btn:disabled { background-color: var(--secondary-color); cursor: not-allowed; transform: none; }
+
+    /* لوحة المتابعة */
+    .school-group {
+      border: 1px solid #ddd; border-radius: 8px; margin-bottom: 15px; overflow: hidden; background: var(--white);
+    }
+    .school-header {
+      background: var(--primary-color); color: var(--white); padding: 15px; cursor: pointer;
+      font-weight: bold; display: flex; justify-content: space-between;
+    }
+    .school-content { padding: 15px; display: none; background: #fafafa; }
+    .request-item { border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 15px; }
+    .request-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .meta-data { font-size: 12px; color: var(--secondary-color); margin-bottom: 10px; }
+    .answer-row { margin-bottom: 5px; font-size: 14px; }
+    .answer-row strong { color: var(--primary-color); }
+
+    /* اللودر */
+    #loader {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(255,255,255,0.8); z-index: 2000; justify-content: center; align-items: center;
+    }
+    .spinner {
+      border: 5px solid #f3f3f3; border-top: 5px solid var(--primary-color);
+      border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    .hidden { display: none !important; }
+    .school-group.active .school-content { display: block; }
+  </style>
+</head>
+<body>
+
+  <div id="loader"><div class="spinner"></div></div>
+
+  <header>
+    <div class="header-spacer"></div>
+    <div id="header-title">منصة طلب التعديلات على منصة تميز المدرسي</div>
+    <div class="header-link-btn" id="nav-btn" onclick="toggleViews()">لوحة المتابعة</div>
+  </header>
+
+  <div class="container">
+    
+    <!-- واجهة تسجيل دخول المدرسة -->
+    <div id="view-school-login" class="card hover-card">
+      <h2 style="text-align:center; color: var(--primary-color)">تسجيل دخول المدارس</h2>
+      <div class="form-group">
+        <label>الرقم الوزاري:</label>
+        <input type="text" id="login-school-id" placeholder="أدخل الرقم الوزاري للمدرسة">
+      </div>
+      <button class="btn" onclick="loginSchool()">دخول</button>
+    </div>
+
+    <!-- واجهة تقديم الطلب -->
+    <div id="view-school-form" class="hidden">
+      <div class="card">
+        <div class="welcome-text">
+          مدير /ة المدرسة &nbsp;&nbsp; سلّمه/ا الله <br>
+          السلام عليكم ورحمة الله وبركاته : <br>
+          حرصاً منا على خدمتك في أسرع وقت وضعنا هذه المنصة لتسجيل جميع التعديلات للمدرسة في المنصة وسوف يتم إجراءها وفي حال عدم وضوح شيء معين سيتم التواصل معك مباشرة …
+        </div>
+        <div class="department-name">إدارة أداء التعليم - قسم الإدارة المدرسية</div>
+      </div>
+
+      <div class="card hover-card">
+        <form id="school-form" onsubmit="submitForm(event)">
+          <div id="dynamic-questions"></div>
+          <br>
+          <button type="submit" class="btn" id="submit-btn">إرسال التعديلات</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- واجهة تسجيل دخول الإدارة -->
+    <div id="view-admin-login" class="card hover-card hidden">
+      <h2 style="text-align:center; color: var(--primary-color)">دخول قسم الإدارة المدرسية</h2>
+      <div class="form-group">
+        <label>كود الدخول:</label>
+        <input type="text" id="login-admin-code" placeholder="أدخل كود الدخول">
+      </div>
+      <button class="btn" onclick="loginAdmin()">دخول</button>
+    </div>
+
+    <!-- لوحة المتابعة -->
+    <div id="view-admin-dashboard" class="hidden">
+      <h2 style="color: var(--primary-color); margin-bottom: 20px;">الطلبات قيد الانتظار</h2>
+      <div id="dashboard-content"></div>
+    </div>
+
+  </div>
+
+  <script>
+    let currentSchoolId = "";
+    let currentAdminCode = "";
+    let currentMode = "school"; 
+    let formQuestions =[];
+
+    function showLoader() { document.getElementById('loader').style.display = 'flex'; }
+    function hideLoader() { document.getElementById('loader').style.display = 'none'; }
+
+    function toggleViews() {
+      if(currentMode === "school") {
+        currentMode = "admin";
+        document.getElementById("nav-btn").innerText = "بوابة المدارس";
+        hideAllViews();
+        currentAdminCode ? showView('view-admin-dashboard') : showView('view-admin-login');
+      } else {
+        currentMode = "school";
+        document.getElementById("nav-btn").innerText = "لوحة المتابعة";
+        hideAllViews();
+        currentSchoolId ? showView('view-school-form') : showView('view-school-login');
+      }
+    }
+
+    function hideAllViews() {
+      document.getElementById('view-school-login').classList.add('hidden');
+      document.getElementById('view-school-form').classList.add('hidden');
+      document.getElementById('view-admin-login').classList.add('hidden');
+      document.getElementById('view-admin-dashboard').classList.add('hidden');
+    }
+    function showView(id) { document.getElementById(id).classList.remove('hidden'); }
+
+    // ================= المدارس =================
+
+    function loginSchool() {
+      const id = document.getElementById("login-school-id").value;
+      if(!id) return alert("الرجاء إدخال الرقم الوزاري");
+      
+      showLoader();
+      google.script.run.withSuccessHandler(isValid => {
+        if(isValid) {
+          currentSchoolId = id;
+          loadQuestions();
+        } else {
+          hideLoader();
+          alert("الرقم الوزاري غير مسجل في النظام!");
+        }
+      }).checkSchoolLogin(id);
+    }
+
+    function loadQuestions() {
+      google.script.run.withSuccessHandler(questions => {
+        formQuestions = questions;
+        buildForm(questions);
+        hideAllViews();
+        showView('view-school-form');
+        hideLoader();
+      }).getQuestions();
+    }
+
+    function buildForm(questions) {
+      const container = document.getElementById("dynamic-questions");
+      
+      let htmlBeforeExtra = "";
+      let htmlExtra = "";
+      let htmlAfterExtra = "";
+      
+      questions.forEach((q, index) => {
+        if(!q) return;
+        let html = "";
+        
+        if(index === 0) {
+          html = `<div class="form-group"><label>${q} <span style="color:red">*</span></label>
+                  <input type="text" id="ans-${index}" required oninput="this.value = this.value.replace(/[^\\u0600-\\u06FFa-zA-Z\\s]/g, '')" placeholder="نصوص فقط"></div>`;
+        }
+        else if(index === 1) {
+          html = `<div class="form-group"><label>${q} <span style="color:red">*</span></label>
+                  <input type="text" id="ans-${index}" required pattern="^966[0-9]{9}$" title="يجب أن يبدأ بـ 966 ويتكون من 12 رقم" placeholder="مثال: 966500000000" maxlength="12"></div>`;
+        }
+        else if(index === 8) { // التخطيط المدرسي
+          html = `<div class="form-group checkbox-group" style="padding:0; margin-bottom:10px;">
+                    <label style="margin:0; cursor:pointer; width:100%; display:flex; align-items:center; gap:10px; padding:15px;">
+                      <input type="checkbox" id="ans-${index}" onchange="document.getElementById('extra-fields').style.display = this.checked ? 'block' : 'none';"> 
+                      <strong style="font-size: 16px;">${q}</strong>
+                    </label>
+                  </div>`;
+        }
+        else if(index >= 9 && index <= 13) { // الأعمدة L إلى P (الأسئلة الإضافية)
+          html = `<div class="form-group" style="margin-bottom: 15px;"><label>${q}</label><input type="text" id="ans-${index}"></div>`;
+        }
+        else if(index === 14) { // الإقرار
+          html = `<div class="form-group checkbox-group" style="padding:15px; margin-top:20px; display:flex; align-items:center; gap:10px;">
+                    <input type="checkbox" id="ans-${index}" required> 
+                    <label for="ans-${index}" style="margin:0; cursor:pointer;">${q}</label>
+                  </div>`;
+        }
+        else { // باقي الأعمدة
+          html = `<div class="form-group"><label>${q}</label><input type="text" id="ans-${index}"></div>`;
+        }
+
+        // تقسيم البيانات على المتغيرات لضمان الترتيب وإصلاح المشكلة
+        if (index <= 8) {
+            htmlBeforeExtra += html;
+        } else if (index >= 9 && index <= 13) {
+            htmlExtra += html;
+        } else {
+            htmlAfterExtra += html;
+        }
+      });
+      
+      let finalHTML = htmlBeforeExtra;
+      
+      // دمج الأسئلة الإضافية (L-P) في الحاوية المخفية أسفل التخطيط المدرسي
+      if(htmlExtra !== "") {
+        finalHTML += `<div id="extra-fields" style="display:none; background:#f9f9f9; padding:20px; border-radius:8px; margin-bottom:20px; border: 1px solid #dcdcdc; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">` 
+                     + htmlExtra + 
+                     `</div>`;
+      }
+                   
+      finalHTML += htmlAfterExtra;
+      
+      container.innerHTML = finalHTML;
+    }
+
+    function submitForm(e) {
+      e.preventDefault();
+      showLoader();
+      document.getElementById("submit-btn").disabled = true;
+
+      let answers =[];
+      for(let i = 0; i < 15; i++) {
+        let el = document.getElementById(`ans-${i}`);
+        if(!el) { answers.push(""); continue; }
+        
+        if(i === 8) { answers.push(el.checked ? "نعم" : "لا"); } 
+        else if(i === 14) { answers.push(el.checked ? "نعم" : ""); } 
+        else if(i >= 9 && i <= 13 && !document.getElementById('ans-8').checked) { answers.push(""); }
+        else { answers.push(el.value); }
+      }
+
+      google.script.run.withSuccessHandler(res => {
+        hideLoader();
+        alert("تم إرسال التعديلات بنجاح!");
+        document.getElementById("school-form").reset();
+        document.getElementById("submit-btn").disabled = false;
+        document.getElementById('extra-fields').style.display = 'none';
+      }).submitResponse(currentSchoolId, answers);
+    }
+
+    // ================= الإدارة =================
+
+    function loginAdmin() {
+      const code = document.getElementById("login-admin-code").value;
+      if(!code) return alert("الرجاء إدخال الكود");
+      
+      showLoader();
+      google.script.run.withSuccessHandler(isValid => {
+        if(isValid) {
+          currentAdminCode = code;
+          loadDashboard();
+        } else {
+          hideLoader();
+          alert("كود الدخول غير صحيح!");
+        }
+      }).checkAdminLogin(code);
+    }
+
+    function loadDashboard() {
+      showLoader(); 
+      google.script.run.withSuccessHandler(data => {
+        renderDashboard(data.headers, data.pending);
+        hideAllViews();
+        showView('view-admin-dashboard');
+        hideLoader();
+      }).getDashboardData();
+    }
+
+    function renderDashboard(headers, pendingData) {
+      const container = document.getElementById("dashboard-content");
+      container.innerHTML = "";
+      
+      if(pendingData.length === 0) {
+        container.innerHTML = "<p style='text-align:center; color:#707070;'>لا توجد طلبات تعديل قيد الانتظار.</p>";
+        return;
+      }
+
+      let grouped = {};
+      pendingData.forEach(req => {
+        if(!grouped[req.schoolId]) grouped[req.schoolId] =[];
+        grouped[req.schoolId].push(req);
+      });
+
+      for(let schoolId in grouped) {
+        let reqs = grouped[schoolId];
+        let sampleTitle = reqs[0].answers[0] || "تعديل جديد"; 
+
+        let groupDiv = document.createElement("div");
+        groupDiv.className = "school-group hover-card";
+        groupDiv.id = `school-group-${schoolId}`;
+        
+        let headerDiv = `
+          <div class="school-header" onclick="this.parentElement.classList.toggle('active')">
+            <span>مدرسة رقم: ${schoolId}</span>
+            <span>(${reqs.length} طلبات) - أحدث طلب: ${sampleTitle.substring(0,15)}...</span>
+          </div>
+          <div class="school-content">
+        `;
+        
+        let contentDiv = "";
+        reqs.forEach((req, idx) => {
+          let ansHtml = "";
+          req.answers.forEach((ans, i) => {
+            if(ans && ans !== "لا" && i !== 14) { 
+              ansHtml += `<div class="answer-row"><strong>${headers[i]}:</strong> ${ans}</div>`;
+            }
+          });
+
+          contentDiv += `
+            <div class="request-item" id="req-${req.uuid}">
+              <div class="meta-data">وقت الطلب: ${req.timestamp}</div>
+              ${ansHtml}
+              <div style="margin-top:15px; display:flex; gap:10px;">
+                <input type="text" id="emp-${req.uuid}" placeholder="اسم الموظف المنفذ" style="flex:1;">
+                <button class="btn" style="width:auto;" onclick="markDone('${req.uuid}', '${schoolId}')">تم التعديل</button>
+              </div>
+            </div>
+          `;
+        });
+        
+        groupDiv.innerHTML = headerDiv + contentDiv + "</div>";
+        container.appendChild(groupDiv);
+      }
+    }
+
+    function markDone(uuid, schoolId) {
+      const empName = document.getElementById(`emp-${uuid}`).value;
+      if(!empName) return alert("الرجاء كتابة اسم الموظف المنفذ للتعديل.");
+      
+      showLoader();
+      google.script.run.withSuccessHandler(success => {
+        if(success) {
+          document.getElementById(`req-${uuid}`).style.display = 'none';
+          alert("تم إغلاق الطلب ونقله للأرشيف.");
+          hideLoader();
+        }
+      }).markAsCompleted(uuid, empName);
+    }
+  </script>
+</body>
+</html>
