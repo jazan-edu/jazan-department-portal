@@ -15,19 +15,20 @@
         <section class="panel"><h2><span>١</span> اختر الملف</h2><label for="pdfInput">ملف PDF — حتى 30 ميجابايت</label><input id="pdfInput" type="file" accept="application/pdf,.pdf"><p id="fileInfo" class="hint">اختر الملف الذي تريد إضافة توقيعك إليه.</p></section>
         <section class="panel"><h2><span>٢</span> جهّز توقيعك</h2>
           <div class="tabs" role="group" aria-label="طريقة التوقيع"><button id="drawTab" aria-pressed="true">رسم التوقيع</button><button id="uploadTab" aria-pressed="false">رفع صورة</button></div>
-          <div id="drawMode"><label for="inkColor">لون القلم</label><select id="inkColor"><option value="#172554">أزرق داكن</option><option value="#111111">أسود</option></select><canvas id="signaturePad" width="640" height="240" aria-label="مساحة رسم التوقيع بالماوس أو اللمس"></canvas><div class="actions"><button id="clearPad" class="quiet">مسح الرسم</button><button id="useDrawing">اعتماد الرسم</button></div></div>
+          <div id="drawMode"><label for="inkColor">لون القلم</label><select id="inkColor"><option value="#0000ff">أزرق</option><option value="#111111">أسود</option></select><canvas id="signaturePad" width="640" height="240" aria-label="مساحة رسم التوقيع بالماوس أو اللمس"></canvas><div class="actions"><button id="clearPad" class="quiet">مسح الرسم</button><button id="useDrawing">اعتماد الرسم</button></div></div>
           <div id="uploadMode" hidden><label for="signatureInput">صورة PNG أو JPG — حتى 5 ميجابايت</label><input id="signatureInput" type="file" accept="image/png,image/jpeg"><p class="hint">يفضّل استخدام صورة بخلفية شفافة.</p></div>
           <div id="signatureReady" hidden><p class="hint">التوقيع المعتمد</p><img id="signaturePreview" alt="معاينة التوقيع"><label for="signatureSize">عرض التوقيع <output id="sizeValue">25%</output></label><input id="signatureSize" type="range" min="10" max="50" value="25"></div>
         </section>
-        <section class="panel"><h2><span>٣</span> ضع التوقيع واحفظ</h2><p class="hint">اختر الصفحة ثم اضغط على موضع التوقيع في المعاينة. يمكنك إضافة أكثر من توقيع.</p>
-          <div class="coordinates"><label for="positionX">من اليسار %<input id="positionX" type="number" min="0" max="100" value="65"></label><label for="positionY">من الأعلى %<input id="positionY" type="number" min="0" max="100" value="80"></label></div><button id="placeSignature" disabled>إضافة في الموضع المحدد</button>
+        <section class="panel"><h2><span>٣</span> ضع التوقيع واحفظ</h2><p class="hint">اختر الصفحة ثم اضغط على موضع التوقيع في المعاينة. اسحب التوقيع بعد إضافته لتغيير مكانه، أو حدده وعدّل حقول الموضع.</p>
+          <div class="coordinates"><label for="positionX">من اليسار %<input id="positionX" type="number" step="0.1" min="0" max="100" value="65"></label><label for="positionY">من الأعلى %<input id="positionY" type="number" step="0.1" min="0" max="100" value="80"></label></div><button id="placeSignature" disabled>إضافة في الموضع المحدد</button>
+          <button id="moveSignature" class="quiet wide" disabled>تعديل مكان التوقيع المحدد</button>
           <div class="actions"><button id="undoSignature" class="quiet" disabled>تراجع عن آخر توقيع</button><button id="clearSignatures" class="quiet" disabled>حذف كل التواقيع</button></div>
           <p id="signatureCount" class="hint">لم تُضف أي توقيع بعد.</p><button id="savePdf" class="primary wide" disabled>تنزيل الملف الموقّع</button><p class="hint small">تضيف الأداة صورة توقيع إلى الملف؛ لا تنشئ شهادة توقيع رقمي.</p>
         </section>
       </aside>
       <section class="previewPanel panel"><div class="previewHeading"><h2>معاينة الملف</h2><div class="pageControls"><button id="prevPage" class="quiet" disabled aria-label="الصفحة السابقة">السابق</button><label for="pageSelect">الصفحة</label><select id="pageSelect" disabled><option>—</option></select><button id="nextPage" class="quiet" disabled aria-label="الصفحة التالية">التالي</button></div></div>
         <div id="pdfEmpty" class="empty"><div class="fileIcon">PDF</div><h3>الملف يظهر هنا</h3><p>ارفع ملفك ثم ارسم توقيعك أو اختر صورته.</p></div>
-        <div id="pdfScroll" hidden><div id="pageSurface" role="img" aria-label="معاينة صفحة PDF؛ اضغط لإضافة التوقيع"><canvas id="pdfCanvas"></canvas><div id="signatureLayer"></div></div></div>
+        <div id="pdfScroll" hidden><div id="pageSurface" role="group" aria-label="معاينة صفحة PDF؛ اضغط لإضافة التوقيع"><canvas id="pdfCanvas"></canvas><div id="signatureLayer"></div></div></div>
       </section>
     </div>
   </section>
