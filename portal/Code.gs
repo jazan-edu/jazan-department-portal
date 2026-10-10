@@ -1,5 +1,0 @@
-function doGet() {
-  return HtmlService.createHtmlOutputFromFile("Index")
-    .setTitle("بوابة القسم الداخلية")
-    .addMetaTag('viewport', 'width=device-width, initial-scale=1');
-}
