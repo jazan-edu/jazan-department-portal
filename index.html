@@ -1,48 +1,240 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#102e2b"><meta name="description" content="بوابة القسم الداخلية — جميع منصات القسم في مساحة عمل واحدة.">
-<title>بوابة القسم | مساحة العمل</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0d2724">
+<meta name="description" content="بوابة القسم الداخلية — جميع منصات القسم في مساحة عمل واحدة.">
+<title>بوابة القسم</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#18342f;--muted:#63756f;--green:#176b53;--line:#e1e8e4;--gold:#d9b66d;--paper:#f4f7f5}
-*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.65 'IBM Plex Sans Arabic',Tahoma,sans-serif}button,input,a{font:inherit}button,a{-webkit-tap-highlight-color:transparent}button{cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #c29a43;outline-offset:4px}button{color:inherit}a{color:inherit}svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}[hidden]{display:none!important}
-.shell{display:flex;min-height:100dvh}.sidebar{background:#102e2b;color:#c2d5ce;width:286px;flex-shrink:0;position:fixed;inset:0 0 0 auto;display:flex;flex-direction:column;z-index:20;padding:32px 18px 18px;background-image:radial-gradient(ellipse at 100% 0,rgba(67,119,91,.22),transparent 55%)}.brand{display:flex;align-items:center;gap:12px;padding:0 10px 28px;border-bottom:1px solid #ffffff14}.brand-mark{display:grid;place-items:center;width:47px;height:49px;border:1px solid #b79c60;border-radius:14px;color:var(--gold)}.brand strong{display:block;color:#fff;font-size:19px}.brand small{font-size:12px;letter-spacing:1.3px;color:#92b1a7}.home-button{border:1px solid #ffffff12;background:#ffffff0a;color:#fff;display:flex;align-items:center;gap:12px;padding:13px 14px;width:100%;border-radius:10px;text-align:right;margin:26px 0 10px}.home-button.selected{background:#245343;border-color:#48694d}.nav{overflow:auto;flex:1;scrollbar-width:thin;scrollbar-color:#416255 transparent}.nav-label{color:#8fa99e;font-size:12px;margin:23px 12px 8px}.nav-item{display:flex;align-items:flex-start;gap:11px;border:0;background:none;width:100%;text-align:right;color:#c6d8d0;padding:12px 13px;border-radius:9px;font-size:14px;line-height:1.7;margin:3px 0}.nav-item svg{margin-top:2px;width:19px;height:19px;color:#a5bfb3}.nav-item:hover{background:#ffffff09;color:white}.nav-item.active{background:#264f40;color:#fff;box-shadow:inset -3px 0 var(--gold)}.nav-item.pending{color:#8fa79d}.nav-item .soon{font-size:12px;margin-right:auto;white-space:nowrap}.sidebar-footer{font-size:12px;color:#99b2a7;padding:19px 10px 0;border-top:1px solid #ffffff12}.sidebar-footer span{display:inline-block;width:6px;height:6px;background:#86ba98;border-radius:50%;margin-left:7px}.main{margin-right:286px;min-width:0;flex:1}.topbar{height:91px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 42px;gap:16px;background:#fff}.breadcrumb{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:14px}.breadcrumb b{color:var(--ink);font-weight:500}.top-end{display:flex;align-items:center;gap:17px}.date{font-size:13px;color:var(--muted)}.department{display:flex;align-items:center;gap:10px;border-right:1px solid var(--line);padding-right:18px;font-size:13px}.avatar{background:#edf3ef;border:1px solid #dce6df;border-radius:50%;width:37px;height:37px;display:grid;place-items:center;color:var(--green);font-weight:600}.menu-button{display:none;border:0;background:none}.workspace{max-width:1500px;margin:auto;padding:37px 42px}.eyebrow{color:var(--green);font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px}.eyebrow:before{content:'';width:21px;height:2px;background:var(--green)}h1{font-size:32px;letter-spacing:-.7px;font-weight:600;line-height:1.4;margin:9px 0 7px}.intro{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-bottom:30px}.intro p{color:var(--muted);margin:0;font-size:15px}.index-number{font-size:68px;line-height:1;color:#d9e4db;font-weight:400;letter-spacing:-4px}.overview{background:#e8f0eb;border:1px solid #dce7df;border-radius:15px;padding:22px 25px;display:flex;align-items:center;gap:26px;margin-bottom:31px}.overview-copy{flex:1}.overview-copy strong{font-size:17px;font-weight:600;display:block}.overview-copy small{font-size:13px;color:var(--muted)}.stat{border-right:1px solid #ccdbd0;padding-right:26px;min-width:105px;display:flex;align-items:center;gap:12px}.stat strong{font-size:29px;font-weight:500;line-height:1.2}.stat span{font-size:13px;color:#536c5e}.section-head{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:20px}.section-head h2{font-size:19px;font-weight:600;margin:0}.section-head h2 small{font-size:13px;font-weight:400;color:var(--muted);margin-right:9px}.search{display:flex;align-items:center;gap:9px;background:#fff;border:1px solid #dbe4de;border-radius:9px;padding:10px 13px;width:290px;color:#71877a}.search input{border:0;outline:none;width:100%;min-width:0;font-size:14px;background:transparent;color:var(--ink)}.search:focus-within{border-color:var(--green);box-shadow:0 0 0 3px #176b5310}.category{font-size:13px;color:#6b7e72;margin:25px 0 12px;display:flex;align-items:center;gap:12px}.category:after{content:'';height:1px;background:var(--line);flex:1}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.card{position:relative;text-align:right;border:1px solid var(--line);border-radius:13px;background:#fff;padding:22px;display:flex;flex-direction:column;min-height:181px;transition:transform .18s,border-color .18s,box-shadow .18s}.card:hover{transform:translateY(-3px);border-color:#a2bbae;box-shadow:0 8px 25px #203e2710}.card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:15px}.platform-icon{display:grid;place-items:center;width:43px;height:43px;border-radius:11px;background:#edf4ef;color:#397452}.card:nth-child(even) .platform-icon{background:#f5f1e7;color:#967739}.badge{font-size:12px;display:flex;align-items:center;gap:6px;color:#3d7457}.badge:before{content:'';width:5px;height:5px;border-radius:50%;background:#558e64}.badge.wait{color:#778579}.badge.wait:before{background:#a4afa7}.card h3{font-size:17px;line-height:1.6;margin:0;font-weight:600}.card-bottom{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:17px;color:#78877d;font-size:12px}.card-arrow{color:var(--green);display:grid;place-items:center;background:#f4f7f4;width:28px;height:28px;border-radius:50%}.card-arrow svg{width:17px;height:17px}.card.pending{background:#fafcfb}.card.pending h3{color:#6c7b71}.page-footer{color:#819086;font-size:12px;display:flex;justify-content:space-between;border-top:1px solid var(--line);padding-top:20px;margin-top:32px}.viewer{height:calc(100dvh - 91px);display:flex;flex-direction:column}.viewer-bar{background:#f8faf9;padding:17px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line)}.viewer-title{display:flex;align-items:center;gap:12px;min-width:0}.viewer-title h1{font-size:18px;margin:0}.viewer-title small{font-size:12px;color:var(--muted)}.open-link{text-decoration:none;border:1px solid #d2dfd5;border-radius:8px;display:flex;align-items:center;gap:8px;background:#fff;padding:9px 12px;font-size:13px;white-space:nowrap}.frame-area{flex:1;position:relative;min-height:0;background:white}.frame-area iframe{width:100%;height:100%;border:0;position:absolute;inset:0}.loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;background:var(--paper);gap:15px;color:var(--muted);padding:24px;text-align:center}.spinner{width:32px;height:32px;border:3px solid #dce8df;border-top-color:var(--green);border-radius:50%;animation:spin .8s linear infinite}.loading p{margin:0}.loading a{font-size:14px}.empty{padding:65px 24px;text-align:center;color:var(--muted)}.empty h2{color:var(--ink);font-size:21px}.backdrop{display:none}@keyframes spin{to{transform:rotate(360deg)}}@media(min-width:1700px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:1150px){.sidebar{width:250px}.main{margin-right:250px}.workspace{padding:28px}.topbar{padding:0 28px}.date{display:none}.overview{gap:15px}.stat{min-width:83px;padding-right:15px}.overview-copy small{display:none}}
-@media(max-width:800px){.sidebar{transform:translateX(100%);transition:transform .2s;width:285px}.sidebar.is-open{transform:translateX(0)}.main{margin-right:0}.topbar{height:73px;padding:0 19px}.menu-button{display:grid;place-items:center;padding:5px}.breadcrumb{font-size:13px;gap:8px}.department{border:0;padding:0}.department span{display:none}.workspace{padding:25px 19px}.intro{gap:10px}h1{font-size:27px}.index-number{display:none}.overview{flex-wrap:wrap;padding:19px;gap:20px}.overview-copy{flex-basis:100%}.overview-copy small{display:block}.stat{flex:1;padding:0;border:0;min-width:0}.stat strong{font-size:25px}.section-head{align-items:flex-start;flex-direction:column;gap:15px}.search{width:100%}.grid{gap:12px}.card{padding:17px;min-height:190px}.card h3{font-size:16px}.viewer{height:calc(100dvh - 73px)}.viewer-bar{padding:12px;align-items:flex-start}.viewer-title h1{font-size:16px}.viewer-title .platform-icon{display:none}.open-link{font-size:12px;padding:7px}.open-link svg{width:16px}.backdrop.is-open{display:block;position:fixed;inset:0;background:#001d1b80;z-index:19;border:0}.page-footer{gap:15px}.page-footer span:last-child{display:none}}
-@media(max-width:480px){.grid{grid-template-columns:1fr}.card{min-height:165px}.intro p{font-size:14px}.breadcrumb>svg{display:none}.stat{gap:8px}.stat span{font-size:12px}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
-</style></head>
+:root{
+  --deep:#0d2724;      /* خلفية المسرح */
+  --pine:#143a35;      /* سطح البطاقة */
+  --pine-hi:#1f5048;   /* حافة البطاقة المضيئة */
+  --gold:#d4b66e;      /* لون الهوية */
+  --paper:#eef4f0;     /* النص الأساسي */
+  --mist:#9fbab1;      /* النص الثانوي */
+  --rail:#0a201d;      /* الشريط الجانبي */
+  --rail-w:268px;
+  --rail-mini:76px;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--deep);color:var(--paper);font:16px/1.7 'Readex Pro',Tahoma,sans-serif;overflow:hidden}
+button,input,a{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0;-webkit-tap-highlight-color:transparent}
+a{text-decoration:none}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+[hidden]{display:none!important}
+
+/* ===== الهيكل ===== */
+.app{display:flex;height:100dvh}
+.rail{width:var(--rail-w);flex-shrink:0;background:var(--rail);border-left:1px solid #ffffff0d;display:flex;flex-direction:column;padding:22px 14px 16px;transition:width .28s ease;position:relative;z-index:30}
+.stage{flex:1;min-width:0;position:relative;display:flex;flex-direction:column;
+  background:radial-gradient(1100px 600px at 85% -10%,#1d4a43 0%,transparent 60%),radial-gradient(700px 500px at 0% 110%,#12352f 0%,transparent 65%),var(--deep)}
+
+/* ===== الشريط الجانبي ===== */
+.brand{display:flex;align-items:center;gap:12px;padding:0 8px 20px;border-bottom:1px solid #ffffff10;white-space:nowrap;overflow:hidden}
+.brand-mark{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;flex-shrink:0;color:var(--gold);background:linear-gradient(145deg,#1d4a43,#0f2e2a);box-shadow:inset 0 1px 0 #ffffff14,0 6px 16px -6px #000a}
+.brand strong{display:block;font-size:18px;font-weight:600;line-height:1.3}
+.brand small{display:block;font-size:12px;color:var(--mist);font-weight:300}
+.nav{flex:1;overflow-y:auto;overflow-x:hidden;margin:14px -6px 0;padding:0 6px;scrollbar-width:thin;scrollbar-color:#2a5047 transparent}
+.nav-group{font-size:12px;color:#7f9c93;margin:18px 12px 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nav-item{display:flex;align-items:center;gap:12px;width:100%;text-align:right;padding:10px 12px;border-radius:11px;font-size:14px;line-height:1.55;color:#c3d6cf;transition:background .15s,color .15s;position:relative}
+.nav-item svg{width:20px;height:20px;color:#8fb0a5}
+.nav-item span{overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.nav-item:hover{background:#ffffff08;color:#fff}
+.nav-item.active{background:linear-gradient(90deg,#1b453e,#235a50);color:#fff}
+.nav-item.active::before{content:'';position:absolute;right:0;top:9px;bottom:9px;width:3px;border-radius:3px;background:var(--gold)}
+.nav-item.active svg{color:var(--gold)}
+.nav-item.pending{opacity:.55}
+.rail-foot{border-top:1px solid #ffffff10;padding-top:12px;display:flex;gap:6px}
+.rail-btn{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;font-size:13px;color:var(--mist);white-space:nowrap;overflow:hidden}
+.rail-btn:hover{background:#ffffff08;color:#fff}
+.rail-btn.grow{flex:1}
+
+/* الشريط المصغّر */
+.app.mini .rail{width:var(--rail-mini)}
+.app.mini .brand{padding-inline:2px;justify-content:center}
+.app.mini .brand div:last-child,.app.mini .nav-group,.app.mini .nav-item span,.app.mini .rail-btn .t{display:none}
+.app.mini .nav-item,.app.mini .rail-btn{justify-content:center;padding:11px 0}
+.app.mini .nav-group{display:block;height:1px;margin:12px 10px;background:#ffffff10;font-size:0}
+.app.mini .rail-foot{flex-direction:column}
+.app.mini .collapse-icon{transform:scaleX(-1)}
+
+/* ===== الرئيسية ===== */
+.home{flex:1;overflow-y:auto;padding:26px clamp(18px,3.4vw,52px) 48px;scrollbar-width:thin;scrollbar-color:#2a5047 transparent}
+.bar{display:flex;align-items:center;gap:16px;margin-bottom:8px}
+.bar h1{margin:0;font-size:24px;font-weight:500;letter-spacing:-.2px}
+.bar .count{color:var(--mist);font-size:14px;font-weight:300}
+.bar .spacer{flex:1}
+.date{color:var(--mist);font-size:13px;font-weight:300}
+.search{display:flex;align-items:center;gap:9px;background:#ffffff0a;border:1px solid #ffffff14;border-radius:12px;padding:9px 13px;width:min(300px,100%);color:var(--mist);transition:border-color .15s,background .15s}
+.search:focus-within{border-color:#d4b66e88;background:#ffffff10}
+.search input{border:0;outline:0;background:transparent;width:100%;min-width:0;font-size:14px;color:var(--paper)}
+.search input::placeholder{color:#7f9c93}
+.menu-btn{display:none;width:42px;height:42px;border-radius:11px;place-items:center;background:#ffffff0a}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px;margin-top:26px}
+
+/* ===== البطاقة ثلاثية الأبعاد ===== */
+.card{--rx:0deg;--ry:0deg;--mx:50%;--my:50%;--lift:0px;
+  position:relative;display:flex;flex-direction:column;text-align:right;min-height:210px;padding:24px 24px 20px;border-radius:22px;
+  background:linear-gradient(160deg,var(--pine-hi) 0%,var(--pine) 46%,#0f2f2b 100%);
+  border:1px solid #d4b66e26;
+  box-shadow:inset 0 1px 0 #ffffff1a,0 2px 0 #0003,0 26px 50px -26px #000c;
+  transform-style:preserve-3d;
+  transform:perspective(900px) rotateX(var(--rx)) rotateY(var(--ry)) translateY(calc(var(--lift) * -1));
+  transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s,border-color .3s;
+  will-change:transform}
+.card.tilting{transition:transform .08s linear,box-shadow .3s,border-color .3s}
+.card:hover,.card:focus-visible{--lift:6px;border-color:#d4b66e66;box-shadow:inset 0 1px 0 #ffffff24,0 2px 0 #0003,0 44px 70px -30px #000e,0 0 0 1px #d4b66e1f}
+.card:focus-visible{outline-offset:6px}
+/* ضوء ذهبي يتبع المؤشر */
+.card .light{position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .35s;
+  background:radial-gradient(420px circle at var(--mx) var(--my),#d4b66e2e,transparent 45%)}
+.card:hover .light{opacity:1}
+/* نسخة كبيرة بارزة من الأيقونة في الخلف */
+.card .ghost{position:absolute;left:10px;bottom:6px;width:132px;height:132px;color:#ffffff10;stroke-width:.8;transform:translateZ(-6px);pointer-events:none;transition:color .4s}
+.card:hover .ghost{color:#d4b66e1a}
+.card .ico{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:var(--gold);
+  background:linear-gradient(145deg,#265b52,#173f39);box-shadow:inset 0 1px 0 #ffffff26,0 14px 22px -10px #000c;
+  transform:translateZ(26px);transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+.card .ico svg{width:27px;height:27px}
+.card .top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;transform-style:preserve-3d}
+.card .cat{font-size:12px;color:var(--gold);opacity:.85;transform:translateZ(14px);padding-top:4px;text-align:left}
+.card h3{margin:20px 0 0;font-size:18px;font-weight:500;line-height:1.6;transform:translateZ(18px);max-width:92%}
+.card .foot{margin-top:auto;padding-top:18px;display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--mist);transform:translateZ(12px)}
+.card .go{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#ffffff0d;color:var(--gold);transition:background .3s,transform .3s}
+.card .go svg{width:18px;height:18px}
+.card:hover .go{background:var(--gold);color:var(--deep);transform:translateX(-4px)}
+.card.pending{background:linear-gradient(160deg,#18403a,#122f2b);border-style:dashed}
+.card.pending .ico{color:var(--mist)}
+.card.pending h3{color:#b7cbc4}
+
+.empty{padding:70px 20px;text-align:center;color:var(--mist)}
+.empty strong{display:block;color:var(--paper);font-size:18px;font-weight:500;margin-bottom:4px}
+
+/* ===== عارض المنصة ===== */
+.viewer{flex:1;display:flex;flex-direction:column;min-height:0}
+.vbar{height:52px;flex-shrink:0;display:flex;align-items:center;gap:10px;padding:0 12px;background:#0a201dcc;border-bottom:1px solid #ffffff10;backdrop-filter:blur(10px)}
+.vbtn{height:36px;display:inline-flex;align-items:center;gap:8px;padding:0 12px;border-radius:10px;font-size:13px;color:#cfe0d9;white-space:nowrap}
+.vbtn:hover{background:#ffffff0d;color:#fff}
+.vbtn svg{width:19px;height:19px}
+.vbar .menu-btn{display:none;width:auto}
+.vtitle{display:flex;align-items:center;gap:10px;min-width:0;flex:1;padding-inline:6px;border-inline-start:1px solid #ffffff14}
+.vtitle .mini-ico{color:var(--gold);display:grid}
+.vtitle .mini-ico svg{width:19px;height:19px}
+.vtitle b{font-weight:500;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vtitle small{color:#7f9c93;font-size:12px;white-space:nowrap}
+.frame{flex:1;position:relative;min-height:0;background:#fff}
+.frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:var(--deep);color:var(--mist);text-align:center;padding:24px}
+.overlay p{margin:0}
+.overlay a{color:var(--gold);font-size:14px}
+.spinner{width:34px;height:34px;border-radius:50%;border:3px solid #ffffff14;border-top-color:var(--gold);animation:spin .8s linear infinite}
+.overlay h2{margin:0;color:var(--paper);font-weight:500;font-size:20px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.backdrop{display:none}
+
+/* ===== الجوال ===== */
+@media (max-width:860px){
+  .rail{position:fixed;inset:0 0 0 auto;width:286px;transform:translateX(100%);transition:transform .25s ease}
+  .app.mini .rail{width:286px}
+  .app.mini .brand div:last-child,.app.mini .nav-item span,.app.mini .rail-btn .t{display:revert}
+  .app.mini .nav-group{display:block;height:auto;margin:18px 12px 6px;background:none;font-size:12px}
+  .app.mini .nav-item,.app.mini .rail-btn{justify-content:flex-start;padding:10px 12px}
+  .app.mini .rail-foot{flex-direction:row}
+  .collapse-btn{display:none!important}
+  .rail.open{transform:none;box-shadow:-20px 0 60px #0009}
+  .backdrop.open{display:block;position:fixed;inset:0;background:#0009;z-index:25;border:0}
+  .menu-btn{display:grid}
+  .vbar .menu-btn{display:inline-flex}
+  .vbar #backBtn{display:none}
+  .bar{flex-wrap:wrap;gap:12px}
+  .bar h1{font-size:21px}
+  .date{display:none}
+  .search{width:100%;order:5}
+  .grid{grid-template-columns:1fr;gap:16px}
+  .card{min-height:180px}
+  .vtitle small{display:none}
+  .vbtn .label{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition:none!important;animation:none!important}
+  .card{transform:none!important}
+}
+</style>
+</head>
 <body>
-<div class="shell">
-<button class="backdrop" id="backdrop" aria-label="إغلاق قائمة المنصات"></button>
-<aside class="sidebar" id="sidebar" aria-label="التنقل الرئيسي">
-<div class="brand"><div class="brand-mark" data-icon="building"></div><div><strong>بوابة القسم</strong><small>JAZAN · WORKSPACE</small></div></div>
-<button class="home-button selected" id="homeButton"><span data-icon="home"></span>الرئيسية</button>
-<nav class="nav" id="sidebarNav" aria-label="المنصات"></nav>
-<div class="sidebar-footer"><span></span>جميع الأنظمة في مساحة واحدة</div>
-</aside>
-<main class="main">
-<header class="topbar"><div class="breadcrumb"><button class="menu-button" id="menuButton" aria-label="فتح قائمة المنصات" aria-expanded="false" aria-controls="sidebar"><span data-icon="menu"></span></button><span>مساحة العمل</span><span style="color:#b6c4bc">/</span><b id="breadcrumbName">الرئيسية</b></div><div class="top-end"><time class="date" id="today"></time><div class="department"><span>القسم الداخلي</span><div class="avatar">ق</div></div></div></header>
-<section class="workspace" id="homeView">
-<div class="intro"><div><div class="eyebrow">بوابة القسم الداخلية</div><h1>أهلاً بك في مساحة عملك</h1><p>منصات القسم، مرتّبة لتصل إلى ما تحتاجه بسهولة.</p></div><div class="index-number" aria-hidden="true">01</div></div>
-<div class="overview"><div class="overview-copy"><strong>كل ما تحتاجه لإنجاز يومك</strong><small>اختر منصتك وابدأ العمل من البوابة مباشرة</small></div><div class="stat"><strong id="totalCount"></strong><span>منصات<br>القسم</span></div><div class="stat"><strong id="readyCount"></strong><span>متاحة<br>للعمل</span></div><div class="stat"><strong id="pendingCount"></strong><span>قريباً<br>في البوابة</span></div></div>
-<div class="section-head"><h2>دليل المنصات <small>وصول مباشر لأنظمة القسم</small></h2><label class="search"><span data-icon="search"></span><input type="search" id="searchBox" placeholder="ابحث عن منصة…" aria-label="البحث عن منصة"></label></div>
-<div id="platformGrid"></div><div class="empty" id="noResults" hidden>لا توجد منصات مطابقة لبحثك.</div>
-<footer class="page-footer"><span>بوابة القسم الداخلية</span><span>مساحة واحدة. وصول أسهل.</span></footer>
-</section>
-<section class="viewer" id="viewer" hidden aria-label="مساحة المنصة">
-<div class="viewer-bar"><div class="viewer-title"><div class="platform-icon" id="viewerIcon"></div><div><small id="viewerCategory"></small><h1 id="viewerName"></h1></div></div><a class="open-link" id="openNewTabBtn" target="_blank" rel="noopener noreferrer">نافذة مستقلة <span data-icon="external"></span></a></div>
-<div class="frame-area"><iframe id="platformFrame" title="المنصة المحددة" hidden></iframe><div class="loading" id="loadingOverlay" role="status" hidden><div class="spinner"></div><p>جاري تحميل المنصة…</p><a id="loadingLink" target="_blank" rel="noopener noreferrer">إذا لم تظهر المنصة، افتحها في نافذة مستقلة ↗</a></div><div class="empty" id="pendingState" hidden><div class="eyebrow" style="justify-content:center">قريباً في البوابة</div><h2>نعمل على إتاحة هذه المنصة</h2><p>ستظهر هنا بمجرد توفر رابطها.</p></div></div>
-</section></main></div>
+<div class="app" id="app">
+  <button class="backdrop" id="backdrop" aria-label="إغلاق القائمة"></button>
+
+  <aside class="rail" id="rail" aria-label="قائمة المنصات">
+    <div class="brand">
+      <div class="brand-mark" data-icon="building"></div>
+      <div><strong>بوابة القسم</strong><small>جميع منصات القسم في مكان واحد</small></div>
+    </div>
+    <nav class="nav" id="nav"></nav>
+    <div class="rail-foot">
+      <button class="rail-btn grow" id="homeBtn" title="الرئيسية"><span data-icon="home"></span><span class="t">الرئيسية</span></button>
+      <button class="rail-btn collapse-btn" id="collapseBtn" title="تصغير القائمة" aria-label="تصغير القائمة"><span class="collapse-icon" data-icon="chevrons"></span></button>
+    </div>
+  </aside>
+
+  <main class="stage">
+    <!-- الرئيسية -->
+    <section class="home" id="home">
+      <header class="bar">
+        <button class="menu-btn" id="menuBtn" aria-label="فتح القائمة" aria-expanded="false" aria-controls="rail"><span data-icon="menu"></span></button>
+        <h1>منصات القسم</h1>
+        <span class="count" id="count"></span>
+        <span class="spacer"></span>
+        <time class="date" id="today"></time>
+        <label class="search"><span data-icon="search"></span><input type="search" id="search" placeholder="ابحث عن منصة" aria-label="ابحث عن منصة"></label>
+      </header>
+      <div id="groups" class="grid"></div>
+      <div class="empty" id="empty" hidden><strong>لا توجد منصة بهذا الاسم</strong>جرّب كلمة أخرى من اسم المنصة.</div>
+    </section>
+
+    <!-- عارض المنصة -->
+    <section class="viewer" id="viewer" hidden aria-label="المنصة المفتوحة">
+      <div class="vbar">
+        <button class="vbtn" id="backBtn" title="العودة إلى الرئيسية"><span data-icon="arrowR"></span><span class="label">الرئيسية</span></button>
+        <button class="vbtn menu-btn" id="menuBtn2" aria-label="فتح القائمة" aria-controls="rail"><span data-icon="menu"></span></button>
+        <div class="vtitle"><span class="mini-ico" id="vIcon"></span><b id="vName"></b><small id="vCat"></small></div>
+        <a class="vbtn" id="vOpen" target="_blank" rel="noopener noreferrer" title="فتح المنصة في نافذة مستقلة"><span data-icon="external"></span><span class="label">نافذة مستقلة</span></a>
+      </div>
+      <div class="frame">
+        <iframe id="frame" title="المنصة" hidden></iframe>
+        <div class="overlay" id="loading" role="status" hidden><div class="spinner"></div><p>جاري تحميل المنصة…</p><a id="loadingLink" target="_blank" rel="noopener noreferrer">لم تظهر؟ افتحها في نافذة مستقلة</a></div>
+        <div class="overlay" id="pending" hidden><h2>هذه المنصة لم تُتح بعد</h2><p>ستظهر هنا بمجرد إضافة رابطها.</p></div>
+      </div>
+    </section>
+  </main>
+</div>
+
 <script>
+/* ============================================================
+   قائمة المنصات
+   لإضافة منصة: انسخ أي مقطع من { إلى }, والصقه وعدّل:
+   - category: اسم الفئة (اسم جديد = قسم جديد)
+   - name: اسم المنصة
+   - icon: اسم الأيقونة من القائمة PATHS بالأسفل
+   - url: رابط المنصة، أو null لتظهر "قريباً"
+   ============================================================ */
 const PLATFORMS = [
 
   // ---- الحضور والمساءلات ----
   {
     category: "الحضور والمساءلات",
     name: "منصة مساند حضوري",
-    icon: "📊",
+    icon: "chart",
     url: "https://script.google.com/macros/s/AKfycbx_N9Sq4wWTR3c8bQbjIjJQK9gjYPCVkp1Xp3KluIfsylBr3drEysR3k5JD9MlNn5EdIQ/exec"
   },
 
@@ -50,13 +242,13 @@ const PLATFORMS = [
   {
     category: "الإشراف التربوي",
     name: "منصة شواهد تنفيذ الأهداف للمشرفين ورؤساء الوحدات",
-    icon: "📁",
+    icon: "folder",
     url: "https://script.google.com/macros/s/AKfycbxAWnvLx0y7sF6jyzJ-9_C0pVc7cbm6j_j9XR_Ce_qP29dM-Wjs6TwDf1Lb9yo1dqbe/exec"
   },
   {
     category: "الإشراف التربوي",
     name: "منصة مساند مدرستي",
-    icon: "🖥️",
+    icon: "monitor",
     url: "https://script.google.com/macros/s/AKfycbxSDULgyNUkS8M_H46n0hyIG2NU1gixxknBIn87hjW-qPVbGTeioe5f1gfV9yZ7vQlq4A/exec"
   },
 
@@ -64,19 +256,19 @@ const PLATFORMS = [
   {
     category: "الأداء الوظيفي والتميز",
     name: "منصة دورة الأداء الوظيفي 1447",
-    icon: "🏆",
+    icon: "award",
     url: "https://script.google.com/macros/s/AKfycbyCS-soDhJiYqSKzLorRqMAxS-_uo-W2tT_9wzXjKY94aHztZtFZAaPovecMTPd9IonVQ/exec"
   },
   {
     category: "الأداء الوظيفي والتميز",
     name: "منصة متابعة حالة التقويم الذاتي",
-    icon: "📈",
+    icon: "trend",
     url: "https://script.google.com/macros/s/AKfycbyYftsyBiHAIsyjUaLp66ppmoOxhgTZi8jzetyd8pzsNXcfyjf712TxKFhYTayyQIsltw/exec"
   },
   {
     category: "الأداء الوظيفي والتميز",
     name: "منصة استقبال التعديلات على منصة التميز",
-    icon: "✏️",
+    icon: "edit",
     url: "https://script.google.com/macros/s/AKfycbzFmkZ1zpCYjaESjLqWW02mAUd6bU8YlHQV5MDZY3honox9pI4l6md-b8vZjrzv5v2M7g/exec"
   },
 
@@ -84,7 +276,7 @@ const PLATFORMS = [
   {
     category: "النماذج والسلامة",
     name: "منصة حصر المواد الكيميائية وقواعد السلامة المرورية",
-    icon: "🧪",
+    icon: "flask",
     url: "https://script.google.com/macros/s/AKfycbwUETl3AwxaQNzPXKTT6n1OLXECw_yy6pl-BlxU1C7tscNtKxhJ_CLvMhrw9JrTV3gO/exec"
   },
 
@@ -92,22 +284,141 @@ const PLATFORMS = [
   {
     category: "طلبات المدارس",
     name: "منصة طلبات التحول عن بعد",
-    icon: "💻",
+    icon: "laptop",
     url: "https://script.google.com/macros/s/AKfycbxpDz9I5RsLJjJ9Mux4tZW1kaET50RihGsAmPwnsYgISefp6R3yAFcyOZahWe58D9p32w/exec?page=admin"
   }
 ];
 
-const PATHS={building:'M3 21h18M5 21V7h14v14M3 7l9-4 9 4M9 11v2m6-2v2m-6 3v2m6-2v2',home:'M3 10l9-7 9 7M5 9v12h14V9M9 21v-7h6v7',menu:'M4 6h16M4 12h16M4 18h16',search:'M21 21l-5-5M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0',chart:'M4 20V4M4 20h17M8 16v-5m5 5V7m5 9V3',door:'M4 21h10V3H4v18m10-9h7m-3-3 3 3-3 3M8 12h1',school:'M3 21h18M5 21V9l7-6 7 6v12M9 21v-6h6v6M10 9h4',file:'M5 3h9l5 5v13H5V3m9 0v6h5M8 13h8m-8 4h6',folder:'M3 7V4h6l3 3h9v13H3V7',award:'M16 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0M8 11l-2 10 6-3 6 3-2-10',trend:'M3 19h18M4 15l6-6 4 4 6-9m-5 0h5v5',edit:'M14 5l5 5M4 20l4-1L21 6l-4-4L4 15v5',flask:'M9 3h6m-5 0v6l-6 10q-1 2 2 2h12q3 0 2-2L14 9V3M7 15h10',book:'M12 5v16M3 3q5-1 9 2 4-3 9-2v16q-5-1-9 2-4-3-9-2V3',monitor:'M3 4h18v12H3V4m6 17h6m-3-5v5M7 12l3-3 3 2 4-4',laptop:'M5 5h14v10H5V5M2 19h20l-2-4H4l-2 4',arrow:'M19 12H5m6-6-6 6 6 6',external:'M14 3h7v7m0-7L10 14M10 3H3v18h18v-7'};
-const ICONS=['chart','folder','monitor','award','trend','edit','flask','laptop'];
+/* الأيقونات المتاحة: chart, folder, monitor, award, trend, edit, flask, laptop, school, file, door, book, users, calendar, clipboard, shield */
+const PATHS={
+  building:'M3 21h18M5 21V7h14v14M3 7l9-4 9 4M9 11v2m6-2v2m-6 3v2m6-2v2',
+  home:'M3 10l9-7 9 7M5 9v12h14V9M9 21v-7h6v7',
+  menu:'M4 6h16M4 12h16M4 18h16',
+  search:'M21 21l-5-5M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0',
+  external:'M14 3h7v7m0-7L10 14M10 3H3v18h18v-7',
+  arrow:'M19 12H5m6-6-6 6 6 6',
+  arrowR:'M5 12h14m-6-6 6 6-6 6',
+  chevrons:'M13 17l5-5-5-5M6 17l5-5-5-5',
+  chart:'M4 20V4M4 20h17M8 16v-5m5 5V7m5 9V3',
+  folder:'M3 7V4h6l3 3h9v13H3V7',
+  monitor:'M3 4h18v12H3V4m6 17h6m-3-5v5M7 12l3-3 3 2 4-4',
+  award:'M16 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0M8 11l-2 10 6-3 6 3-2-10',
+  trend:'M3 19h18M4 15l6-6 4 4 6-9m-5 0h5v5',
+  edit:'M14 5l5 5M4 20l4-1L21 6l-4-4L4 15v5',
+  flask:'M9 3h6m-5 0v6l-6 10q-1 2 2 2h12q3 0 2-2L14 9V3M7 15h10',
+  laptop:'M5 5h14v10H5V5M2 19h20l-2-4H4l-2 4',
+  school:'M3 21h18M5 21V9l7-6 7 6v12M9 21v-6h6v6M10 9h4',
+  file:'M5 3h9l5 5v13H5V3m9 0v6h5M8 13h8m-8 4h6',
+  door:'M4 21h10V3H4v18m10-9h7m-3-3 3 3-3 3M8 12h1',
+  book:'M12 5v16M3 3q5-1 9 2 4-3 9-2v16q-5-1-9 2-4-3-9-2V3',
+  users:'M16 20v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8m13 10v-2a4 4 0 0 0-3-3.9M16 2.1a4 4 0 0 1 0 7.8',
+  calendar:'M4 5h16v16H4V5m12-2v4M8 3v4M4 11h16',
+  clipboard:'M9 4h6v3H9V4M7 5H5v16h14V5h-2M8 12h8m-8 4h5',
+  shield:'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3'
+};
+
 const $=id=>document.getElementById(id);
-function icon(name){return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="'+(PATHS[name]||PATHS.file)+'"/></svg>';}
+const icon=n=>'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="'+(PATHS[n]||PATHS.file)+'"/></svg>';
 document.querySelectorAll('[data-icon]').forEach(el=>el.innerHTML=icon(el.dataset.icon));
-let activeIndex=null,loadTimer;
-function toggleMenu(open){$('sidebar').classList.toggle('is-open',open);$('backdrop').classList.toggle('is-open',open);$('menuButton').setAttribute('aria-expanded',String(open));}
-function renderSidebar(){const nav=$('sidebarNav');nav.replaceChildren();let category='';PLATFORMS.forEach((p,i)=>{if(category!==p.category){category=p.category;const label=document.createElement('div');label.className='nav-label';label.textContent=category;nav.append(label);}const button=document.createElement('button');button.className='nav-item'+(!p.url?' pending':'')+(i===activeIndex?' active':'');button.setAttribute('aria-current',i===activeIndex?'page':'false');button.innerHTML=icon(ICONS[i]);const name=document.createElement('span');name.textContent=p.name;button.append(name);button.onclick=()=>selectPlatform(i);nav.append(button);});}
-function renderCards(){const term=$('searchBox').value.trim();const grid=$('platformGrid');grid.replaceChildren();let count=0;[...new Set(PLATFORMS.map(p=>p.category))].forEach(category=>{const entries=PLATFORMS.map((p,i)=>({p,i})).filter(({p})=>p.category===category&&p.name.includes(term));if(!entries.length)return;const heading=document.createElement('h3');heading.className='category';heading.textContent=category;grid.append(heading);const group=document.createElement('div');group.className='grid';entries.forEach(({p,i})=>{count++;const card=document.createElement('button');card.className='card'+(!p.url?' pending':'');card.innerHTML='<div class="card-top"><span class="platform-icon">'+icon(ICONS[i])+'</span><span class="badge'+(!p.url?' wait':'')+'">'+(p.url?'متاحة الآن':'قريباً')+'</span></div>';const title=document.createElement('h3');title.textContent=p.name;card.append(title);const bottom=document.createElement('div');bottom.className='card-bottom';bottom.innerHTML='<span>'+(p.url?'الدخول إلى المنصة':'بانتظار إتاحة المنصة')+'</span><span class="card-arrow">'+icon('arrow')+'</span>';card.append(bottom);card.onclick=()=>selectPlatform(i);group.append(card);});grid.append(group);});$('noResults').hidden=count>0;}
-function resetFrame(){clearTimeout(loadTimer);$('platformFrame').onload=null;$('platformFrame').removeAttribute('src');$('platformFrame').hidden=true;$('loadingOverlay').hidden=true;}
-function showHome(){activeIndex=null;resetFrame();$('viewer').hidden=true;$('homeView').hidden=false;$('homeButton').classList.add('selected');$('breadcrumbName').textContent='الرئيسية';toggleMenu(false);renderSidebar();}
-function selectPlatform(i){const p=PLATFORMS[i];if(!p)return;activeIndex=i;resetFrame();$('homeView').hidden=true;$('viewer').hidden=false;$('homeButton').classList.remove('selected');$('breadcrumbName').textContent='المنصات';$('viewerName').textContent=p.name;$('viewerCategory').textContent=p.category;$('viewerIcon').innerHTML=icon(ICONS[i]);$('pendingState').hidden=!!p.url;$('openNewTabBtn').hidden=!p.url;toggleMenu(false);renderSidebar();if(!p.url)return;const frame=$('platformFrame');$('openNewTabBtn').href=p.url;$('loadingLink').href=p.url;frame.title=p.name;$('loadingOverlay').hidden=false;frame.onload=()=>{if(activeIndex!==i)return;clearTimeout(loadTimer);$('loadingOverlay').hidden=true;frame.hidden=false;};frame.src=p.url;loadTimer=setTimeout(()=>{if(activeIndex===i){$('loadingOverlay').hidden=true;frame.hidden=false;}},15000);}
-$('homeButton').onclick=showHome;$('menuButton').onclick=()=>toggleMenu(!$('sidebar').classList.contains('is-open'));$('backdrop').onclick=()=>toggleMenu(false);document.addEventListener('keydown',e=>{if(e.key==='Escape'){toggleMenu(false);$('menuButton').focus();}});$('searchBox').addEventListener('input',renderCards);$('today').textContent=new Intl.DateTimeFormat('ar-SA',{weekday:'long',day:'numeric',month:'long',calendar:'gregory'}).format(new Date());$('totalCount').textContent=PLATFORMS.length.toLocaleString('ar-SA');$('readyCount').textContent=PLATFORMS.filter(p=>p.url).length.toLocaleString('ar-SA');$('pendingCount').textContent=PLATFORMS.filter(p=>!p.url).length.toLocaleString('ar-SA');renderSidebar();renderCards();
-</script></body></html>
+
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+const isMobile=()=>matchMedia('(max-width:860px)').matches;
+const canTilt=matchMedia('(pointer:fine)').matches&&!matchMedia('(prefers-reduced-motion:reduce)').matches;
+let active=null,loadTimer;
+
+/* ---------- القائمة الجانبية ---------- */
+function renderNav(){
+  const nav=$('nav');nav.replaceChildren();let cat='';
+  PLATFORMS.forEach((p,i)=>{
+    if(p.category!==cat){cat=p.category;const g=document.createElement('div');g.className='nav-group';g.textContent=cat;nav.append(g);}
+    const b=document.createElement('button');
+    b.className='nav-item'+(p.url?'':' pending')+(i===active?' active':'');
+    b.title=p.name;b.setAttribute('aria-current',i===active?'page':'false');
+    b.innerHTML=icon(p.icon);const s=document.createElement('span');s.textContent=p.name;b.append(s);
+    b.onclick=()=>openPlatform(i);nav.append(b);
+  });
+}
+
+/* ---------- البطاقات ---------- */
+function renderCards(){
+  const term=$('search').value.trim();const grid=$('groups');grid.replaceChildren();grid.className='grid';let shown=0;
+  PLATFORMS.forEach((p,i)=>{
+    if(!(p.name.includes(term)||p.category.includes(term)))return;
+    shown++;
+    const card=document.createElement('button');
+    card.className='card'+(p.url?'':' pending');
+    card.innerHTML='<span class="light"></span>'+icon(p.icon).replace('<svg','<svg class="ghost"')+'<span class="top"><span class="ico">'+icon(p.icon)+'</span><span class="cat"></span></span>';
+    card.querySelector('.cat').textContent=p.category;
+    const t=document.createElement('h3');t.textContent=p.name;card.append(t);
+    const f=document.createElement('span');f.className='foot';
+    f.innerHTML='<span>'+(p.url?'فتح المنصة':'قريباً')+'</span><span class="go">'+icon('arrow')+'</span>';
+    card.append(f);
+    card.onclick=()=>openPlatform(i);
+    if(canTilt)attachTilt(card);
+    grid.append(card);
+  });
+  $('empty').hidden=shown>0;
+}
+
+function attachTilt(card){
+  let raf=0;
+  card.addEventListener('pointermove',e=>{
+    const r=card.getBoundingClientRect();const x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
+    cancelAnimationFrame(raf);
+    raf=requestAnimationFrame(()=>{
+      card.classList.add('tilting');
+      card.style.setProperty('--ry',((x-.5)*14).toFixed(2)+'deg');
+      card.style.setProperty('--rx',((.5-y)*10).toFixed(2)+'deg');
+      card.style.setProperty('--mx',(x*100).toFixed(1)+'%');
+      card.style.setProperty('--my',(y*100).toFixed(1)+'%');
+    });
+  });
+  card.addEventListener('pointerleave',()=>{
+    cancelAnimationFrame(raf);card.classList.remove('tilting');
+    card.style.setProperty('--rx','0deg');card.style.setProperty('--ry','0deg');
+  });
+}
+
+/* ---------- التنقل ---------- */
+function setMini(on,save){$('app').classList.toggle('mini',on);$('collapseBtn').title=on?'توسيع القائمة':'تصغير القائمة';$('collapseBtn').setAttribute('aria-label',$('collapseBtn').title);if(save)store.set('portal-mini',on?'1':'0');}
+function toggleDrawer(open){$('rail').classList.toggle('open',open);$('backdrop').classList.toggle('open',open);$('menuBtn').setAttribute('aria-expanded',String(open));}
+function resetFrame(){clearTimeout(loadTimer);const f=$('frame');f.onload=null;f.removeAttribute('src');f.hidden=true;$('loading').hidden=true;}
+
+function showHome(){
+  active=null;resetFrame();$('viewer').hidden=true;$('home').hidden=false;
+  setMini(store.get('portal-mini')==='1');toggleDrawer(false);renderNav();
+  if(location.hash)history.replaceState(null,'',location.pathname+location.search);
+}
+function openPlatform(i){
+  const p=PLATFORMS[i];if(!p)return;active=i;resetFrame();
+  $('home').hidden=true;$('viewer').hidden=false;
+  $('vName').textContent=p.name;$('vCat').textContent=p.category;$('vIcon').innerHTML=icon(p.icon);
+  $('pending').hidden=!!p.url;$('vOpen').hidden=!p.url;
+  if(!isMobile())setMini(true);
+  toggleDrawer(false);renderNav();
+  history.replaceState(null,'','#'+(i+1));
+  if(!p.url)return;
+  const f=$('frame');$('vOpen').href=p.url;$('loadingLink').href=p.url;f.title=p.name;$('loading').hidden=false;
+  f.onload=()=>{if(active!==i)return;clearTimeout(loadTimer);$('loading').hidden=true;f.hidden=false;};
+  f.src=p.url;
+  loadTimer=setTimeout(()=>{if(active===i){$('loading').hidden=true;f.hidden=false;}},15000);
+}
+
+$('homeBtn').onclick=showHome;$('backBtn').onclick=showHome;
+$('collapseBtn').onclick=()=>setMini(!$('app').classList.contains('mini'),true);
+$('menuBtn').onclick=()=>toggleDrawer(!$('rail').classList.contains('open'));
+$('menuBtn2').onclick=()=>toggleDrawer(!$('rail').classList.contains('open'));
+$('backdrop').onclick=()=>toggleDrawer(false);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')toggleDrawer(false);});
+$('search').addEventListener('input',renderCards);
+
+const ready=PLATFORMS.filter(p=>p.url).length;
+$('count').textContent=ready.toLocaleString('ar-SA')+' منصات متاحة';
+$('today').textContent=new Intl.DateTimeFormat('ar-SA',{weekday:'long',day:'numeric',month:'long',calendar:'gregory'}).format(new Date());
+
+renderCards();
+const fromHash=parseInt(location.hash.slice(1),10);
+if(fromHash>=1&&fromHash<=PLATFORMS.length)openPlatform(fromHash-1);else showHome();
+</script>
+</body>
+</html>
