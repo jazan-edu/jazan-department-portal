@@ -214,6 +214,7 @@ svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
         <iframe id="frame" title="المنصة" hidden></iframe>
         <div class="overlay" id="loading" role="status" hidden><div class="spinner"></div><p>جاري تحميل المنصة…</p><a id="loadingLink" target="_blank" rel="noopener noreferrer">لم تظهر؟ افتحها في نافذة مستقلة</a></div>
         <div class="overlay" id="pending" hidden><h2>هذه المنصة لم تُتح بعد</h2><p>ستظهر هنا بمجرد إضافة رابطها.</p></div>
+        <div class="overlay" id="externalNotice" hidden><h2>فتح النظام في تبويب مستقل</h2><p>تابع إلى موقع النظام لتسجيل الدخول.</p><a id="externalLink" target="_blank" rel="noopener noreferrer">فتح النظام ↗</a></div>
       </div>
     </section>
   </main>
@@ -286,11 +287,19 @@ const PLATFORMS = [
     name: "منصة طلبات التحول عن بعد",
     icon: "laptop",
     url: "https://script.google.com/macros/s/AKfycbxpDz9I5RsLJjJ9Mux4tZW1kaET50RihGsAmPwnsYgISefp6R3yAFcyOZahWe58D9p32w/exec?page=admin"
-  }
+  },
+  { category: "أدوات القسم", name: "توقيع ملفات PDF", icon: "edit", url: "tools.html?tool=sign", tool: true },
+  { category: "أدوات القسم", name: "إنشاء QR Code", icon: "qr", url: "tools.html?tool=qr", tool: true },
+  { category: "أنظمة الوزارة", name: "نظام نور", icon: "school", url: "https://noor.moe.gov.sa/Noor/Login.aspx?ref=noor", external: true },
+  { category: "أنظمة الوزارة", name: "نظام فارس", icon: "users", url: "https://sshr.moe.gov.sa/OA_HTML/AppsLocalLogin.jsp", external: true },
+  { category: "أنظمة الوزارة", name: "نظام أعمالي", icon: "clipboard", url: "https://aamali.moe.gov.sa/", external: true },
+  { category: "أنظمة الوزارة", name: "الدعم الموحد", icon: "support", url: "https://usc.moe.gov.sa/moe_csm", external: true }
 ];
 
 /* الأيقونات المتاحة: chart, folder, monitor, award, trend, edit, flask, laptop, school, file, door, book, users, calendar, clipboard, shield */
 const PATHS={
+  qr:'M3 3h6v6H3zM15 3h6v6h-6zM3 15h6v6H3zM15 15h2v2h-2zM19 13h2v4m-8 2v2h4m2-2h2v2M11 3v3m0 5h4v2m-12 0h4',
+  support:'M4 14v-3a8 8 0 0 1 16 0v3M4 12H2v7h4v-7H4m16 0h2v7h-4v-7h2m0 7q0 3-7 3',
   building:'M3 21h18M5 21V7h14v14M3 7l9-4 9 4M9 11v2m6-2v2m-6 3v2m6-2v2',
   home:'M3 10l9-7 9 7M5 9v12h14V9M9 21v-7h6v7',
   menu:'M4 6h16M4 12h16M4 18h16',
@@ -331,11 +340,12 @@ function renderNav(){
   const nav=$('nav');nav.replaceChildren();let cat='';
   PLATFORMS.forEach((p,i)=>{
     if(p.category!==cat){cat=p.category;const g=document.createElement('div');g.className='nav-group';g.textContent=cat;nav.append(g);}
-    const b=document.createElement('button');
+    const b=document.createElement(p.external?'a':'button');
     b.className='nav-item'+(p.url?'':' pending')+(i===active?' active':'');
     b.title=p.name;b.setAttribute('aria-current',i===active?'page':'false');
     b.innerHTML=icon(p.icon);const s=document.createElement('span');s.textContent=p.name;b.append(s);
-    b.onclick=()=>openPlatform(i);nav.append(b);
+    if(p.external){b.href=p.url;b.target='_blank';b.rel='noopener noreferrer';b.title=p.name+' — تبويب مستقل';}
+    else b.onclick=()=>openPlatform(i);nav.append(b);
   });
 }
 
@@ -345,15 +355,16 @@ function renderCards(){
   PLATFORMS.forEach((p,i)=>{
     if(!(p.name.includes(term)||p.category.includes(term)))return;
     shown++;
-    const card=document.createElement('button');
+    const card=document.createElement(p.external?'a':'button');
     card.className='card'+(p.url?'':' pending');
     card.innerHTML='<span class="light"></span>'+icon(p.icon).replace('<svg','<svg class="ghost"')+'<span class="top"><span class="ico">'+icon(p.icon)+'</span><span class="cat"></span></span>';
     card.querySelector('.cat').textContent=p.category;
     const t=document.createElement('h3');t.textContent=p.name;card.append(t);
     const f=document.createElement('span');f.className='foot';
-    f.innerHTML='<span>'+(p.url?'فتح المنصة':'قريباً')+'</span><span class="go">'+icon('arrow')+'</span>';
+    f.innerHTML='<span>'+(p.external?'فتح في تبويب مستقل':p.tool?'فتح الأداة':p.url?'فتح المنصة':'قريباً')+'</span><span class="go">'+icon(p.external?'external':'arrow')+'</span>';
     card.append(f);
-    card.onclick=()=>openPlatform(i);
+    if(p.external){card.href=p.url;card.target='_blank';card.rel='noopener noreferrer';}
+    else card.onclick=()=>openPlatform(i);
     if(canTilt)attachTilt(card);
     grid.append(card);
   });
@@ -382,7 +393,7 @@ function attachTilt(card){
 /* ---------- التنقل ---------- */
 function setMini(on,save){$('app').classList.toggle('mini',on);$('collapseBtn').title=on?'توسيع القائمة':'تصغير القائمة';$('collapseBtn').setAttribute('aria-label',$('collapseBtn').title);if(save)store.set('portal-mini',on?'1':'0');}
 function toggleDrawer(open){$('rail').classList.toggle('open',open);$('backdrop').classList.toggle('open',open);$('menuBtn').setAttribute('aria-expanded',String(open));}
-function resetFrame(){clearTimeout(loadTimer);const f=$('frame');f.onload=null;f.removeAttribute('src');f.hidden=true;$('loading').hidden=true;}
+function resetFrame(){clearTimeout(loadTimer);const f=$('frame');f.onload=null;f.removeAttribute('src');f.hidden=true;$('loading').hidden=true;$('externalNotice').hidden=true;}
 
 function showHome(){
   active=null;resetFrame();$('viewer').hidden=true;$('home').hidden=false;
@@ -398,6 +409,7 @@ function openPlatform(i){
   toggleDrawer(false);renderNav();
   history.replaceState(null,'','#'+(i+1));
   if(!p.url)return;
+  if(p.external){$('vOpen').href=p.url;$('externalLink').href=p.url;$('externalNotice').hidden=false;return;}
   const f=$('frame');$('vOpen').href=p.url;$('loadingLink').href=p.url;f.title=p.name;$('loading').hidden=false;
   f.onload=()=>{if(active!==i)return;clearTimeout(loadTimer);$('loading').hidden=true;f.hidden=false;};
   f.src=p.url;
@@ -413,7 +425,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')toggleDrawer(false);
 $('search').addEventListener('input',renderCards);
 
 const ready=PLATFORMS.filter(p=>p.url).length;
-$('count').textContent=ready.toLocaleString('ar-SA')+' منصات متاحة';
+$('count').textContent=ready.toLocaleString('ar-SA')+' منصة وأداة';
 $('today').textContent=new Intl.DateTimeFormat('ar-SA',{weekday:'long',day:'numeric',month:'long',calendar:'gregory'}).format(new Date());
 
 renderCards();

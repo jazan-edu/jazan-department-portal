@@ -1,0 +1,27 @@
+{
+  "name": "jazan-department-portal",
+  "version": "1.0.0",
+  "description": "هذا المستودع يحتوي على **الكود المصدري فقط** لبوابة القسم الداخلية وجميع المنصات المرتبطة بها (Google Apps Script).",
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "node --test tests/tools.test.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "pdf-lib": "1.17.1",
+    "pdfjs-dist": "5.1.91",
+    "qrcode": "1.5.4"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "jsqr": "1.4.0",
+    "pngjs": "7.0.0"
+  },
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.15.0"
+  }
+}
