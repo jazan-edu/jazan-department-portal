@@ -71,6 +71,12 @@ const PLATFORMS = [
     icon: "📁",
     url: "https://script.google.com/macros/s/AKfycbxAWnvLx0y7sF6jyzJ-9_C0pVc7cbm6j_j9XR_Ce_qP29dM-Wjs6TwDf1Lb9yo1dqbe/exec"
   },
+  {
+    category: "الإشراف التربوي",
+    name: "منصة مساند مدرستي",
+    icon: "🖥️",
+    url: "https://script.google.com/macros/s/AKfycbxSDULgyNUkS8M_H46n0hyIG2NU1gixxknBIn87hjW-qPVbGTeioe5f1gfV9yZ7vQlq4A/exec"
+  },
 
   // ---- الأداء الوظيفي والتميز ----
   {
@@ -104,11 +110,19 @@ const PLATFORMS = [
     name: "منصة المبررات لعدم اكتمال بعض نقاط الدروس في مدرستي",
     icon: "📚",
     url: null
+  },
+
+  // ---- طلبات المدارس ----
+  {
+    category: "طلبات المدارس",
+    name: "منصة طلبات التحول عن بعد",
+    icon: "💻",
+    url: "https://script.google.com/macros/s/AKfycbxpDz9I5RsLJjJ9Mux4tZW1kaET50RihGsAmPwnsYgISefp6R3yAFcyOZahWe58D9p32w/exec"
   }
 ];
 
-const PATHS={building:'M3 21h18M5 21V7h14v14M3 7l9-4 9 4M9 11v2m6-2v2m-6 3v2m6-2v2',home:'M3 10l9-7 9 7M5 9v12h14V9M9 21v-7h6v7',menu:'M4 6h16M4 12h16M4 18h16',search:'M21 21l-5-5M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0',chart:'M4 20V4M4 20h17M8 16v-5m5 5V7m5 9V3',door:'M4 21h10V3H4v18m10-9h7m-3-3 3 3-3 3M8 12h1',school:'M3 21h18M5 21V9l7-6 7 6v12M9 21v-6h6v6M10 9h4',file:'M5 3h9l5 5v13H5V3m9 0v6h5M8 13h8m-8 4h6',folder:'M3 7V4h6l3 3h9v13H3V7',award:'M16 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0M8 11l-2 10 6-3 6 3-2-10',trend:'M3 19h18M4 15l6-6 4 4 6-9m-5 0h5v5',edit:'M14 5l5 5M4 20l4-1L21 6l-4-4L4 15v5',flask:'M9 3h6m-5 0v6l-6 10q-1 2 2 2h12q3 0 2-2L14 9V3M7 15h10',book:'M12 5v16M3 3q5-1 9 2 4-3 9-2v16q-5-1-9 2-4-3-9-2V3',arrow:'M19 12H5m6-6-6 6 6 6',external:'M14 3h7v7m0-7L10 14M10 3H3v18h18v-7'};
-const ICONS=['chart','door','school','file','folder','award','trend','edit','flask','book'];
+const PATHS={building:'M3 21h18M5 21V7h14v14M3 7l9-4 9 4M9 11v2m6-2v2m-6 3v2m6-2v2',home:'M3 10l9-7 9 7M5 9v12h14V9M9 21v-7h6v7',menu:'M4 6h16M4 12h16M4 18h16',search:'M21 21l-5-5M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0',chart:'M4 20V4M4 20h17M8 16v-5m5 5V7m5 9V3',door:'M4 21h10V3H4v18m10-9h7m-3-3 3 3-3 3M8 12h1',school:'M3 21h18M5 21V9l7-6 7 6v12M9 21v-6h6v6M10 9h4',file:'M5 3h9l5 5v13H5V3m9 0v6h5M8 13h8m-8 4h6',folder:'M3 7V4h6l3 3h9v13H3V7',award:'M16 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0M8 11l-2 10 6-3 6 3-2-10',trend:'M3 19h18M4 15l6-6 4 4 6-9m-5 0h5v5',edit:'M14 5l5 5M4 20l4-1L21 6l-4-4L4 15v5',flask:'M9 3h6m-5 0v6l-6 10q-1 2 2 2h12q3 0 2-2L14 9V3M7 15h10',book:'M12 5v16M3 3q5-1 9 2 4-3 9-2v16q-5-1-9 2-4-3-9-2V3',monitor:'M3 4h18v12H3V4m6 17h6m-3-5v5M7 12l3-3 3 2 4-4',laptop:'M5 5h14v10H5V5M2 19h20l-2-4H4l-2 4',arrow:'M19 12H5m6-6-6 6 6 6',external:'M14 3h7v7m0-7L10 14M10 3H3v18h18v-7'};
+const ICONS=['chart','door','school','file','folder','monitor','award','trend','edit','flask','book','laptop'];
 const $=id=>document.getElementById(id);
 function icon(name){return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="'+(PATHS[name]||PATHS.file)+'"/></svg>';}
 document.querySelectorAll('[data-icon]').forEach(el=>el.innerHTML=icon(el.dataset.icon));
