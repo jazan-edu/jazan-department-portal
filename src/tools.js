@@ -19,6 +19,7 @@ status(mode === 'qr' ? 'أدخل الرابط أو النص لإنشاء الر�
 
 let pdfBytes, pdfDocument, viewport, pageNumber = 1, filename = 'document.pdf';
 let marks = [], signature = null, busy = false, drawing = false, hasInk = false;
+let selectedMark = null;
 const pad = $('signaturePad'), pen = pad.getContext('2d', { willReadFrequently: true });
 function controls() {
   const ready = !!pdfDocument && !busy;
@@ -26,6 +27,7 @@ function controls() {
   $('prevPage').disabled = !ready || pageNumber <= 1;
   $('nextPage').disabled = !ready || pageNumber >= pdfDocument.numPages;
   $('placeSignature').disabled = !ready || !signature;
+  $('moveSignature').disabled = !ready || !marks.includes(selectedMark) || selectedMark.page !== pageNumber;
   $('undoSignature').disabled = busy || !marks.length;
   $('clearSignatures').disabled = busy || !marks.length;
   $('savePdf').disabled = busy || !marks.length;
@@ -35,12 +37,49 @@ function controls() {
 function drawMarks() {
   $('signatureLayer').replaceChildren();
   for (const mark of marks.filter(m => m.page === pageNumber)) {
-    const img = document.createElement('img'); img.src = mark.image; img.alt = 'توقيع مضاف';
+    const img = document.createElement('img'); img.src = mark.image; img.alt = 'توقيع مضاف؛ اسحب لتغيير مكانه';
+    img.draggable = false; img.tabIndex = 0; img.setAttribute('role', 'button');
+    img.classList.toggle('selected', mark === selectedMark);
+    img.setAttribute('aria-pressed', String(mark === selectedMark));
+    img.onclick = event => { event.stopPropagation(); selectMark(mark); };
+    img.onkeydown = event => {
+      if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); selectMark(mark); }
+    };
+    img.onpointerdown = event => {
+      if (busy || event.button !== 0) return;
+      event.preventDefault(); event.stopPropagation();
+      selectedMark = mark; syncPosition();
+      $('signatureLayer').querySelectorAll('img').forEach(el => { el.classList.toggle('selected', el === img); el.setAttribute('aria-pressed', String(el === img)); });
+      controls();
+      const rect = $('pageSurface').getBoundingClientRect();
+      const startX = event.clientX, startY = event.clientY, left = mark.left, top = mark.top;
+      img.setPointerCapture(event.pointerId);
+      img.onpointermove = move => {
+        if (!img.hasPointerCapture(move.pointerId)) return;
+        move.preventDefault();
+        moveMark(mark, left + (move.clientX - startX) / rect.width, top + (move.clientY - startY) / rect.height);
+        img.style.left = mark.left * 100 + '%'; img.style.top = mark.top * 100 + '%'; syncPosition();
+      };
+      const finish = () => { img.onpointermove = null; status('تم تعديل مكان التوقيع. يمكنك سحبه مجددًا أو تنزيل الملف.'); };
+      img.onpointerup = finish; img.onpointercancel = finish; img.onlostpointercapture = finish;
+    };
     Object.assign(img.style, { left: mark.left * 100 + '%', top: mark.top * 100 + '%',
       width: mark.relativeWidth * 100 + '%', height: mark.relativeHeight * 100 + '%' });
     $('signatureLayer').append(img);
   }
   controls();
+}
+function syncPosition() {
+  if (!selectedMark) return;
+  $('positionX').value = ((selectedMark.left + selectedMark.relativeWidth / 2) * 100).toFixed(1);
+  $('positionY').value = ((selectedMark.top + selectedMark.relativeHeight / 2) * 100).toFixed(1);
+}
+function selectMark(mark) { selectedMark = mark; syncPosition(); drawMarks(); status('التوقيع محدد. اسحبه أو عدّل حقول الموضع ثم اضغط «تعديل مكان التوقيع المحدد».'); }
+function moveMark(mark, left, top) {
+  mark.left = Math.max(0, Math.min(1 - mark.relativeWidth, left));
+  mark.top = Math.max(0, Math.min(1 - mark.relativeHeight, top));
+  Object.assign(mark, signaturePlacement(viewport, mark.left * viewport.width, mark.top * viewport.height,
+    mark.relativeWidth * viewport.width, mark.relativeHeight * viewport.height));
 }
 async function renderPage() {
   busy = true; controls();
@@ -67,7 +106,7 @@ $('pdfInput').addEventListener('change', async event => {
       standardFontDataUrl: new URL('./standard_fonts/', import.meta.url).href,
       wasmUrl: new URL('./wasm/', import.meta.url).href }).promise;
     if (pdfDocument) await pdfDocument.destroy();
-    pdfBytes = data; pdfDocument = next; pageNumber = 1; filename = file.name; marks = [];
+    pdfBytes = data; pdfDocument = next; pageNumber = 1; filename = file.name; marks = []; selectedMark = null;
     $('pageSelect').replaceChildren();
     for (let i = 1; i <= next.numPages; i++) $('pageSelect').add(new Option(String(i), String(i)));
     $('fileInfo').textContent = `${file.name} — ${next.numPages} صفحة`;
@@ -75,7 +114,7 @@ $('pdfInput').addEventListener('change', async event => {
   } catch (error) { status('تعذّر فتح الملف. اختر ملف PDF سليمًا وغير محمي بكلمة مرور.', true); }
   finally { event.target.value = ''; busy = false; controls(); }
 });
-async function goPage(number) { if (busy || !pdfDocument) return; pageNumber = number; await renderPage(); }
+async function goPage(number) { if (busy || !pdfDocument) return; selectedMark = null; pageNumber = number; await renderPage(); }
 $('pageSelect').onchange = event => goPage(Number(event.target.value));
 $('prevPage').onclick = () => goPage(pageNumber - 1);
 $('nextPage').onclick = () => goPage(pageNumber + 1);
@@ -135,7 +174,8 @@ function place(xFraction, yFraction) {
   const y = Math.max(0, Math.min(viewport.height - height, viewport.height * yFraction - height / 2));
   marks.push({ page: pageNumber, image: signature.image, ...signaturePlacement(viewport, x, y, width, height),
     left: x / viewport.width, top: y / viewport.height, relativeWidth: width / viewport.width, relativeHeight: height / viewport.height });
-  drawMarks(); status(`تمت إضافة التوقيع إلى الصفحة ${pageNumber}. يمكنك تنزيل الملف أو إضافة توقيع آخر.`);
+  selectedMark = marks.at(-1); syncPosition();
+  drawMarks(); status(`تمت إضافة التوقيع إلى الصفحة ${pageNumber}. اسحبه لتعديل مكانه أو نزّل الملف.`);
 }
 $('pageSurface').onclick = event => { const rect = event.currentTarget.getBoundingClientRect(); place((event.clientX - rect.left) / rect.width, (event.clientY - rect.top) / rect.height); };
 $('placeSignature').onclick = () => {
@@ -143,8 +183,15 @@ $('placeSignature').onclick = () => {
   if (!$('positionX').value || !$('positionY').value || !Number.isFinite(x + y) || x < 0 || x > 100 || y < 0 || y > 100) { status('أدخل موضعًا بين 0 و100 في الحقلين.', true); return; }
   place(x / 100, y / 100);
 };
-$('undoSignature').onclick = () => { marks.pop(); drawMarks(); status('تم التراجع عن آخر توقيع.'); };
-$('clearSignatures').onclick = () => { marks = []; drawMarks(); status('تم حذف التواقيع المضافة من المعاينة.'); };
+$('moveSignature').onclick = () => {
+  if (busy || !marks.includes(selectedMark) || selectedMark.page !== pageNumber) return;
+  const x = Number($('positionX').value), y = Number($('positionY').value);
+  if (!$('positionX').value || !$('positionY').value || !Number.isFinite(x + y) || x < 0 || x > 100 || y < 0 || y > 100) { status('أدخل موضعًا بين 0 و100 في الحقلين.', true); return; }
+  moveMark(selectedMark, x / 100 - selectedMark.relativeWidth / 2, y / 100 - selectedMark.relativeHeight / 2);
+  syncPosition(); drawMarks(); status('تم تعديل مكان التوقيع المحدد.');
+};
+$('undoSignature').onclick = () => { marks.pop(); if (!marks.includes(selectedMark)) selectedMark = null; drawMarks(); status('تم التراجع عن آخر توقيع.'); };
+$('clearSignatures').onclick = () => { marks = []; selectedMark = null; drawMarks(); status('تم حذف التواقيع المضافة من المعاينة.'); };
 $('savePdf').onclick = async () => {
   if (busy || !marks.length) return; busy = true; controls(); status('جاري إعداد الملف الموقّع…');
   try { const bytes = await signPdf(pdfBytes, marks); download(new Blob([bytes], { type: 'application/pdf' }), filename.replace(/\.pdf$/i, '') + '-signed.pdf'); status('تم تجهيز الملف الموقّع وتنزيله.'); }
