@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0d2724">
+<title>إزالة العلامة المائية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --deep:#0d2724;--pine:#143a35;--pine-hi:#1f5048;--gold:#d4b66e;
+  --paper:#eef4f0;--mist:#9fbab1;--dim:#7f9c93;--line:#ffffff14;--warn:#e7a46b;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:radial-gradient(900px 520px at 92% -12%,#1d4a43 0,transparent 60%),var(--deep);color:var(--paper);font:15px/1.8 'Noto Kufi Arabic',Tahoma,sans-serif}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none;-webkit-tap-highlight-color:transparent}
+button:disabled{cursor:not-allowed;opacity:.45}
+[hidden]{display:none!important}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+
+.wrap{min-height:100vh;padding:24px clamp(16px,3vw,40px) 32px;display:flex;flex-direction:column;gap:20px}
+.head h1{margin:0;font-size:22px;font-weight:500}
+.head p{margin:2px 0 0;color:var(--mist);font-size:13px;font-weight:300}
+
+/* ===== منطقة الرفع ===== */
+.drop{flex:1;min-height:340px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:40px 20px;
+  border:1.5px dashed #d4b66e55;border-radius:24px;background:linear-gradient(160deg,#17423b66,#0f2f2b66);transition:border-color .2s,background .2s}
+.drop.over{border-color:var(--gold);background:linear-gradient(160deg,#1f5048aa,#143a35aa)}
+.drop .big{width:76px;height:76px;border-radius:22px;display:grid;place-items:center;color:var(--gold);background:linear-gradient(145deg,#265b52,#173f39);box-shadow:inset 0 1px 0 #ffffff26,0 18px 30px -14px #000c}
+.drop .big svg{width:36px;height:36px}
+.drop h2{margin:6px 0 0;font-size:19px;font-weight:500}
+.drop p{margin:0;color:var(--mist);font-size:14px;max-width:460px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;height:44px;padding:0 20px;border-radius:12px;font-size:14px;font-weight:500;transition:background .15s,transform .15s}
+.btn svg{width:19px;height:19px}
+.btn.gold{background:var(--gold);color:var(--deep)}
+.btn.gold:hover:not(:disabled){background:#e2c582}
+.btn.ghost{background:#ffffff0d;color:var(--paper)}
+.btn.ghost:hover:not(:disabled){background:#ffffff17}
+.btn.wide{width:100%}
+.error{color:var(--warn);font-size:13px;margin:0}
+
+/* ===== مساحة العمل ===== */
+.work{display:grid;grid-template-columns:330px minmax(0,1fr);gap:20px;align-items:start}
+.panel{position:sticky;top:16px;display:flex;flex-direction:column;gap:18px;padding:18px;border-radius:20px;
+  background:linear-gradient(160deg,#1a4640,#123631);border:1px solid #d4b66e26;box-shadow:inset 0 1px 0 #ffffff14,0 24px 40px -26px #000c}
+.file{display:flex;align-items:center;gap:12px}
+.file .ico{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;color:var(--gold);background:#ffffff0d;flex-shrink:0}
+.file div{min-width:0;flex:1}
+.file b{display:block;font-weight:500;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.file small{display:block;color:var(--dim);font-size:12px}
+.file button{color:var(--mist);font-size:12px;padding:6px 8px;border-radius:8px}
+.file button:hover{background:#ffffff0d;color:#fff}
+.label{font-size:13px;color:#d8e6e0;margin:0 0 8px;display:flex;justify-content:space-between;align-items:baseline}
+.label output{color:var(--gold);font-weight:500}
+.seg{display:flex;background:#0a201d;border:1px solid var(--line);border-radius:12px;padding:4px;gap:4px}
+.seg button{flex:1;padding:7px 8px;border-radius:9px;font-size:13px;color:var(--mist);transition:background .15s,color .15s}
+.seg button:hover{color:#fff}
+.seg button.on{background:linear-gradient(180deg,#2a6156,#1e4c44);color:#fff;box-shadow:inset 0 1px 0 #ffffff1f}
+.hint{margin:8px 2px 0;color:var(--dim);font-size:12px;line-height:1.75}
+.report{padding:12px 14px;border-radius:12px;background:#0a201d;border:1px solid var(--line);font-size:13px;color:var(--mist)}
+.report strong{display:block;color:var(--paper);font-weight:500;font-size:14px;margin-bottom:2px}
+.report.ok strong{color:#9fd6b4}
+.report.none strong{color:var(--warn)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chips span{font-size:12px;padding:2px 9px;border-radius:20px;background:#ffffff0d;color:#cfe0d9}
+input[type=range]{width:100%;accent-color:var(--gold)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.row .btn{height:36px;padding:0 12px;font-size:13px;font-weight:400}
+.btn.ghost.on{background:#d4b66e26;color:var(--gold);box-shadow:inset 0 0 0 1px #d4b66e66}
+.check{display:flex;align-items:center;gap:8px;font-size:13px;color:#cfe0d9;cursor:pointer}
+.check input{accent-color:var(--gold);width:16px;height:16px}
+.progress{display:flex;flex-direction:column;gap:6px}
+.progress .bar{height:6px;border-radius:6px;background:#ffffff14;overflow:hidden}
+.progress i{display:block;height:100%;width:0;background:var(--gold);transition:width .2s}
+.progress small{color:var(--mist);font-size:12px}
+.divider{height:1px;background:var(--line);margin:0 -2px}
+
+.stage{display:flex;flex-direction:column;gap:12px;min-width:0}
+.toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.toolbar .seg{width:auto}
+.toolbar .seg button{flex:none;padding:6px 16px}
+.pager{display:flex;align-items:center;gap:4px;margin-inline-start:auto;color:var(--mist);font-size:13px}
+.pager button{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:#cfe0d9}
+.pager button:hover:not(:disabled){background:#ffffff0d}
+.pager svg{width:18px;height:18px}
+.sheet{position:relative;align-self:center;max-width:100%;line-height:0;border-radius:6px;background:#fff;box-shadow:0 30px 60px -30px #000e,0 0 0 1px #00000014}
+.sheet canvas{display:block;max-width:100%;height:auto}
+#overlay{position:absolute;inset:0;width:100%;height:100%;touch-action:none;pointer-events:none}
+.sheet.drawing #overlay{pointer-events:auto;cursor:crosshair}
+.busy{position:absolute;inset:0;display:grid;place-items:center;background:#ffffffb0;line-height:1.8}
+.spinner{width:32px;height:32px;border-radius:50%;border:3px solid #0d272422;border-top-color:#1f5048;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.note{color:var(--mist);font-size:12px;text-align:center;margin:0}
+
+@media (max-width:900px){
+  .work{grid-template-columns:1fr}
+  .panel{position:static}
+  .pager{margin-inline-start:0}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="head">
+    <h1>إزالة العلامة المائية</h1>
+    <p>ارفع خطاباً بصيغة PDF ونزّل منه نسخة بدون العلامة المائية. المعالجة تتم داخل متصفحك، والملف لا يُرفع إلى أي جهة.</p>
+  </header>
+
+  <!-- الرفع -->
+  <section class="drop" id="drop">
+    <div class="big" data-icon="upload"></div>
+    <h2>اسحب ملف الخطاب هنا</h2>
+    <p>ملف PDF من أي نظام، أو خطاب ممسوح ضوئياً.</p>
+    <button class="btn gold" id="pickBtn"><span data-icon="file"></span>اختيار ملف PDF</button>
+    <p class="error" id="dropError" hidden></p>
+    <input type="file" id="fileInput" accept="application/pdf,.pdf" hidden>
+  </section>
+
+  <!-- العمل -->
+  <section class="work" id="work" hidden>
+    <aside class="panel">
+      <div class="file">
+        <span class="ico" data-icon="file"></span>
+        <div><b id="fileName"></b><small id="fileMeta"></small></div>
+        <button id="changeBtn">تغيير</button>
+      </div>
+
+      <div>
+        <p class="label">طريقة الإزالة</p>
+        <div class="seg" id="modeSeg" role="tablist">
+          <button data-mode="smart" class="on" role="tab" aria-selected="true">إزالة ذكية</button>
+          <button data-mode="image" role="tab" aria-selected="false">تنظيف بالصورة</button>
+        </div>
+        <p class="hint" id="modeHint"></p>
+      </div>
+
+      <!-- الإزالة الذكية -->
+      <div id="smartCtl">
+        <p class="label">مستوى البحث عن العلامة</p>
+        <div class="seg" id="sensSeg">
+          <button data-sens="0">دقيق</button>
+          <button data-sens="1" class="on">متوسط</button>
+          <button data-sens="2">شامل</button>
+        </div>
+        <p class="hint" id="sensHint"></p>
+        <div class="report" id="report" hidden></div>
+      </div>
+
+      <!-- التنظيف بالصورة -->
+      <div id="imageCtl" hidden>
+        <p class="label"><span>قوة التبييض</span><output id="strengthOut"></output></p>
+        <input type="range" id="strength" min="0" max="100" value="45" aria-label="قوة التبييض">
+        <p class="hint">ارفعها حتى تختفي العلامة. لو بدأت الكتابة الخفيفة تبهت، نزّلها قليلاً.</p>
+        <div class="divider" style="margin:14px 0"></div>
+        <p class="label">مسح منطقة محددة</p>
+        <div class="row">
+          <button class="btn ghost" id="drawBtn"><span data-icon="square"></span>تحديد منطقة</button>
+          <button class="btn ghost" id="undoBtn" disabled>تراجع</button>
+          <button class="btn ghost" id="clearBtn" disabled>مسح الكل</button>
+        </div>
+        <label class="check" style="margin-top:10px"><input type="checkbox" id="allPages">كرّر المناطق على كل الصفحات</label>
+        <p class="hint">للأختام النصية والأسطر اللي يضيفها النظام في الهامش. اسحب مستطيلاً على المعاينة.</p>
+        <div class="divider" style="margin:14px 0"></div>
+        <p class="label">دقة الملف الناتج</p>
+        <div class="seg" id="qualitySeg">
+          <button data-q="2" class="on">عادية</button>
+          <button data-q="3">عالية للطباعة</button>
+        </div>
+      </div>
+
+      <div class="progress" id="progress" hidden><div class="bar"><i id="progressBar"></i></div><small id="progressText"></small></div>
+      <button class="btn gold wide" id="downloadBtn" disabled><span data-icon="download"></span>تنزيل الملف النظيف</button>
+    </aside>
+
+    <div class="stage" id="stage">
+      <div class="toolbar">
+        <div class="seg" id="viewSeg">
+          <button data-view="before">قبل</button>
+          <button data-view="after" class="on">بعد</button>
+        </div>
+        <div class="pager">
+          <button id="prevBtn" aria-label="الصفحة السابقة"><span data-icon="next"></span></button>
+          <span id="pageInfo"></span>
+          <button id="nextBtn" aria-label="الصفحة التالية"><span data-icon="prev"></span></button>
+        </div>
+      </div>
+      <div class="sheet" id="sheet">
+        <canvas id="view"></canvas>
+        <canvas id="overlay"></canvas>
+        <div class="busy" id="busy" hidden><div class="spinner"></div></div>
+      </div>
+      <p class="note" id="stageNote"></p>
+    </div>
+  </section>
+</div>
+
+<script src="vendor/pdf-lib.min.js"></script>
+<script src="vendor/pdf.min.js"></script>
+<script>
+/* =====================================================================
+   أداة إزالة العلامة المائية — تعمل بالكامل داخل المتصفح
+   ===================================================================== */
+const { PDFDocument, PDFName, PDFDict, PDFArray, PDFNumber, decodePDFRawStream } = PDFLib;
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'vendor/pdf.worker.min.js';
+
+const ICONS = {
+  upload:'M12 16V4m-5 5 5-5 5 5M4 16v4h16v-4',
+  file:'M5 3h9l5 5v13H5V3m9 0v6h5',
+  download:'M12 4v12m-5-5 5 5 5-5M4 20h16',
+  square:'M4 4h16v16H4z',
+  next:'M9 6l6 6-6 6',
+  prev:'M15 6l-6 6 6 6'
+};
+const $ = id => document.getElementById(id);
+document.querySelectorAll('[data-icon]').forEach(el => el.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + ICONS[el.dataset.icon] + '"/></svg>');
+const ar = n => Number(n).toLocaleString('ar-SA');
+
+const S = {
+  bytes:null, name:'', doc:null, pages:0, page:1,
+  mode:'smart', sens:1, view:'after',
+  clean:null, encrypted:false,
+  strength:45, quality:2,
+  rects:[], allPages:false, drawing:false,
+  token:0, smartToken:0
+};
+
+/* ---------------------------------------------------------------------
+   أدوات مساعدة
+   --------------------------------------------------------------------- */
+function bytesToStr(u8){ let s=''; const C=0x8000; for(let i=0;i<u8.length;i+=C) s+=String.fromCharCode.apply(null,u8.subarray(i,i+C)); return s; }
+function strToBytes(s){ const u=new Uint8Array(s.length); for(let i=0;i<s.length;i++) u[i]=s.charCodeAt(i)&255; return u; }
+const mul = (a,b) => [a[0]*b[0]+a[1]*b[2], a[0]*b[1]+a[1]*b[3], a[2]*b[0]+a[3]*b[2], a[2]*b[1]+a[3]*b[3], a[4]*b[0]+a[5]*b[2]+b[4], a[4]*b[1]+a[5]*b[3]+b[5]];
+const isDiagonal = m => { const a = Math.abs(Math.atan2(m[1],m[0])*180/Math.PI) % 90; return a > 10 && a < 80; };
+function streamBytes(st){ try { return decodePDFRawStream(st).decode(); } catch(e){ return null; } }
+function threshold(){ return Math.round(250 - S.strength * 1.1); } // 0 → 250 (خفيف)  100 → 140 (قوي)
+
+/* ---------------------------------------------------------------------
+   قارئ أوامر محتوى الصفحة (PDF content stream)
+   --------------------------------------------------------------------- */
+function tokenize(s){
+  const toks=[], n=s.length; let i=0;
+  const ws = c => c===32||c===10||c===13||c===9||c===12||c===0;
+  const delim = c => c===40||c===41||c===60||c===62||c===91||c===93||c===123||c===125||c===47||c===37;
+  while(i<n){
+    const c=s.charCodeAt(i);
+    if(ws(c)){ i++; continue; }
+    if(c===37){ while(i<n && s.charCodeAt(i)!==10 && s.charCodeAt(i)!==13) i++; continue; }
+    const st=i;
+    if(c===40){ let d=1; i++; while(i<n && d>0){ const x=s.charCodeAt(i); if(x===92){ i+=2; continue; } if(x===40) d++; else if(x===41) d--; i++; } toks.push({t:'str',s:st,e:i}); continue; }
+    if(c===60){ if(s.charCodeAt(i+1)===60){ i+=2; toks.push({t:'<<',s:st,e:i}); continue; } i++; while(i<n && s.charCodeAt(i)!==62) i++; i++; toks.push({t:'hex',s:st,e:i}); continue; }
+    if(c===62){ i += s.charCodeAt(i+1)===62 ? 2 : 1; toks.push({t:'>>',s:st,e:i}); continue; }
+    if(c===91||c===93){ i++; toks.push({t:String.fromCharCode(c),s:st,e:i}); continue; }
+    if(c===123||c===125||c===41){ i++; continue; }
+    if(c===47){ i++; while(i<n && !ws(s.charCodeAt(i)) && !delim(s.charCodeAt(i))) i++; toks.push({t:'name',s:st,e:i,v:s.slice(st+1,i)}); continue; }
+    while(i<n && !ws(s.charCodeAt(i)) && !delim(s.charCodeAt(i))) i++;
+    if(i===st){ i++; continue; }
+    const w=s.slice(st,i);
+    if(/^[+-]?(\d+\.?\d*|\.\d+)$/.test(w)){ toks.push({t:'num',s:st,e:i,v:parseFloat(w)}); continue; }
+    toks.push({t:'op',s:st,e:i,v:w});
+    if(w==='ID'){ // بيانات صورة مضمّنة: نتخطاها حتى EI
+      const re=/[\s\0]EI(?=[\s\0]|$)/g; re.lastIndex=i; const m=re.exec(s);
+      const end = m ? m.index+1 : n;
+      i = m ? end+2 : n;
+      toks.push({t:'op',s:end,e:i,v:'EI'});
+    }
+  }
+  return toks;
+}
+
+function lookupDict(dict, key){ try { return dict ? dict.lookupMaybe(PDFName.of(key), PDFDict) : undefined; } catch(e){ return undefined; } }
+function extGState(res, name){
+  const g = lookupDict(lookupDict(res,'ExtGState'), name); if(!g) return null;
+  let ca=null; try { const n=g.lookupMaybe(PDFName.of('ca'), PDFNumber); if(n) ca=n.asNumber(); } catch(e){}
+  const hasSM = g.has(PDFName.of('SMask'));
+  const sm = hasSM && String(g.get(PDFName.of('SMask'))) !== '/None';
+  return {ca, hasSM, sm};
+}
+const WATERMARK_LAYER = /water|draft|confiden|copy|stamp|مسود|علام|نسخ|سري|مائي/i;
+
+/* يفحص أوامر الصفحة ويحدد ما يشبه العلامة المائية
+   sens: 0 دقيق، 1 متوسط، 2 شامل */
+function scan(str, res, ctm0, area, sens, depth, cuts, stats, init){
+  const toks = tokenize(str);
+  let ops = [], ctm = ctm0, alpha = init.alpha, smask = init.smask, lum = init.lum, fs = 12, tr = 0, tm = [1,0,0,1,0,0];
+  const stack = [], mc = [];
+  const out = {flagged:0, kept:0};
+  const outer = init.outer == null ? 1 : init.outer, outerMask = !!init.outerMask; // شفافية المجموعة الأم
+
+  for(const tk of toks){
+    if(tk.t !== 'op'){ ops.push(tk); continue; }
+    const op = tk.v, first = ops.length ? ops[0].s : tk.s;
+    const nums = ops.filter(o => o.t==='num').map(o => o.v);
+    const names = ops.filter(o => o.t==='name').map(o => o.v);
+    const eff = alpha * outer;
+    const trans = eff < 0.95 || smask || outerMask;
+
+    switch(op){
+      case 'q': stack.push({ctm,alpha,smask,lum,fs,tr}); break;
+      case 'Q': if(stack.length) ({ctm,alpha,smask,lum,fs,tr} = stack.pop()); break;
+      case 'cm': if(nums.length===6) ctm = mul(nums, ctm); break;
+      case 'gs': { const g = extGState(res, names[0]); if(g){ if(g.ca!=null) alpha=g.ca; if(g.hasSM) smask=g.sm; } break; }
+      case 'g': if(nums.length===1) lum = nums[0]; break;
+      case 'rg': if(nums.length===3) lum = .299*nums[0]+.587*nums[1]+.114*nums[2]; break;
+      case 'k': if(nums.length===4){ const [c,m,y,k]=nums; lum = .299*(1-c)*(1-k)+.587*(1-m)*(1-k)+.114*(1-y)*(1-k); } break;
+      case 'sc': case 'scn':
+        if(names.length) lum = null;
+        else if(nums.length===1) lum = nums[0];
+        else if(nums.length===3) lum = .299*nums[0]+.587*nums[1]+.114*nums[2];
+        else if(nums.length===4){ const [c,m,y,k]=nums; lum = .299*(1-c)*(1-k)+.587*(1-m)*(1-k)+.114*(1-y)*(1-k); }
+        break;
+      case 'Tf': if(nums.length) fs = nums[nums.length-1]; break;
+      case 'Tr': if(nums.length) tr = nums[0]; break;
+      case 'BT': tm = [1,0,0,1,0,0]; break;
+      case 'Tm': if(nums.length===6) tm = nums; break;
+
+      case 'Tj': case 'TJ': case "'": case '"': {
+        if(tr === 3){ out.kept++; break; } // نص غير مرئي (طبقة النص في الملفات الممسوحة) نتركه
+        const m = mul(tm, ctm);
+        const size = Math.abs(fs) * Math.hypot(m[2], m[3]);
+        const diag = isDiagonal(m);
+        const light = lum != null && lum >= 0.72;
+        let flag;
+        if(sens === 0) flag = diag && size >= 28 && (trans || light);
+        else if(sens === 1) flag = (diag && size >= 6) || (trans && size >= 24) || (light && size >= 30);
+        else flag = diag || trans || (light && size >= 9);
+        if(flag){
+          cuts.push({s:first, e:tk.e, rep: (op==="'"||op==='"') ? 'T*' : ''});
+          stats.text++; out.flagged++;
+        } else out.kept++;
+        break;
+      }
+
+      case 'Do': {
+        const xobjs = lookupDict(res, 'XObject');
+        let xo; try { xo = xobjs && xobjs.lookup(PDFName.of(names[0])); } catch(e){}
+        if(!xo || !xo.dict) break;
+        const sub = String(xo.dict.get(PDFName.of('Subtype')));
+        const w = Math.hypot(ctm[0], ctm[1]), h = Math.hypot(ctm[2], ctm[3]);
+        if(sub === '/Image'){
+          const cover = (w*h) / area, diag = isDiagonal(ctm);
+          const masked = xo.dict.has(PDFName.of('SMask')) || xo.dict.has(PDFName.of('Mask'));
+          let flag;
+          if(sens === 0) flag = (trans && cover >= 0.15) || (diag && cover >= 0.08);
+          else if(sens === 1) flag = (trans && cover >= 0.10) || (diag && cover >= 0.04);
+          else flag = (trans && cover >= 0.04) || (diag && cover >= 0.02) || (masked && cover >= 0.20 && cover < 0.95);
+          if(flag){ cuts.push({s:first, e:tk.e, rep:''}); stats.image++; out.flagged++; } else out.kept++;
+        } else if(sub === '/Form' && depth < 4){
+          const bytes = streamBytes(xo); if(!bytes) break;
+          let fm = [1,0,0,1,0,0];
+          try { const arr = xo.dict.lookupMaybe(PDFName.of('Matrix'), PDFArray); if(arr && arr.size()===6) fm = arr.asArray().map(x => x.asNumber()); } catch(e){}
+          const fres = lookupDict(xo.dict, 'Resources') || res;
+          const fctm = mul(fm, ctm);
+          const bb = (() => { try { const a = xo.dict.lookupMaybe(PDFName.of('BBox'), PDFArray); return a ? a.asArray().map(x=>x.asNumber()) : null; } catch(e){ return null; } })();
+          const cover = bb ? (Math.abs(bb[2]-bb[0]) * Math.hypot(fctm[0],fctm[1]) * Math.abs(bb[3]-bb[1]) * Math.hypot(fctm[2],fctm[3])) / area : 0;
+          const inner = {text:0,image:0,form:0,marked:0,annot:0};
+          const r = scan(bytesToStr(bytes), fres, fctm, area, sens, depth+1, [], inner, {alpha:1, smask:false, lum, outer:eff, outerMask:smask||outerMask});
+          const flag = (r.flagged > 0 && r.kept === 0) || (sens >= 1 && trans && cover >= 0.12 && r.kept === 0);
+          if(flag){ cuts.push({s:first, e:tk.e, rep:''}); stats.form++; out.flagged++; }
+          else if(r.kept > 0) out.kept++;
+        }
+        break;
+      }
+
+      case 'BDC': {
+        let flagged = false;
+        if(names[0] === 'Artifact' && names.includes('Watermark')) flagged = true;
+        else if(names[0] === 'OC' && names[1]){
+          try {
+            const ocg = lookupDict(lookupDict(res,'Properties'), names[1]);
+            const nm = ocg && ocg.lookup(PDFName.of('Name'));
+            const txt = nm && nm.decodeText ? nm.decodeText() : '';
+            if(WATERMARK_LAYER.test(txt)) flagged = true;
+          } catch(e){}
+        }
+        mc.push({s:first, flagged}); break;
+      }
+      case 'BMC': mc.push({s:first, flagged:false}); break;
+      case 'EMC': { const m = mc.pop(); if(m && m.flagged){ cuts.push({s:m.s, e:tk.e, rep:''}); stats.marked++; out.flagged++; } break; }
+    }
+    ops = [];
+  }
+  return out;
+}
+
+function applyCuts(str, cuts){
+  cuts.sort((a,b) => a.s - b.s || b.e - a.e);
+  const keep = [];
+  for(const c of cuts){ const last = keep[keep.length-1]; if(last && c.s < last.e) continue; keep.push(c); }
+  let out = '', pos = 0;
+  for(const c of keep){ out += str.slice(pos, c.s) + ' ' + c.rep + ' '; pos = c.e; }
+  return out + str.slice(pos);
+}
+
+function pageContent(page){
+  const c = page.node.Contents(); if(!c) return null;
+  const parts = [];
+  if(c instanceof PDFArray){ for(let i=0;i<c.size();i++){ const b = streamBytes(c.lookup(i)); if(b) parts.push(bytesToStr(b)); } }
+  else { const b = streamBytes(c); if(b) parts.push(bytesToStr(b)); }
+  return parts.length ? parts.join('\n') : null;
+}
+
+async function smartClean(bytes, sens){
+  let doc;
+  try { doc = await PDFDocument.load(bytes, {updateMetadata:false}); }
+  catch(e){ if(/encrypt/i.test(String(e && e.message || e))) throw new Error('ENCRYPTED'); throw e; }
+  const stats = {text:0,image:0,form:0,marked:0,annot:0};
+  const pagesHit = new Set();
+  doc.getPages().forEach((page, pi) => {
+    const before = stats.text+stats.image+stats.form+stats.marked+stats.annot;
+    const {width, height} = page.getSize();
+    const res = page.node.Resources();
+    const str = pageContent(page);
+    if(str){
+      const cuts = [];
+      scan(str, res, [1,0,0,1,0,0], width*height, sens, 0, cuts, stats, {alpha:1, smask:false, lum:0, outer:1});
+      if(cuts.length){
+        const st = doc.context.flateStream(strToBytes(applyCuts(str, cuts)));
+        page.node.set(PDFName.of('Contents'), doc.context.register(st));
+      }
+    }
+    const annots = page.node.Annots();
+    if(annots){
+      const keep = []; let removed = 0;
+      for(let i=0;i<annots.size();i++){
+        let sub = '';
+        try { const d = annots.lookupMaybe(i, PDFDict); sub = d ? String(d.get(PDFName.of('Subtype'))) : ''; } catch(e){}
+        if(sub === '/Watermark' || (sens >= 2 && sub === '/Stamp')) removed++;
+        else keep.push(annots.get(i));
+      }
+      if(removed){ stats.annot += removed; page.node.set(PDFName.of('Annots'), doc.context.obj(keep)); }
+    }
+    if(stats.text+stats.image+stats.form+stats.marked+stats.annot > before) pagesHit.add(pi+1);
+  });
+  const total = stats.text+stats.image+stats.form+stats.marked+stats.annot;
+  return { bytes: total ? await doc.save() : null, stats, total, pages:[...pagesHit].sort((a,b)=>a-b) };
+}
+
+/* ---------------------------------------------------------------------
+   التنظيف بالصورة
+   --------------------------------------------------------------------- */
+function rectsFor(p){ return S.rects.filter(r => S.allPages || r.p === p).map(r => r.r); }
+function whiten(canvas, T, rects){
+  const ctx = canvas.getContext('2d', {willReadFrequently:true});
+  const w = canvas.width, h = canvas.height;
+  const img = ctx.getImageData(0,0,w,h), d = img.data;
+  for(let i=0;i<d.length;i+=4){ if(d[i]>=T && d[i+1]>=T && d[i+2]>=T){ d[i]=255; d[i+1]=255; d[i+2]=255; } }
+  ctx.putImageData(img,0,0);
+  ctx.fillStyle = '#fff';
+  for(const r of rects) ctx.fillRect(r[0]*w, r[1]*h, (r[2]-r[0])*w, (r[3]-r[1])*h);
+}
+async function renderTo(doc, pageNo, scale, canvas){
+  const page = await doc.getPage(pageNo);
+  const vp = page.getViewport({scale});
+  canvas.width = Math.ceil(vp.width); canvas.height = Math.ceil(vp.height);
+  const ctx = canvas.getContext('2d', {willReadFrequently:true});
+  ctx.fillStyle = '#fff'; ctx.fillRect(0,0,canvas.width,canvas.height);
+  await page.render({canvasContext:ctx, viewport:vp}).promise;
+  return page.getViewport({scale:1});
+}
+async function imageClean(onProgress){
+  const out = await PDFDocument.create();
+  const T = threshold();
+  for(let p=1; p<=S.pages; p++){
+    const c = document.createElement('canvas');
+    const base = await renderTo(S.doc, p, S.quality, c);
+    whiten(c, T, rectsFor(p));
+    const blob = await new Promise(r => c.toBlob(r, 'image/png'));
+    const png = await out.embedPng(new Uint8Array(await blob.arrayBuffer()));
+    const page = out.addPage([base.width, base.height]);
+    page.drawImage(png, {x:0, y:0, width:base.width, height:base.height});
+    onProgress(p / S.pages);
+  }
+  return out.save();
+}
+
+/* ---------------------------------------------------------------------
+   الواجهة
+   --------------------------------------------------------------------- */
+const HINTS = {
+  smart: 'تحذف العلامة من محتوى الملف نفسه، فيبقى النص كما هو قابلاً للتحديد والبحث. تناسب الملفات الصادرة من الأنظمة مثل نور وفارس.',
+  image: 'تحوّل كل صفحة إلى صورة وتبيّض الألوان الفاتحة. تناسب الخطابات الممسوحة ضوئياً والملفات اللي ما تنفع معها الإزالة الذكية، لكن النص في الملف الناتج ما يكون قابلاً للتحديد.'
+};
+const SENS_HINTS = [
+  'يحذف فقط العلامات المائلة الكبيرة الشفافة. الأنسب لو المستوى المتوسط أخذ أكثر من اللازم.',
+  'يحذف النصوص المائلة والكبيرة الشفافة والصور الشفافة. يناسب أغلب الخطابات.',
+  'يحذف أيضاً أي نص فاتح أو شفاف ولو كان صغيراً. تأكد من المعاينة قبل التنزيل.'
+];
+
+function setBusy(on){ $('busy').hidden = !on; }
+function showProgress(frac, text){ $('progress').hidden = frac == null; if(frac != null){ $('progressBar').style.width = Math.round(frac*100)+'%'; $('progressText').textContent = text || ''; } }
+function setSeg(segId, attr, val){ document.querySelectorAll('#'+segId+' button').forEach(b => { const on = b.dataset[attr] === String(val); b.classList.toggle('on', on); if(b.hasAttribute('aria-selected')) b.setAttribute('aria-selected', String(on)); }); }
+
+function updatePanel(){
+  setSeg('modeSeg','mode',S.mode); setSeg('sensSeg','sens',S.sens); setSeg('viewSeg','view',S.view); setSeg('qualitySeg','q',S.quality);
+  $('modeHint').textContent = HINTS[S.mode];
+  $('sensHint').textContent = SENS_HINTS[S.sens];
+  $('smartCtl').hidden = S.mode !== 'smart';
+  $('imageCtl').hidden = S.mode !== 'image';
+  $('strengthOut').textContent = ar(S.strength) + '٪';
+  $('undoBtn').disabled = $('clearBtn').disabled = S.rects.length === 0;
+  $('drawBtn').classList.toggle('on', S.drawing);
+  $('sheet').classList.toggle('drawing', S.drawing && S.mode === 'image' && S.view === 'after');
+  $('pageInfo').textContent = 'صفحة ' + ar(S.page) + ' من ' + ar(S.pages);
+  $('prevBtn').disabled = S.page <= 1; $('nextBtn').disabled = S.page >= S.pages;
+  $('downloadBtn').disabled = S.mode === 'smart' ? !(S.clean && S.clean.total) : false;
+
+  const rep = $('report');
+  if(S.mode === 'smart' && S.clean){
+    rep.hidden = false;
+    if(S.clean.total){
+      const st = S.clean.stats, chips = [];
+      if(st.text) chips.push('نص العلامة');
+      if(st.image) chips.push('صورة العلامة');
+      if(st.form) chips.push('علامة مدمجة');
+      if(st.marked) chips.push('طبقة علامة مائية');
+      if(st.annot) chips.push('ختم مضاف');
+      const pg = S.clean.pages.length === S.pages ? 'كل الصفحات' : (S.clean.pages.length === 1 ? 'الصفحة ' + ar(S.clean.pages[0]) : 'الصفحات ' + S.clean.pages.map(ar).join('، '));
+      rep.className = 'report ok';
+      rep.innerHTML = '<strong></strong><span></span><div class="chips"></div>';
+      rep.querySelector('strong').textContent = 'أُزيلت العلامة من ' + pg;
+      rep.querySelector('span').textContent = 'نوع ما أُزيل:';
+      chips.forEach(t => { const s = document.createElement('span'); s.textContent = t; rep.querySelector('.chips').append(s); });
+    } else {
+      rep.className = 'report none';
+      rep.innerHTML = '<strong>ما لقيت علامة مائية بهذا المستوى</strong>جرّب المستوى «شامل»، أو انتقل إلى «تنظيف بالصورة».';
+    }
+  } else rep.hidden = true;
+
+  let note = '';
+  if(S.mode === 'smart' && S.view === 'after' && S.clean && !S.clean.total) note = 'المعاينة تعرض الملف الأصلي لأنه ما أُزيل شيء.';
+  if(S.mode === 'image' && S.view === 'after' && S.drawing) note = 'اسحب مستطيلاً فوق الجزء اللي تبي تمسحه.';
+  $('stageNote').textContent = note;
+}
+
+async function refresh(){
+  if(!S.doc) return;
+  const tok = ++S.token;
+  updatePanel();
+  let doc = S.doc;
+  if(S.view === 'after' && S.mode === 'smart' && S.clean && S.clean.doc) doc = S.clean.doc;
+  setBusy(true);
+  try {
+    const page = await doc.getPage(Math.min(S.page, doc.numPages));
+    const base = page.getViewport({scale:1});
+    const avail = Math.max(280, Math.min($('stage').clientWidth, 900));
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const scale = (avail / base.width) * dpr;
+    const tmp = document.createElement('canvas');
+    await renderTo(doc, Math.min(S.page, doc.numPages), scale, tmp);
+    if(tok !== S.token) return;
+    if(S.view === 'after' && S.mode === 'image') whiten(tmp, threshold(), rectsFor(S.page));
+    const view = $('view');
+    view.width = tmp.width; view.height = tmp.height;
+    view.style.width = (tmp.width/dpr) + 'px';
+    view.getContext('2d').drawImage(tmp, 0, 0);
+    drawOverlay();
+  } catch(e){ console.error(e); }
+  finally { if(tok === S.token) setBusy(false); }
+}
+
+function drawOverlay(temp){
+  const ov = $('overlay'), v = $('view');
+  ov.width = v.width; ov.height = v.height;
+  const ctx = ov.getContext('2d'); ctx.clearRect(0,0,ov.width,ov.height);
+  if(S.mode !== 'image' || S.view !== 'after') return;
+  const list = rectsFor(S.page).slice(); if(temp) list.push(temp);
+  ctx.setLineDash([8,6]); ctx.lineWidth = 2; ctx.strokeStyle = '#c0962f';
+  for(const r of list) ctx.strokeRect(r[0]*ov.width, r[1]*ov.height, (r[2]-r[0])*ov.width, (r[3]-r[1])*ov.height);
+}
+
+async function runSmart(){
+  const tok = ++S.smartToken;
+  S.clean = null; updatePanel();
+  if(S.encrypted) return;
+  setBusy(true);
+  try {
+    const res = await smartClean(S.bytes.slice(), S.sens);
+    if(tok !== S.smartToken) return;
+    if(res.total) res.doc = await pdfjsLib.getDocument({data: res.bytes.slice()}).promise;
+    S.clean = res;
+  } catch(e){
+    if(tok !== S.smartToken) return;
+    if(e.message === 'ENCRYPTED'){
+      S.encrypted = true; S.mode = 'image';
+      $('dropError').hidden = true;
+      alertInline('الملف محمي من التعديل، فالإزالة الذكية ما تشتغل عليه. حوّلتك إلى «تنظيف بالصورة» وهو يشتغل معه.');
+    } else {
+      console.error(e);
+      S.clean = {total:0, stats:{}, pages:[]};
+    }
+  }
+  if(tok === S.smartToken) refresh();
+}
+function alertInline(msg){ const r = $('report'); r.hidden = false; r.className = 'report none'; r.textContent = msg; $('stageNote').textContent = msg; }
+
+async function loadFile(file){
+  $('dropError').hidden = true;
+  if(!file) return;
+  if(!/\.pdf$/i.test(file.name) && file.type !== 'application/pdf'){ showDropError('الملف لازم يكون بصيغة PDF.'); return; }
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  let doc;
+  try { doc = await pdfjsLib.getDocument({data: bytes.slice()}).promise; }
+  catch(e){
+    showDropError(e && e.name === 'PasswordException' ? 'الملف محمي بكلمة مرور، افتحه وأزل الحماية أولاً ثم ارفعه من جديد.' : 'ما قدرت أفتح الملف. تأكد إنه PDF سليم.');
+    return;
+  }
+  Object.assign(S, {bytes, doc, name:file.name, pages:doc.numPages, page:1, clean:null, encrypted:false, rects:[], drawing:false, view:'after', mode:'smart'});
+  $('fileName').textContent = file.name;
+  $('fileMeta').textContent = ar(doc.numPages) + (doc.numPages === 1 ? ' صفحة' : ' صفحات') + ' · ' + (bytes.length/1024 > 1024 ? ar((bytes.length/1048576).toFixed(1)) + ' م.ب' : ar(Math.round(bytes.length/1024)) + ' ك.ب');
+  $('drop').hidden = true; $('work').hidden = false;
+  showProgress(null);
+  runSmart();
+}
+function showDropError(msg){ const e = $('dropError'); e.textContent = msg; e.hidden = false; $('drop').hidden = false; $('work').hidden = true; }
+
+async function download(){
+  const base = S.name.replace(/\.pdf$/i, '');
+  let bytes;
+  $('downloadBtn').disabled = true;
+  try {
+    if(S.mode === 'smart'){ if(!S.clean || !S.clean.total) return; bytes = S.clean.bytes; }
+    else {
+      showProgress(0, 'جاري تجهيز الصفحات…');
+      bytes = await imageClean(f => showProgress(f, 'تمت ' + ar(Math.round(f*S.pages)) + ' من ' + ar(S.pages) + ' صفحات'));
+      showProgress(1, 'الملف جاهز');
+    }
+    const url = URL.createObjectURL(new Blob([bytes], {type:'application/pdf'}));
+    const a = document.createElement('a'); a.href = url; a.download = base + '-نظيف.pdf';
+    document.body.append(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 30000);
+  } finally { updatePanel(); }
+}
+
+/* ----- الأحداث ----- */
+$('pickBtn').onclick = () => $('fileInput').click();
+$('changeBtn').onclick = () => $('fileInput').click();
+$('fileInput').onchange = e => { loadFile(e.target.files[0]); e.target.value = ''; };
+const drop = $('drop');
+['dragenter','dragover'].forEach(t => document.addEventListener(t, e => { e.preventDefault(); drop.classList.add('over'); }));
+['dragleave','drop'].forEach(t => document.addEventListener(t, e => { e.preventDefault(); if(t==='drop' || e.target === drop) drop.classList.remove('over'); }));
+document.addEventListener('drop', e => { const f = e.dataTransfer && e.dataTransfer.files[0]; if(f) loadFile(f); });
+
+$('modeSeg').onclick = e => { const b = e.target.closest('button'); if(!b) return;
+  if(b.dataset.mode === 'smart' && S.encrypted){ alertInline('الملف محمي من التعديل، فالإزالة الذكية ما تشتغل عليه. استخدم «تنظيف بالصورة».'); return; }
+  S.mode = b.dataset.mode; S.drawing = false; showProgress(null);
+  if(S.mode === 'smart' && !S.clean) runSmart(); else refresh(); };
+$('sensSeg').onclick = e => { const b = e.target.closest('button'); if(!b) return; S.sens = +b.dataset.sens; runSmart(); };
+$('viewSeg').onclick = e => { const b = e.target.closest('button'); if(!b) return; S.view = b.dataset.view; refresh(); };
+$('qualitySeg').onclick = e => { const b = e.target.closest('button'); if(!b) return; S.quality = +b.dataset.q; updatePanel(); };
+$('prevBtn').onclick = () => { if(S.page > 1){ S.page--; refresh(); } };
+$('nextBtn').onclick = () => { if(S.page < S.pages){ S.page++; refresh(); } };
+let strengthTimer;
+$('strength').oninput = e => { S.strength = +e.target.value; updatePanel(); clearTimeout(strengthTimer); strengthTimer = setTimeout(refresh, 120); };
+$('allPages').onchange = e => { S.allPages = e.target.checked; refresh(); };
+$('drawBtn').onclick = () => { S.drawing = !S.drawing; if(S.drawing) S.view = 'after'; refresh(); };
+$('undoBtn').onclick = () => { S.rects.pop(); refresh(); };
+$('clearBtn').onclick = () => { S.rects = []; refresh(); };
+$('downloadBtn').onclick = download;
+
+(() => {
+  const ov = $('overlay'); let start = null;
+  const pt = e => { const r = ov.getBoundingClientRect(); return [Math.min(1,Math.max(0,(e.clientX-r.left)/r.width)), Math.min(1,Math.max(0,(e.clientY-r.top)/r.height))]; };
+  const box = (a,b) => [Math.min(a[0],b[0]), Math.min(a[1],b[1]), Math.max(a[0],b[0]), Math.max(a[1],b[1])];
+  ov.addEventListener('pointerdown', e => { if(!S.drawing) return; start = pt(e); ov.setPointerCapture(e.pointerId); });
+  ov.addEventListener('pointermove', e => { if(start) drawOverlay(box(start, pt(e))); });
+  ov.addEventListener('pointerup', e => { if(!start) return; const r = box(start, pt(e)); start = null;
+    if((r[2]-r[0]) > 0.005 && (r[3]-r[1]) > 0.003) S.rects.push({p:S.page, r});
+    refresh(); });
+})();
+
+let resizeTimer;
+window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(refresh, 200); });
+updatePanel();
+</script>
+</body>
+</html>

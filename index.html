@@ -290,13 +290,14 @@ const PLATFORMS = [
   },
   { category: "أدوات القسم", name: "توقيع ملفات PDF", icon: "edit", url: "tools.html?tool=sign", tool: true },
   { category: "أدوات القسم", name: "إنشاء QR Code", icon: "qr", url: "tools.html?tool=qr", tool: true },
+  { category: "أدوات القسم", name: "إزالة العلامة المائية من الخطابات", icon: "eraser", url: "tools/watermark.html", tool: true },
   { category: "أنظمة الوزارة", name: "نظام نور", icon: "school", url: "https://noor.moe.gov.sa/Noor/Login.aspx?ref=noor", external: true },
   { category: "أنظمة الوزارة", name: "نظام فارس", icon: "users", url: "https://sshr.moe.gov.sa/OA_HTML/AppsLocalLogin.jsp", external: true },
   { category: "أنظمة الوزارة", name: "نظام أعمالي", icon: "clipboard", url: "https://aamali.moe.gov.sa/", external: true },
   { category: "أنظمة الوزارة", name: "الدعم الموحد", icon: "support", url: "https://usc.moe.gov.sa/moe_csm", external: true }
 ];
 
-/* الأيقونات المتاحة: chart, folder, monitor, award, trend, edit, flask, laptop, school, file, door, book, users, calendar, clipboard, shield */
+/* الأيقونات المتاحة: chart, folder, monitor, award, trend, edit, flask, laptop, school, file, door, book, users, calendar, clipboard, shield, qr, support, eraser */
 const PATHS={
   qr:'M3 3h6v6H3zM15 3h6v6h-6zM3 15h6v6H3zM15 15h2v2h-2zM19 13h2v4m-8 2v2h4m2-2h2v2M11 3v3m0 5h4v2m-12 0h4',
   support:'M4 14v-3a8 8 0 0 1 16 0v3M4 12H2v7h4v-7H4m16 0h2v7h-4v-7h2m0 7q0 3-7 3',
@@ -323,7 +324,8 @@ const PATHS={
   users:'M16 20v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8m13 10v-2a4 4 0 0 0-3-3.9M16 2.1a4 4 0 0 1 0 7.8',
   calendar:'M4 5h16v16H4V5m12-2v4M8 3v4M4 11h16',
   clipboard:'M9 4h6v3H9V4M7 5H5v16h14V5h-2M8 12h8m-8 4h5',
-  shield:'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3'
+  shield:'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3',
+  eraser:'M7 21l-4.3-4.3a2.4 2.4 0 0 1 0-3.4l9.6-9.6a2.4 2.4 0 0 1 3.4 0l5.6 5.6a2.4 2.4 0 0 1 0 3.4L13 21M22 21H7M5 11l9 9'
 };
 
 const $=id=>document.getElementById(id);
