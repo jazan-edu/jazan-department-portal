@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0d2724">
+<meta name="robots" content="noindex">
+<title>__TITLE__</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--deep:#0d2724;--gold:#d4b66e;--paper:#eef4f0;--mist:#9fbab1;--warn:#e7a46b}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{min-height:100vh;display:grid;place-items:center;padding:24px 16px;background:radial-gradient(900px 520px at 92% -12%,#1d4a43 0,transparent 60%),var(--deep);color:var(--paper);font:15px/1.8 'Noto Kufi Arabic',Tahoma,sans-serif}
+form{width:min(380px,100%);display:flex;flex-direction:column;gap:14px;padding:30px 26px 26px;border-radius:22px;background:linear-gradient(160deg,#1a4640,#123631);border:1px solid #d4b66e26;box-shadow:inset 0 1px 0 #ffffff14,0 30px 50px -28px #000d}
+.lock{width:58px;height:58px;border-radius:17px;display:grid;place-items:center;color:var(--gold);background:linear-gradient(145deg,#265b52,#173f39);box-shadow:inset 0 1px 0 #ffffff26,0 14px 24px -12px #000c}
+.lock svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+h1{margin:6px 0 0;font-size:20px;font-weight:500}
+p{margin:0;color:var(--mist);font-size:13px}
+label{font-size:13px;color:#d8e6e0}
+input[type=password]{width:100%;height:46px;margin-top:6px;padding:0 14px;border-radius:12px;border:1px solid #ffffff1f;background:#0a201d;color:var(--paper);font:inherit;font-size:16px;outline:none;transition:border-color .15s}
+input[type=password]:focus{border-color:#d4b66e99}
+.check{display:flex;align-items:center;gap:8px;font-size:13px;color:#cfe0d9;cursor:pointer}
+.check input{accent-color:var(--gold);width:16px;height:16px}
+button{height:46px;border:0;border-radius:12px;background:var(--gold);color:var(--deep);font:inherit;font-weight:500;cursor:pointer}
+button:disabled{opacity:.6;cursor:progress}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.error{color:var(--warn);font-size:13px;min-height:1.8em}
+</style>
+</head>
+<body>
+<form id="gate" autocomplete="off">
+  <div class="lock"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 11h12v10H6zM8 11V8a4 4 0 0 1 8 0v3M12 15v2"/></svg></div>
+  <div><h1>__TITLE__</h1><p>هذه الأداة محمية. أدخل كلمة المرور للمتابعة.</p></div>
+  <label>كلمة المرور<input type="password" id="pw" autocomplete="current-password" required autofocus></label>
+  <label class="check"><input type="checkbox" id="remember" checked>تذكّرني على هذا الجهاز</label>
+  <button id="go">دخول</button>
+  <p class="error" id="err" role="alert"></p>
+</form>
+<script>
+/* الصفحة الأصلية مشفّرة (AES-256-GCM بمفتاح مشتق من كلمة المرور عبر PBKDF2).
+   لا تُفك إلا بكلمة المرور الصحيحة. لإعادة البناء: tools/lock/lock.mjs */
+const P = __PAYLOAD__;
+const b64d = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+const b64e = u => btoa(String.fromCharCode(...new Uint8Array(u)));
+const STORE = 'unlock:' + location.pathname + ':' + P.salt;
+const store = {
+  get(){ try { return localStorage.getItem(STORE); } catch(e){ return null; } },
+  set(v){ try { localStorage.setItem(STORE, v); } catch(e){} },
+  del(){ try { localStorage.removeItem(STORE); } catch(e){} }
+};
+async function deriveKey(pw){
+  const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(pw), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey({name:'PBKDF2', salt:b64d(P.salt), iterations:P.iter, hash:'SHA-256'}, base, {name:'AES-GCM', length:256}, true, ['decrypt']);
+}
+async function unlock(key){
+  const pt = await crypto.subtle.decrypt({name:'AES-GCM', iv:b64d(P.iv)}, key, b64d(P.ct));
+  return new TextDecoder().decode(pt);
+}
+function show(html){ document.open(); document.write(html); document.close(); }
+
+(async () => {
+  const saved = store.get();
+  if(saved){
+    try {
+      const key = await crypto.subtle.importKey('raw', b64d(saved), {name:'AES-GCM'}, true, ['decrypt']);
+      return show(await unlock(key));
+    } catch(e){ store.del(); }
+  }
+  document.getElementById('gate').addEventListener('submit', async e => {
+    e.preventDefault();
+    const btn = document.getElementById('go'), err = document.getElementById('err'), pw = document.getElementById('pw');
+    btn.disabled = true; btn.textContent = 'جاري التحقق…'; err.textContent = '';
+    try {
+      const key = await deriveKey(pw.value);
+      const html = await unlock(key);
+      if(document.getElementById('remember').checked) store.set(b64e(await crypto.subtle.exportKey('raw', key)));
+      show(html);
+    } catch(ex){
+      err.textContent = 'كلمة المرور غير صحيحة.';
+      btn.disabled = false; btn.textContent = 'دخول'; pw.select();
+    }
+  });
+})();
+</script>
+</body>
+</html>

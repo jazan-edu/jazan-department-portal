@@ -4,3 +4,6 @@ Thumbs.db
 *.xls
 *.csv
 node_modules/
+
+# النسخ غير المشفّرة من الصفحات المقفلة
+*.src.html
