@@ -42,6 +42,7 @@ button:disabled{opacity:.6;cursor:progress}
 <script>
 /* الصفحة الأصلية مشفّرة (AES-256-GCM بمفتاح مشتق من كلمة المرور عبر PBKDF2).
    لا تُفك إلا بكلمة المرور الصحيحة. لإعادة البناء: tools/lock/lock.mjs */
+(() => {
 const P = __PAYLOAD__;
 const b64d = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
 const b64e = u => btoa(String.fromCharCode(...new Uint8Array(u)));
@@ -59,30 +60,47 @@ async function unlock(key){
   const pt = await crypto.subtle.decrypt({name:'AES-GCM', iv:b64d(P.iv)}, key, b64d(P.ct));
   return new TextDecoder().decode(pt);
 }
-function show(html){ document.open(); document.write(html); document.close(); }
+/* نستبدل محتوى الصفحة في مكانه ثم نشغّل السكربتات بالترتيب (أثبت من document.write) */
+async function show(html){
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  for(const a of doc.documentElement.attributes) document.documentElement.setAttribute(a.name, a.value);
+  const scripts = [...doc.querySelectorAll('script')]; scripts.forEach(s => s.remove());
+  document.head.replaceChildren(...[...doc.head.childNodes].map(n => document.importNode(n, true)));
+  document.body.replaceChildren(...[...doc.body.childNodes].map(n => document.importNode(n, true)));
+  for(const a of [...document.body.attributes]) document.body.removeAttribute(a.name);
+  for(const a of doc.body.attributes) document.body.setAttribute(a.name, a.value);
+  for(const old of scripts){
+    const el = document.createElement('script');
+    for(const a of old.attributes) el.setAttribute(a.name, a.value);
+    if(old.src){ await new Promise((ok, fail) => { el.onload = ok; el.onerror = fail; document.body.append(el); }); }
+    else { el.textContent = old.textContent; document.body.append(el); }
+  }
+}
 
 (async () => {
   const saved = store.get();
   if(saved){
     try {
       const key = await crypto.subtle.importKey('raw', b64d(saved), {name:'AES-GCM'}, true, ['decrypt']);
-      return show(await unlock(key));
+      return await show(await unlock(key));
     } catch(e){ store.del(); }
   }
   document.getElementById('gate').addEventListener('submit', async e => {
     e.preventDefault();
     const btn = document.getElementById('go'), err = document.getElementById('err'), pw = document.getElementById('pw');
     btn.disabled = true; btn.textContent = 'جاري التحقق…'; err.textContent = '';
-    try {
-      const key = await deriveKey(pw.value);
-      const html = await unlock(key);
-      if(document.getElementById('remember').checked) store.set(b64e(await crypto.subtle.exportKey('raw', key)));
-      show(html);
-    } catch(ex){
+    let key, html;
+    try { key = await deriveKey(pw.value); html = await unlock(key); }
+    catch(ex){
       err.textContent = 'كلمة المرور غير صحيحة.';
       btn.disabled = false; btn.textContent = 'دخول'; pw.select();
+      return;
     }
+    if(document.getElementById('remember').checked) store.set(b64e(await crypto.subtle.exportKey('raw', key)));
+    try { await show(html); }
+    catch(ex){ location.reload(); }
   });
+})();
 })();
 </script>
 </body>
