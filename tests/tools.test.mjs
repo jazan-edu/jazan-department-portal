@@ -50,9 +50,13 @@ test('portal retains old links and exposes both tools and four external systems'
   const html = await readFile('index.html', 'utf8');
   const text = html.match(/const PLATFORMS = (\[[\s\S]*?\n\]);/)[1];
   const platforms = Function('return ' + text)();
-  assert.equal(platforms.length, 14);
+  assert.ok(platforms.length >= 17);
   assert.equal(platforms[5].name, 'منصة استقبال التعديلات على منصة التميز');
-  assert.equal(platforms.filter(p => p.tool).length, 2);
+  assert.equal(platforms.filter(p => p.tool).length, 3);
+  const scripts = platforms.filter(p => p.url && p.url.startsWith('https://script.google.com/'));
+  assert.ok(scripts.every(p => /\/macros\/s\/[\w-]+\/exec(\?.*)?$/.test(p.url)), 'Apps Script links must end in /exec');
+  assert.equal(new Set(scripts.map(p => p.url)).size, scripts.length, 'no duplicate platform links');
+  assert.ok(platforms.every(p => p.category && p.name && p.icon));
   assert.equal(platforms.filter(p => p.external).length, 4);
   assert.ok(platforms.filter(p => p.external).every(p => !p.url.includes('TransactionId')));
 });
