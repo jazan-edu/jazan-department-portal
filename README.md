@@ -23,7 +23,7 @@
 | [`self-evaluation-tracking`](./platforms/self-evaluation-tracking) | منصة متابعة حالة التقويم الذاتي | الأداء الوظيفي والتميز |
 | [`excellence-modifications`](./platforms/excellence-modifications) | منصة استقبال التعديلات على منصة التميز | الأداء الوظيفي والتميز |
 | [`chemical-safety`](./platforms/chemical-safety) | منصة حصر المواد الكيميائية وقواعد السلامة المرورية | النماذج والسلامة |
-| — | منصة طلبات التحول عن بعد | طلبات المدارس |
+| [رابط مختصر](https://jazan-edu.github.io/remote-learning/) | منصة طلبات التحول عن بعد | طلبات المدارس |
 | — | منصة تقييم الاحتياج التطويري للقيادات | القيادات المدرسية |
 | — | منصة متابعة حركة الوكلاء | القيادات المدرسية |
 
