@@ -11,15 +11,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --deep:#0d2724;      /* خلفية المسرح */
-  --pine:#143a35;      /* سطح البطاقة */
-  --pine-hi:#1f5048;   /* حافة البطاقة المضيئة */
-  --gold:#d4b66e;      /* لون الهوية */
-  --paper:#eef4f0;     /* النص الأساسي */
-  --mist:#9fbab1;      /* النص الثانوي */
-  --rail:#0a201d;      /* الشريط الجانبي */
-  --rail-w:268px;
-  --rail-mini:76px;
+--deep:#0d2724; /* خلفية المسرح */
+--pine:#143a35; /* سطح البطاقة */
+--pine-hi:#1f5048; /* حافة البطاقة المضيئة */
+--gold:#d4b66e; /* لون الهوية */
+--paper:#eef4f0; /* النص الأساسي */
+--mist:#9fbab1; /* النص الثانوي */
+--rail:#0a201d; /* الشريط الجانبي */
+--rail-w:268px;
+--rail-mini:76px;
 }
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -35,7 +35,7 @@ svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
 .app{display:flex;height:100dvh}
 .rail{width:var(--rail-w);flex-shrink:0;background:var(--rail);border-left:1px solid #ffffff0d;display:flex;flex-direction:column;padding:22px 14px 16px;transition:width .28s ease;position:relative;z-index:30}
 .stage{flex:1;min-width:0;position:relative;display:flex;flex-direction:column;
-  background:radial-gradient(1100px 600px at 85% -10%,#1d4a43 0%,transparent 60%),radial-gradient(700px 500px at 0% 110%,#12352f 0%,transparent 65%),var(--deep)}
+background:radial-gradient(1100px 600px at 85% -10%,#1d4a43 0%,transparent 60%),radial-gradient(700px 500px at 0% 110%,#12352f 0%,transparent 65%),var(--deep)}
 
 /* ===== الشريط الجانبي ===== */
 .brand{display:flex;align-items:center;gap:12px;padding:0 8px 20px;border-bottom:1px solid #ffffff10;white-space:nowrap;overflow:hidden}
@@ -83,27 +83,27 @@ svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
 
 /* ===== البطاقة ثلاثية الأبعاد ===== */
 .card{--rx:0deg;--ry:0deg;--mx:50%;--my:50%;--lift:0px;
-  position:relative;display:flex;flex-direction:column;text-align:right;min-height:210px;padding:24px 24px 20px;border-radius:22px;
-  background:linear-gradient(160deg,var(--pine-hi) 0%,var(--pine) 46%,#0f2f2b 100%);
-  border:1px solid #d4b66e26;
-  box-shadow:inset 0 1px 0 #ffffff1a,0 2px 0 #0003,0 26px 50px -26px #000c;
-  transform-style:preserve-3d;
-  transform:perspective(900px) rotateX(var(--rx)) rotateY(var(--ry)) translateY(calc(var(--lift) * -1));
-  transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s,border-color .3s;
-  will-change:transform}
+position:relative;display:flex;flex-direction:column;text-align:right;min-height:210px;padding:24px 24px 20px;border-radius:22px;
+background:linear-gradient(160deg,var(--pine-hi) 0%,var(--pine) 46%,#0f2f2b 100%);
+border:1px solid #d4b66e26;
+box-shadow:inset 0 1px 0 #ffffff1a,0 2px 0 #0003,0 26px 50px -26px #000c;
+transform-style:preserve-3d;
+transform:perspective(900px) rotateX(var(--rx)) rotateY(var(--ry)) translateY(calc(var(--lift) * -1));
+transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s,border-color .3s;
+will-change:transform}
 .card.tilting{transition:transform .08s linear,box-shadow .3s,border-color .3s}
 .card:hover,.card:focus-visible{--lift:6px;border-color:#d4b66e66;box-shadow:inset 0 1px 0 #ffffff24,0 2px 0 #0003,0 44px 70px -30px #000e,0 0 0 1px #d4b66e1f}
 .card:focus-visible{outline-offset:6px}
 /* ضوء ذهبي يتبع المؤشر */
 .card .light{position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .35s;
-  background:radial-gradient(420px circle at var(--mx) var(--my),#d4b66e2e,transparent 45%)}
+background:radial-gradient(420px circle at var(--mx) var(--my),#d4b66e2e,transparent 45%)}
 .card:hover .light{opacity:1}
 /* نسخة كبيرة بارزة من الأيقونة في الخلف */
 .card .ghost{position:absolute;left:10px;bottom:6px;width:132px;height:132px;color:#ffffff10;stroke-width:.8;transform:translateZ(-6px);pointer-events:none;transition:color .4s}
 .card:hover .ghost{color:#d4b66e1a}
 .card .ico{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:var(--gold);
-  background:linear-gradient(145deg,#265b52,#173f39);box-shadow:inset 0 1px 0 #ffffff26,0 14px 22px -10px #000c;
-  transform:translateZ(26px);transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+background:linear-gradient(145deg,#265b52,#173f39);box-shadow:inset 0 1px 0 #ffffff26,0 14px 22px -10px #000c;
+transform:translateZ(26px);transition:transform .45s cubic-bezier(.2,.8,.2,1)}
 .card .ico svg{width:27px;height:27px}
 .card .top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;transform-style:preserve-3d}
 .card .cat{font-size:12px;color:var(--gold);opacity:.85;transform:translateZ(14px);padding-top:4px;text-align:left}
@@ -144,220 +144,227 @@ svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6;stroke
 
 /* ===== الجوال ===== */
 @media (max-width:860px){
-  .rail{position:fixed;inset:0 0 0 auto;width:286px;transform:translateX(100%);transition:transform .25s ease}
-  .app.mini .rail{width:286px}
-  .app.mini .brand div:last-child,.app.mini .nav-item span,.app.mini .rail-btn .t{display:revert}
-  .app.mini .nav-group{display:block;height:auto;margin:18px 12px 6px;background:none;font-size:12px}
-  .app.mini .nav-item,.app.mini .rail-btn{justify-content:flex-start;padding:10px 12px}
-  .app.mini .rail-foot{flex-direction:row}
-  .collapse-btn{display:none!important}
-  .rail.open{transform:none;box-shadow:-20px 0 60px #0009}
-  .backdrop.open{display:block;position:fixed;inset:0;background:#0009;z-index:25;border:0}
-  .menu-btn{display:grid}
-  .vbar .menu-btn{display:inline-flex}
-  .vbar #backBtn{display:none}
-  .bar{flex-wrap:wrap;gap:12px}
-  .bar h1{font-size:21px}
-  .date{display:none}
-  .search{width:100%;order:5}
-  .grid{grid-template-columns:1fr;gap:16px}
-  .card{min-height:180px}
-  .vtitle small{display:none}
-  .vbtn .label{display:none}
+.rail{position:fixed;inset:0 0 0 auto;width:286px;transform:translateX(100%);transition:transform .25s ease}
+.app.mini .rail{width:286px}
+.app.mini .brand div:last-child,.app.mini .nav-item span,.app.mini .rail-btn .t{display:revert}
+.app.mini .nav-group{display:block;height:auto;margin:18px 12px 6px;background:none;font-size:12px}
+.app.mini .nav-item,.app.mini .rail-btn{justify-content:flex-start;padding:10px 12px}
+.app.mini .rail-foot{flex-direction:row}
+.collapse-btn{display:none!important}
+.rail.open{transform:none;box-shadow:-20px 0 60px #0009}
+.backdrop.open{display:block;position:fixed;inset:0;background:#0009;z-index:25;border:0}
+.menu-btn{display:grid}
+.vbar .menu-btn{display:inline-flex}
+.vbar #backBtn{display:none}
+.bar{flex-wrap:wrap;gap:12px}
+.bar h1{font-size:21px}
+.date{display:none}
+.search{width:100%;order:5}
+.grid{grid-template-columns:1fr;gap:16px}
+.card{min-height:180px}
+.vtitle small{display:none}
+.vbtn .label{display:none}
 }
 @media (prefers-reduced-motion:reduce){
-  *,*::before,*::after{transition:none!important;animation:none!important}
-  .card{transform:none!important}
+*,*::before,*::after{transition:none!important;animation:none!important}
+.card{transform:none!important}
 }
 </style>
 </head>
 <body>
 <div class="app" id="app">
-  <button class="backdrop" id="backdrop" aria-label="إغلاق القائمة"></button>
+<button class="backdrop" id="backdrop" aria-label="إغلاق القائمة"></button>
 
-  <aside class="rail" id="rail" aria-label="قائمة المنصات">
-    <div class="brand">
-      <div class="brand-mark" data-icon="building"></div>
-      <div><strong>بوابة القسم</strong><small>جميع منصات القسم في مكان واحد</small></div>
-    </div>
-    <nav class="nav" id="nav"></nav>
-    <div class="rail-foot">
-      <button class="rail-btn grow" id="homeBtn" title="الرئيسية"><span data-icon="home"></span><span class="t">الرئيسية</span></button>
-      <button class="rail-btn collapse-btn" id="collapseBtn" title="تصغير القائمة" aria-label="تصغير القائمة"><span class="collapse-icon" data-icon="chevrons"></span></button>
-    </div>
-  </aside>
+<aside class="rail" id="rail" aria-label="قائمة المنصات">
+<div class="brand">
+<div class="brand-mark" data-icon="building"></div>
+<div><strong>بوابة القسم</strong><small>جميع منصات القسم في مكان واحد</small></div>
+</div>
+<nav class="nav" id="nav"></nav>
+<div class="rail-foot">
+<button class="rail-btn grow" id="homeBtn" title="الرئيسية"><span data-icon="home"></span><span class="t">الرئيسية</span></button>
+<button class="rail-btn collapse-btn" id="collapseBtn" title="تصغير القائمة" aria-label="تصغير القائمة"><span class="collapse-icon" data-icon="chevrons"></span></button>
+</div>
+</aside>
 
-  <main class="stage">
-    <!-- الرئيسية -->
-    <section class="home" id="home">
-      <header class="bar">
-        <button class="menu-btn" id="menuBtn" aria-label="فتح القائمة" aria-expanded="false" aria-controls="rail"><span data-icon="menu"></span></button>
-        <h1>منصات القسم</h1>
-        <span class="count" id="count"></span>
-        <span class="spacer"></span>
-        <time class="date" id="today"></time>
-        <label class="search"><span data-icon="search"></span><input type="search" id="search" placeholder="ابحث عن منصة" aria-label="ابحث عن منصة"></label>
-      </header>
-      <div id="groups" class="grid"></div>
-      <div class="empty" id="empty" hidden><strong>لا توجد منصة بهذا الاسم</strong>جرّب كلمة أخرى من اسم المنصة.</div>
-    </section>
+<main class="stage">
+<!-- الرئيسية -->
+<section class="home" id="home">
+<header class="bar">
+<button class="menu-btn" id="menuBtn" aria-label="فتح القائمة" aria-expanded="false" aria-controls="rail"><span data-icon="menu"></span></button>
+<h1>منصات القسم</h1>
+<span class="count" id="count"></span>
+<span class="spacer"></span>
+<time class="date" id="today"></time>
+<label class="search"><span data-icon="search"></span><input type="search" id="search" placeholder="ابحث عن منصة" aria-label="ابحث عن منصة"></label>
+</header>
+<div id="groups" class="grid"></div>
+<div class="empty" id="empty" hidden><strong>لا توجد منصة بهذا الاسم</strong>جرّب كلمة أخرى من اسم المنصة.</div>
+</section>
 
-    <!-- عارض المنصة -->
-    <section class="viewer" id="viewer" hidden aria-label="المنصة المفتوحة">
-      <div class="vbar">
-        <button class="vbtn" id="backBtn" title="العودة إلى الرئيسية"><span data-icon="arrowR"></span><span class="label">الرئيسية</span></button>
-        <button class="vbtn menu-btn" id="menuBtn2" aria-label="فتح القائمة" aria-controls="rail"><span data-icon="menu"></span></button>
-        <div class="vtitle"><span class="mini-ico" id="vIcon"></span><b id="vName"></b><small id="vCat"></small></div>
-        <a class="vbtn" id="vOpen" target="_blank" rel="noopener noreferrer" title="فتح المنصة في نافذة مستقلة"><span data-icon="external"></span><span class="label">نافذة مستقلة</span></a>
-      </div>
-      <div class="frame">
-        <iframe id="frame" title="المنصة" hidden></iframe>
-        <div class="overlay" id="loading" role="status" hidden><div class="spinner"></div><p>جاري تحميل المنصة…</p><a id="loadingLink" target="_blank" rel="noopener noreferrer">لم تظهر؟ افتحها في نافذة مستقلة</a></div>
-        <div class="overlay" id="pending" hidden><h2>هذه المنصة لم تُتح بعد</h2><p>ستظهر هنا بمجرد إضافة رابطها.</p></div>
-        <div class="overlay" id="externalNotice" hidden><h2>فتح النظام في تبويب مستقل</h2><p>تابع إلى موقع النظام لتسجيل الدخول.</p><a id="externalLink" target="_blank" rel="noopener noreferrer">فتح النظام ↗</a></div>
-      </div>
-    </section>
-  </main>
+<!-- عارض المنصة -->
+<section class="viewer" id="viewer" hidden aria-label="المنصة المفتوحة">
+<div class="vbar">
+<button class="vbtn" id="backBtn" title="العودة إلى الرئيسية"><span data-icon="arrowR"></span><span class="label">الرئيسية</span></button>
+<button class="vbtn menu-btn" id="menuBtn2" aria-label="فتح القائمة" aria-controls="rail"><span data-icon="menu"></span></button>
+<div class="vtitle"><span class="mini-ico" id="vIcon"></span><b id="vName"></b><small id="vCat"></small></div>
+<a class="vbtn" id="vOpen" target="_blank" rel="noopener noreferrer" title="فتح المنصة في نافذة مستقلة"><span data-icon="external"></span><span class="label">نافذة مستقلة</span></a>
+</div>
+<div class="frame">
+<iframe id="frame" title="المنصة" hidden></iframe>
+<div class="overlay" id="loading" role="status" hidden><div class="spinner"></div><p>جاري تحميل المنصة…</p><a id="loadingLink" target="_blank" rel="noopener noreferrer">لم تظهر؟ افتحها في نافذة مستقلة</a></div>
+<div class="overlay" id="pending" hidden><h2>هذه المنصة لم تُتح بعد</h2><p>ستظهر هنا بمجرد إضافة رابطها.</p></div>
+<div class="overlay" id="externalNotice" hidden><h2>فتح النظام في تبويب مستقل</h2><p>تابع إلى موقع النظام لتسجيل الدخول.</p><a id="externalLink" target="_blank" rel="noopener noreferrer">فتح النظام ↗</a></div>
+</div>
+</section>
+</main>
 </div>
 
 <script>
 /* ============================================================
-   قائمة المنصات
-   لإضافة منصة: انسخ أي مقطع من { إلى }, والصقه وعدّل:
-   - category: اسم الفئة (اسم جديد = قسم جديد)
-   - name: اسم المنصة
-   - icon: اسم الأيقونة من القائمة PATHS بالأسفل
-   - url: رابط المنصة، أو null لتظهر "قريباً"
-   ============================================================ */
+قائمة المنصات
+لإضافة منصة: انسخ أي مقطع من { إلى }, والصقه وعدّل:
+- category: اسم الفئة (اسم جديد = قسم جديد)
+- name: اسم المنصة
+- icon: اسم الأيقونة من القائمة PATHS بالأسفل
+- url: رابط المنصة، أو null لتظهر "قريباً"
+============================================================ */
 const PLATFORMS = [
 
-  // ---- الحضور والمساءلات ----
-  {
-    category: "الحضور والمساءلات",
-    name: "منصة مساند حضوري",
-    icon: "chart",
-    url: "https://script.google.com/macros/s/AKfycbx_N9Sq4wWTR3c8bQbjIjJQK9gjYPCVkp1Xp3KluIfsylBr3drEysR3k5JD9MlNn5EdIQ/exec"
-  },
+// ---- الحضور والمساءلات ----
+{
+category: "الحضور والمساءلات",
+name: "منصة مساند حضوري",
+icon: "chart",
+url: "https://script.google.com/macros/s/AKfycbx_N9Sq4wWTR3c8bQbjIjJQK9gjYPCVkp1Xp3KluIfsylBr3drEysR3k5JD9MlNn5EdIQ/exec"
+},
 
-  // ---- الإشراف التربوي ----
-  {
-    category: "الإشراف التربوي",
-    name: "منصة شواهد تنفيذ الأهداف للمشرفين ورؤساء الوحدات",
-    icon: "folder",
-    url: "https://script.google.com/macros/s/AKfycbxAWnvLx0y7sF6jyzJ-9_C0pVc7cbm6j_j9XR_Ce_qP29dM-Wjs6TwDf1Lb9yo1dqbe/exec"
-  },
-  {
-    category: "الإشراف التربوي",
-    name: "منصة مساند مدرستي",
-    icon: "monitor",
-    url: "https://script.google.com/macros/s/AKfycbyDfSbcP0se_MFAPG-L3pV9pJAOthcGmwoGaAjjlnyxgqTZlP_Sp40eM4EHXlfzDk4Z8A/exec"
-  },
+// ---- الإشراف التربوي ----
+{
+category: "الإشراف التربوي",
+name: "منصة شواهد تنفيذ الأهداف للمشرفين ورؤساء الوحدات",
+icon: "folder",
+url: "https://script.google.com/macros/s/AKfycbxAWnvLx0y7sF6jyzJ-9_C0pVc7cbm6j_j9XR_Ce_qP29dM-Wjs6TwDf1Lb9yo1dqbe/exec"
+},
+{
+category: "الإشراف التربوي",
+name: "منصة مساند مدرستي",
+icon: "monitor",
+url: "https://script.google.com/macros/s/AKfycbyDfSbcP0se_MFAPG-L3pV9pJAOthcGmwoGaAjjlnyxgqTZlP_Sp40eM4EHXlfzDk4Z8A/exec"
+},
 
-  // ---- الأداء الوظيفي والتميز ----
-  {
-    category: "الأداء الوظيفي والتميز",
-    name: "منصة دورة الأداء الوظيفي 1447",
-    icon: "award",
-    url: "https://script.google.com/macros/s/AKfycbyCS-soDhJiYqSKzLorRqMAxS-_uo-W2tT_9wzXjKY94aHztZtFZAaPovecMTPd9IonVQ/exec"
-  },
-  {
-    category: "الأداء الوظيفي والتميز",
-    name: "منصة متابعة حالة التقويم الذاتي",
-    icon: "trend",
-    url: "https://script.google.com/macros/s/AKfycbyYftsyBiHAIsyjUaLp66ppmoOxhgTZi8jzetyd8pzsNXcfyjf712TxKFhYTayyQIsltw/exec"
-  },
-  {
-    category: "الأداء الوظيفي والتميز",
-    name: "منصة استقبال التعديلات على منصة التميز",
-    icon: "edit",
-    url: "https://script.google.com/macros/s/AKfycbzFmkZ1zpCYjaESjLqWW02mAUd6bU8YlHQV5MDZY3honox9pI4l6md-b8vZjrzv5v2M7g/exec"
-  },
-  {
-    category: "الأداء الوظيفي والتميز",
-    name: "منصة توقيع أهداف الأداء الوظيفي",
-    icon: "file",
-    url: "https://jazan-edu.github.io/"
-  },
-  {
-    category: "الأداء الوظيفي والتميز",
-    name: "منصة متابعة أعمالي",
-    icon: "calendar",
-    url: "https://script.google.com/macros/s/AKfycbzKU9vAAfifOOmaZdnsNGM-kNFfTfzR6lPzsiG0kEQIs-mh24BFEWPS-S5IRqzve3RnKQ/exec"
-  },
+// ---- الأداء الوظيفي والتميز ----
+{
+category: "الأداء الوظيفي والتميز",
+name: "منصة دورة الأداء الوظيفي 1447",
+icon: "award",
+url: "https://script.google.com/macros/s/AKfycbyCS-soDhJiYqSKzLorRqMAxS-_uo-W2tT_9wzXjKY94aHztZtFZAaPovecMTPd9IonVQ/exec"
+},
+{
+category: "الأداء الوظيفي والتميز",
+name: "منصة متابعة حالة التقويم الذاتي",
+icon: "trend",
+url: "https://script.google.com/macros/s/AKfycbyYftsyBiHAIsyjUaLp66ppmoOxhgTZi8jzetyd8pzsNXcfyjf712TxKFhYTayyQIsltw/exec"
+},
+{
+category: "الأداء الوظيفي والتميز",
+name: "منصة استقبال التعديلات على منصة التميز",
+icon: "edit",
+url: "https://script.google.com/macros/s/AKfycbzFmkZ1zpCYjaESjLqWW02mAUd6bU8YlHQV5MDZY3honox9pI4l6md-b8vZjrzv5v2M7g/exec"
+},
+{
+category: "الأداء الوظيفي والتميز",
+name: "منصة توقيع أهداف الأداء الوظيفي",
+icon: "file",
+url: "https://jazan-edu.github.io/"
+},
+{
+category: "الأداء الوظيفي والتميز",
+name: "منصة متابعة أعمالي",
+icon: "calendar",
+url: "https://script.google.com/macros/s/AKfycbzKU9vAAfifOOmaZdnsNGM-kNFfTfzR6lPzsiG0kEQIs-mh24BFEWPS-S5IRqzve3RnKQ/exec"
+},
 
-  // ---- النماذج والسلامة ----
-  {
-    category: "النماذج والسلامة",
-    name: "منصة حصر المواد الكيميائية وقواعد السلامة المرورية",
-    icon: "flask",
-    url: "https://script.google.com/macros/s/AKfycbwUETl3AwxaQNzPXKTT6n1OLXECw_yy6pl-BlxU1C7tscNtKxhJ_CLvMhrw9JrTV3gO/exec"
-  },
-  {
-    category: "النماذج والسلامة",
-    name: "منصة المختبرات المدرسية",
-    icon: "flask",
-    url: "https://script.google.com/macros/s/AKfycbzakrytBqxpHuJnVFsFNJilISjQr_zjhcN4rmozvUNPg-d6P89mMieBkfNbT0npULGN/exec"
-  },
+// ---- النماذج والسلامة ----
+{
+category: "النماذج والسلامة",
+name: "منصة حصر المواد الكيميائية وقواعد السلامة المرورية",
+icon: "flask",
+url: "https://script.google.com/macros/s/AKfycbwUETl3AwxaQNzPXKTT6n1OLXECw_yy6pl-BlxU1C7tscNtKxhJ_CLvMhrw9JrTV3gO/exec"
+},
+{
+category: "النماذج والسلامة",
+name: "منصة المختبرات المدرسية",
+icon: "flask",
+url: "https://script.google.com/macros/s/AKfycbzakrytBqxpHuJnVFsFNJilISjQr_zjhcN4rmozvUNPg-d6P89mMieBkfNbT0npULGN/exec"
+},
+{
+category: "النماذج والسلامة",
+name: "خطة الإخلاء - المرحلة الأولى",
+icon: "door",
+url: "evacuation-plan.html",
+tool: true
+},
 
-  // ---- طلبات المدارس ----
-  {
-    category: "طلبات المدارس",
-    name: "منصة طلبات التحول عن بعد",
-    icon: "laptop",
-    url: "https://jazan-edu.github.io/remote-learning/"
-  },
+// ---- طلبات المدارس ----
+{
+category: "طلبات المدارس",
+name: "منصة طلبات التحول عن بعد",
+icon: "laptop",
+url: "https://jazan-edu.github.io/remote-learning/"
+},
 
-  // ---- القيادات المدرسية ----
-  {
-    category: "القيادات المدرسية",
-    name: "منصة تقييم الاحتياج التطويري للقيادات",
-    icon: "clipboard",
-    url: "https://script.google.com/macros/s/AKfycbzkI5l_AsPFKvt5Ra16T6uLPF_hsCE-hyGNhTEAiF8MHByWr-1mh4LyryxKFBLwwkmOMA/exec"
-  },
-  {
-    category: "القيادات المدرسية",
-    name: "منصة متابعة حركة الوكلاء",
-    icon: "users",
-    url: "https://script.google.com/macros/s/AKfycbxDXZGGHytoGcKKbm6Y6d9WvLyVjF01HfuBlF34AEi_o1tGmXpMvL5FF-xYfWELqH_N/exec"
-  },
-  { category: "أدوات القسم", name: "توقيع ملفات PDF", icon: "edit", url: "tools.html?tool=sign", tool: true },
-  { category: "أدوات القسم", name: "إنشاء QR Code", icon: "qr", url: "tools.html?tool=qr", tool: true },
-  { category: "أدوات القسم", name: "إزالة العلامة المائية من الخطابات", icon: "eraser", url: "tools/watermark.html", tool: true },
-  { category: "أنظمة الوزارة", name: "نظام نور", icon: "school", url: "https://noor.moe.gov.sa/Noor/Login.aspx?ref=noor", external: true },
-  { category: "أنظمة الوزارة", name: "نظام فارس", icon: "users", url: "https://sshr.moe.gov.sa/OA_HTML/AppsLocalLogin.jsp", external: true },
-  { category: "أنظمة الوزارة", name: "نظام أعمالي", icon: "clipboard", url: "https://aamali.moe.gov.sa/", external: true },
-  { category: "أنظمة الوزارة", name: "الدعم الموحد", icon: "support", url: "https://usc.moe.gov.sa/moe_csm", external: true }
+// ---- القيادات المدرسية ----
+{
+category: "القيادات المدرسية",
+name: "منصة تقييم الاحتياج التطويري للقيادات",
+icon: "clipboard",
+url: "https://script.google.com/macros/s/AKfycbzkI5l_AsPFKvt5Ra16T6uLPF_hsCE-hyGNhTEAiF8MHByWr-1mh4LyryxKFBLwwkmOMA/exec"
+},
+{
+category: "القيادات المدرسية",
+name: "منصة متابعة حركة الوكلاء",
+icon: "users",
+url: "https://script.google.com/macros/s/AKfycbxDXZGGHytoGcKKbm6Y6d9WvLyVjF01HfuBlF34AEi_o1tGmXpMvL5FF-xYfWELqH_N/exec"
+},
+{ category: "أدوات القسم", name: "توقيع ملفات PDF", icon: "edit", url: "tools.html?tool=sign", tool: true },
+{ category: "أدوات القسم", name: "إنشاء QR Code", icon: "qr", url: "tools.html?tool=qr", tool: true },
+{ category: "أدوات القسم", name: "إزالة العلامة المائية من الخطابات", icon: "eraser", url: "tools/watermark.html", tool: true },
+{ category: "أنظمة الوزارة", name: "نظام نور", icon: "school", url: "https://noor.moe.gov.sa/Noor/Login.aspx?ref=noor", external: true },
+{ category: "أنظمة الوزارة", name: "نظام فارس", icon: "users", url: "https://sshr.moe.gov.sa/OA_HTML/AppsLocalLogin.jsp", external: true },
+{ category: "أنظمة الوزارة", name: "نظام أعمالي", icon: "clipboard", url: "https://aamali.moe.gov.sa/", external: true },
+{ category: "أنظمة الوزارة", name: "الدعم الموحد", icon: "support", url: "https://usc.moe.gov.sa/moe_csm", external: true }
 ];
 
 /* الأيقونات المتاحة: chart, folder, monitor, award, trend, edit, flask, laptop, school, file, door, book, users, calendar, clipboard, shield, qr, support, eraser */
 const PATHS={
-  qr:'M3 3h6v6H3zM15 3h6v6h-6zM3 15h6v6H3zM15 15h2v2h-2zM19 13h2v4m-8 2v2h4m2-2h2v2M11 3v3m0 5h4v2m-12 0h4',
-  support:'M4 14v-3a8 8 0 0 1 16 0v3M4 12H2v7h4v-7H4m16 0h2v7h-4v-7h2m0 7q0 3-7 3',
-  building:'M3 21h18M5 21V7h14v14M3 7l9-4 9 4M9 11v2m6-2v2m-6 3v2m6-2v2',
-  home:'M3 10l9-7 9 7M5 9v12h14V9M9 21v-7h6v7',
-  menu:'M4 6h16M4 12h16M4 18h16',
-  search:'M21 21l-5-5M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0',
-  external:'M14 3h7v7m0-7L10 14M10 3H3v18h18v-7',
-  arrow:'M19 12H5m6-6-6 6 6 6',
-  arrowR:'M5 12h14m-6-6 6 6-6 6',
-  chevrons:'M13 17l5-5-5-5M6 17l5-5-5-5',
-  chart:'M4 20V4M4 20h17M8 16v-5m5 5V7m5 9V3',
-  folder:'M3 7V4h6l3 3h9v13H3V7',
-  monitor:'M3 4h18v12H3V4m6 17h6m-3-5v5M7 12l3-3 3 2 4-4',
-  award:'M16 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0M8 11l-2 10 6-3 6 3-2-10',
-  trend:'M3 19h18M4 15l6-6 4 4 6-9m-5 0h5v5',
-  edit:'M14 5l5 5M4 20l4-1L21 6l-4-4L4 15v5',
-  flask:'M9 3h6m-5 0v6l-6 10q-1 2 2 2h12q3 0 2-2L14 9V3M7 15h10',
-  laptop:'M5 5h14v10H5V5M2 19h20l-2-4H4l-2 4',
-  school:'M3 21h18M5 21V9l7-6 7 6v12M9 21v-6h6v6M10 9h4',
-  file:'M5 3h9l5 5v13H5V3m9 0v6h5M8 13h8m-8 4h6',
-  door:'M4 21h10V3H4v18m10-9h7m-3-3 3 3-3 3M8 12h1',
-  book:'M12 5v16M3 3q5-1 9 2 4-3 9-2v16q-5-1-9 2-4-3-9-2V3',
-  users:'M16 20v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8m13 10v-2a4 4 0 0 0-3-3.9M16 2.1a4 4 0 0 1 0 7.8',
-  calendar:'M4 5h16v16H4V5m12-2v4M8 3v4M4 11h16',
-  clipboard:'M9 4h6v3H9V4M7 5H5v16h14V5h-2M8 12h8m-8 4h5',
-  shield:'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3',
-  eraser:'M7 21l-4.3-4.3a2.4 2.4 0 0 1 0-3.4l9.6-9.6a2.4 2.4 0 0 1 3.4 0l5.6 5.6a2.4 2.4 0 0 1 0 3.4L13 21M22 21H7M5 11l9 9'
+qr:'M3 3h6v6H3zM15 3h6v6h-6zM3 15h6v6H3zM15 15h2v2h-2zM19 13h2v4m-8 2v2h4m2-2h2v2M11 3v3m0 5h4v2m-12 0h4',
+support:'M4 14v-3a8 8 0 0 1 16 0v3M4 12H2v7h4v-7H4m16 0h2v7h-4v-7h2m0 7q0 3-7 3',
+building:'M3 21h18M5 21V7h14v14M3 7l9-4 9 4M9 11v2m6-2v2m-6 3v2m6-2v2',
+home:'M3 10l9-7 9 7M5 9v12h14V9M9 21v-7h6v7',
+menu:'M4 6h16M4 12h16M4 18h16',
+search:'M21 21l-5-5M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0',
+external:'M14 3h7v7m0-7L10 14M10 3H3v18h18v-7',
+arrow:'M19 12H5m6-6-6 6 6 6',
+arrowR:'M5 12h14m-6-6 6 6-6 6',
+chevrons:'M13 17l5-5-5-5M6 17l5-5-5-5',
+chart:'M4 20V4M4 20h17M8 16v-5m5 5V7m5 9V3',
+folder:'M3 7V4h6l3 3h9v13H3V7',
+monitor:'M3 4h18v12H3V4m6 17h6m-3-5v5M7 12l3-3 3 2 4-4',
+award:'M16 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0M8 11l-2 10 6-3 6 3-2-10',
+trend:'M3 19h18M4 15l6-6 4 4 6-9m-5 0h5v5',
+edit:'M14 5l5 5M4 20l4-1L21 6l-4-4L4 15v5',
+flask:'M9 3h6m-5 0v6l-6 10q-1 2 2 2h12q3 0 2-2L14 9V3M7 15h10',
+laptop:'M5 5h14v10H5V5M2 19h20l-2-4H4l-2 4',
+school:'M3 21h18M5 21V9l7-6 7 6v12M9 21v-6h6v6M10 9h4',
+file:'M5 3h9l5 5v13H5V3m9 0v6h5M8 13h8m-8 4h6',
+door:'M4 21h10V3H4v18m10-9h7m-3-3 3 3-3 3M8 12h1',
+book:'M12 5v16M3 3q5-1 9 2 4-3 9-2v16q-5-1-9 2-4-3-9-2V3',
+users:'M16 20v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8m13 10v-2a4 4 0 0 0-3-3.9M16 2.1a4 4 0 0 1 0 7.8',
+calendar:'M4 5h16v16H4V5m12-2v4M8 3v4M4 11h16',
+clipboard:'M9 4h6v3H9V4M7 5H5v16h14V5h-2M8 12h8m-8 4h5',
+shield:'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3',
+eraser:'M7 21l-4.3-4.3a2.4 2.4 0 0 1 0-3.4l9.6-9.6a2.4 2.4 0 0 1 3.4 0l5.6 5.6a2.4 2.4 0 0 1 0 3.4L13 21M22 21H7M5 11l9 9'
 };
 
 const $=id=>document.getElementById(id);
@@ -371,57 +378,57 @@ let active=null,loadTimer;
 
 /* ---------- القائمة الجانبية ---------- */
 function renderNav(){
-  const nav=$('nav');nav.replaceChildren();let cat='';
-  PLATFORMS.forEach((p,i)=>{
-    if(p.category!==cat){cat=p.category;const g=document.createElement('div');g.className='nav-group';g.textContent=cat;nav.append(g);}
-    const b=document.createElement(p.external?'a':'button');
-    b.className='nav-item'+(p.url?'':' pending')+(i===active?' active':'');
-    b.title=p.name;b.setAttribute('aria-current',i===active?'page':'false');
-    b.innerHTML=icon(p.icon);const s=document.createElement('span');s.textContent=p.name;b.append(s);
-    if(p.external){b.href=p.url;b.target='_blank';b.rel='noopener noreferrer';b.title=p.name+' — تبويب مستقل';}
-    else b.onclick=()=>openPlatform(i);nav.append(b);
-  });
+const nav=$('nav');nav.replaceChildren();let cat='';
+PLATFORMS.forEach((p,i)=>{
+if(p.category!==cat){cat=p.category;const g=document.createElement('div');g.className='nav-group';g.textContent=cat;nav.append(g);}
+const b=document.createElement(p.external?'a':'button');
+b.className='nav-item'+(p.url?'':' pending')+(i===active?' active':'');
+b.title=p.name;b.setAttribute('aria-current',i===active?'page':'false');
+b.innerHTML=icon(p.icon);const s=document.createElement('span');s.textContent=p.name;b.append(s);
+if(p.external){b.href=p.url;b.target='_blank';b.rel='noopener noreferrer';b.title=p.name+' — تبويب مستقل';}
+else b.onclick=()=>openPlatform(i);nav.append(b);
+});
 }
 
 /* ---------- البطاقات ---------- */
 function renderCards(){
-  const term=$('search').value.trim();const grid=$('groups');grid.replaceChildren();grid.className='grid';let shown=0;
-  PLATFORMS.forEach((p,i)=>{
-    if(!(p.name.includes(term)||p.category.includes(term)))return;
-    shown++;
-    const card=document.createElement(p.external?'a':'button');
-    card.className='card'+(p.url?'':' pending');
-    card.innerHTML='<span class="light"></span>'+icon(p.icon).replace('<svg','<svg class="ghost"')+'<span class="top"><span class="ico">'+icon(p.icon)+'</span><span class="cat"></span></span>';
-    card.querySelector('.cat').textContent=p.category;
-    const t=document.createElement('h3');t.textContent=p.name;card.append(t);
-    const f=document.createElement('span');f.className='foot';
-    f.innerHTML='<span>'+(p.external?'فتح في تبويب مستقل':p.tool?'فتح الأداة':p.url?'فتح المنصة':'قريباً')+'</span><span class="go">'+icon(p.external?'external':'arrow')+'</span>';
-    card.append(f);
-    if(p.external){card.href=p.url;card.target='_blank';card.rel='noopener noreferrer';}
-    else card.onclick=()=>openPlatform(i);
-    if(canTilt)attachTilt(card);
-    grid.append(card);
-  });
-  $('empty').hidden=shown>0;
+const term=$('search').value.trim();const grid=$('groups');grid.replaceChildren();grid.className='grid';let shown=0;
+PLATFORMS.forEach((p,i)=>{
+if(!(p.name.includes(term)||p.category.includes(term)))return;
+shown++;
+const card=document.createElement(p.external?'a':'button');
+card.className='card'+(p.url?'':' pending');
+card.innerHTML='<span class="light"></span>'+icon(p.icon).replace('<svg','<svg class="ghost"')+'<span class="top"><span class="ico">'+icon(p.icon)+'</span><span class="cat"></span></span>';
+card.querySelector('.cat').textContent=p.category;
+const t=document.createElement('h3');t.textContent=p.name;card.append(t);
+const f=document.createElement('span');f.className='foot';
+f.innerHTML='<span>'+(p.external?'فتح في تبويب مستقل':p.tool?'فتح الأداة':p.url?'فتح المنصة':'قريباً')+'</span><span class="go">'+icon(p.external?'external':'arrow')+'</span>';
+card.append(f);
+if(p.external){card.href=p.url;card.target='_blank';card.rel='noopener noreferrer';}
+else card.onclick=()=>openPlatform(i);
+if(canTilt)attachTilt(card);
+grid.append(card);
+});
+$('empty').hidden=shown>0;
 }
 
 function attachTilt(card){
-  let raf=0;
-  card.addEventListener('pointermove',e=>{
-    const r=card.getBoundingClientRect();const x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
-    cancelAnimationFrame(raf);
-    raf=requestAnimationFrame(()=>{
-      card.classList.add('tilting');
-      card.style.setProperty('--ry',((x-.5)*14).toFixed(2)+'deg');
-      card.style.setProperty('--rx',((.5-y)*10).toFixed(2)+'deg');
-      card.style.setProperty('--mx',(x*100).toFixed(1)+'%');
-      card.style.setProperty('--my',(y*100).toFixed(1)+'%');
-    });
-  });
-  card.addEventListener('pointerleave',()=>{
-    cancelAnimationFrame(raf);card.classList.remove('tilting');
-    card.style.setProperty('--rx','0deg');card.style.setProperty('--ry','0deg');
-  });
+let raf=0;
+card.addEventListener('pointermove',e=>{
+const r=card.getBoundingClientRect();const x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
+cancelAnimationFrame(raf);
+raf=requestAnimationFrame(()=>{
+card.classList.add('tilting');
+card.style.setProperty('--ry',((x-.5)*14).toFixed(2)+'deg');
+card.style.setProperty('--rx',((.5-y)*10).toFixed(2)+'deg');
+card.style.setProperty('--mx',(x*100).toFixed(1)+'%');
+card.style.setProperty('--my',(y*100).toFixed(1)+'%');
+});
+});
+card.addEventListener('pointerleave',()=>{
+cancelAnimationFrame(raf);card.classList.remove('tilting');
+card.style.setProperty('--rx','0deg');card.style.setProperty('--ry','0deg');
+});
 }
 
 /* ---------- التنقل ---------- */
@@ -430,24 +437,24 @@ function toggleDrawer(open){$('rail').classList.toggle('open',open);$('backdrop'
 function resetFrame(){clearTimeout(loadTimer);const f=$('frame');f.onload=null;f.removeAttribute('src');f.hidden=true;$('loading').hidden=true;$('externalNotice').hidden=true;}
 
 function showHome(){
-  active=null;resetFrame();$('viewer').hidden=true;$('home').hidden=false;
-  setMini(store.get('portal-mini')==='1');toggleDrawer(false);renderNav();
-  if(location.hash)history.replaceState(null,'',location.pathname+location.search);
+active=null;resetFrame();$('viewer').hidden=true;$('home').hidden=false;
+setMini(store.get('portal-mini')==='1');toggleDrawer(false);renderNav();
+if(location.hash)history.replaceState(null,'',location.pathname+location.search);
 }
 function openPlatform(i){
-  const p=PLATFORMS[i];if(!p)return;active=i;resetFrame();
-  $('home').hidden=true;$('viewer').hidden=false;
-  $('vName').textContent=p.name;$('vCat').textContent=p.category;$('vIcon').innerHTML=icon(p.icon);
-  $('pending').hidden=!!p.url;$('vOpen').hidden=!p.url;
-  if(!isMobile())setMini(true);
-  toggleDrawer(false);renderNav();
-  history.replaceState(null,'','#'+(i+1));
-  if(!p.url)return;
-  if(p.external){$('vOpen').href=p.url;$('externalLink').href=p.url;$('externalNotice').hidden=false;return;}
-  const f=$('frame');$('vOpen').href=p.url;$('loadingLink').href=p.url;f.title=p.name;$('loading').hidden=false;
-  f.onload=()=>{if(active!==i)return;clearTimeout(loadTimer);$('loading').hidden=true;f.hidden=false;};
-  f.src=p.url;
-  loadTimer=setTimeout(()=>{if(active===i){$('loading').hidden=true;f.hidden=false;}},15000);
+const p=PLATFORMS[i];if(!p)return;active=i;resetFrame();
+$('home').hidden=true;$('viewer').hidden=false;
+$('vName').textContent=p.name;$('vCat').textContent=p.category;$('vIcon').innerHTML=icon(p.icon);
+$('pending').hidden=!!p.url;$('vOpen').hidden=!p.url;
+if(!isMobile())setMini(true);
+toggleDrawer(false);renderNav();
+history.replaceState(null,'','#'+(i+1));
+if(!p.url)return;
+if(p.external){$('vOpen').href=p.url;$('externalLink').href=p.url;$('externalNotice').hidden=false;return;}
+const f=$('frame');$('vOpen').href=p.url;$('loadingLink').href=p.url;f.title=p.name;$('loading').hidden=false;
+f.onload=()=>{if(active!==i)return;clearTimeout(loadTimer);$('loading').hidden=true;f.hidden=false;};
+f.src=p.url;
+loadTimer=setTimeout(()=>{if(active===i){$('loading').hidden=true;f.hidden=false;}},15000);
 }
 
 $('homeBtn').onclick=showHome;$('backBtn').onclick=showHome;
